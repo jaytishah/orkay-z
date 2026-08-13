@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+
+# next.js build output
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# netlify
+.netlify/
+
+# env
+.env
+.env*.local
+
+# os / editor
+.DS_Store
+Thumbs.db
+
+# tooling caches
+.impeccable/
