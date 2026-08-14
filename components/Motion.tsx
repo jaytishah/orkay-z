@@ -68,6 +68,9 @@ export default function Motion() {
       const inkLayer = q('.logo__layer--ink') as HTMLElement | null;
       const logoEl = q('.logo') as HTMLElement | null;
       const lightSections = qa('.ui-light');
+      /* dark photos that sit inside a light section — the ink layer has to stop
+         at their left edge or the mark goes black over black */
+      const darkInserts = qa('.ui-light .z9-loc__media');
       const updateLogoInk = () => {
         if (!inkLayer || !logoEl) return;
         const r = logoEl.getBoundingClientRect();
@@ -88,10 +91,27 @@ export default function Motion() {
         } else {
           const t = ((top - r.top) / scale) * 100;
           const b = ((r.bottom - bottom) / scale) * 100;
-          inkLayer.style.clipPath = `inset(${Math.max(0, t)}% 0 ${Math.max(0, b)}% 0)`;
+          let right = 0;
+          for (const el of darkInserts) {
+            const m = el.getBoundingClientRect();
+            if (m.bottom > r.top && m.top < r.bottom && m.left < r.right) {
+              const cut = ((r.right - Math.max(m.left, r.left)) / (r.width || 1)) * 100;
+              if (cut > right) right = cut;
+            }
+          }
+          inkLayer.style.clipPath =
+            `inset(${Math.max(0, t)}% ${Math.min(100, right)}% ${Math.max(0, b)}% 0)`;
         }
       };
       gsap.ticker.add(updateLogoInk);
+
+      const locSection = q('.z9-loc__media');
+      if (locSection && logoEl) {
+        ScrollTrigger.create({
+          trigger: locSection, start: 'top 40%', end: 'bottom top',
+          onToggle: (s) => logoEl.classList.toggle('logo--xl', s.isActive),
+        });
+      }
 
       /* split headlines into masked lines */
       qa('.reveal-lines').forEach((el) => {
@@ -114,6 +134,37 @@ export default function Motion() {
             scrollTrigger: { trigger: el.parentElement as HTMLElement, start: 'top bottom', end: 'bottom top', scrub: true },
           });
         });
+
+        /* the sky photo rides up 10vh as the section enters — a lift on the top
+           edge only, well inside the slack that scale(1.4) leaves at the bottom */
+        const worldBg = q('.z9-world__bg');
+        if (worldBg) {
+          gsap.fromTo(worldBg, { y: '10vh' }, {
+            y: 0, ease: 'none',
+            scrollTrigger: { trigger: '.z9-world', start: 'top bottom', end: 'top top', scrub: true },
+          });
+        }
+
+        /* the collage drifts up inside its own frame while the section is held,
+           so the pinned plate never reads as a still image */
+        const galleryStage = q('.gallery__stage');
+        if (galleryStage) {
+          gsap.fromTo(galleryStage, { y: '8vh' }, {
+            y: '-8vh', ease: 'none',
+            scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true },
+          });
+        }
+
+        /* reference behaviour: the rule draws out across screen one and retracts
+           across screen two — pure scrub, no autoplay */
+        const worldRule = q('.z9-world__rule');
+        if (worldRule) {
+          gsap.timeline({
+            scrollTrigger: { trigger: '.z9-world', start: 'top bottom', end: 'bottom top', scrub: true },
+          })
+            .fromTo(worldRule, { scaleX: 0 }, { scaleX: 1, ease: 'none' })
+            .to(worldRule, { scaleX: 0, ease: 'none' });
+        }
       }
 
       /* pinned manufacturing journey */
@@ -145,7 +196,7 @@ export default function Motion() {
           const travel = (slides.length * 0.9) / (2 + slides.length * 0.9);
           gsap.timeline({
             scrollTrigger: {
-              trigger: '.journey__pin', pin: true, scrub: 0.6,
+              trigger: '.journey__pin', pin: true, scrub: 0.6, anticipatePin: 1,
               end: () => `+=${innerHeight * 2 + slides.length * innerHeight * 0.9}`,
               onUpdate: (st) => {
                 const p = Math.min(1, Math.max(0, (st.progress - hold) / travel));
@@ -283,17 +334,41 @@ export default function Motion() {
         pickSpace();
       }
 
-      /* infrastructure plate — crosses the viewport right to left over the
-         journey's held last screen, measured the same rect-first way */
-      const infraWrap = q('.infra-scroll') as HTMLElement | null;
-      const infra = q('.infra') as HTMLElement | null;
-      if (infraWrap && infra && !reduced) {
-        const slideInfra = () => {
-          const p = Math.min(1, Math.max(0, -infraWrap.getBoundingClientRect().top / innerHeight));
-          infra.style.transform = `translate3d(${(1 - p) * 100}%,0,0)`;
+      /* services — the pinned photo follows whichever card is nearest the
+         middle of the viewport */
+      const techCards = qa('.tech__card');
+      const techImgs = qa('.tech__media img');
+      let techTeardown = () => {};
+      const techMedia = q('.tech__media') as HTMLElement | null;
+      if (techCards.length && techImgs.length) {
+        let techShown = -1;
+        const pickTech = () => {
+          let best = 0;
+          let bestD = Infinity;
+          techCards.forEach((c, i) => {
+            const r = c.getBoundingClientRect();
+            const d = Math.abs(r.top + r.height / 2 - innerHeight / 2);
+            if (d < bestD) { bestD = d; best = i; }
+          });
+          /* the photo drifts with the column as well as swapping, so the two
+             halves read as one movement rather than a slideshow */
+          if (techMedia && !reduced) {
+            const first = techCards[0].getBoundingClientRect();
+            const last = techCards[techCards.length - 1].getBoundingClientRect();
+            const span = last.bottom - first.top - innerHeight;
+            const p = span > 0 ? Math.min(1, Math.max(0, -first.top / span)) : 0;
+            techMedia.style.setProperty('--drift', `${(p - 0.5) * 7}%`);
+          }
+          if (best === techShown) return;
+          techShown = best;
+          techImgs.forEach((im, n) => im.classList.toggle('is-active', n === best));
         };
-        lenis.on('scroll', slideInfra);
-        slideInfra();
+        /* every frame, not on scroll events: the cards move with the page on the
+           ticker's clock, so the drift has to be measured on the same clock or
+           the photo trails the column by a frame or two */
+        gsap.ticker.add(pickTech);
+        techTeardown = () => gsap.ticker.remove(pickTech);
+        pickTech();
       }
 
       /* applications carousel — copy travels on the images, same as day cycle */
@@ -311,8 +386,31 @@ export default function Motion() {
         if (amenDesc) amenDesc.textContent = d.desc || '';
         if (amenCur) amenCur.textContent = String(amenIdx + 1);
       };
-      q('.amen .arrow--next')?.addEventListener('click', () => setAmen(amenIdx + 1));
-      q('.amen .arrow--prev')?.addEventListener('click', () => setAmen(amenIdx - 1));
+      /* scroll owns the index while the panel is stuck, so the arrows scroll to
+         the step rather than setting it — otherwise the next frame overrides */
+      const amenWrap = q('.amen-scroll') as HTMLElement | null;
+      /* the wrapper's last screen belongs to the section climbing over it, so
+         the slides share everything above that */
+      const amenSpan = () => (amenWrap ? amenWrap.getBoundingClientRect().height - innerHeight * 2 : 0);
+      if (amenWrap && amenImgs.length) {
+        lenis.on('scroll', () => {
+          const span = amenSpan();
+          if (span <= 0) return;
+          const p = Math.min(1, Math.max(0, -amenWrap.getBoundingClientRect().top / span));
+          const i = Math.min(amenImgs.length - 1, Math.floor(p * amenImgs.length));
+          if (i !== amenIdx) setAmen(i);
+        });
+      }
+      const goAmen = (i: number) => {
+        const span = amenSpan();
+        const n = amenImgs.length;
+        if (!amenWrap || span <= 0 || !n) { setAmen(i); return; }
+        const idx = (i + n) % n;
+        const top = amenWrap.getBoundingClientRect().top + scrollY;
+        lenis.scrollTo(top + span * ((idx + 0.5) / n), { duration: 1 });
+      };
+      q('.amen .arrow--next')?.addEventListener('click', () => goAmen(amenIdx + 1));
+      q('.amen .arrow--prev')?.addEventListener('click', () => goAmen(amenIdx - 1));
 
       /* day cycle stepper */
       const dayImgs = qa('.daycycle__media img');
@@ -369,6 +467,7 @@ export default function Motion() {
         gsap.ticker.remove(updateLogoInk);
         anchorHandlers.forEach(([a, h]) => a.removeEventListener('click', h));
         burger?.removeEventListener('click', burgerHandler);
+        techTeardown();
         lenis.destroy();
       };
     })();

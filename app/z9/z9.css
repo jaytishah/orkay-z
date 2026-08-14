@@ -85,7 +85,7 @@
   position: relative; z-index: 2;
   display: flex; align-items: flex-end; justify-content: space-between; gap: var(--pad);
 }
-.z9-about__title { max-width: 11ch; font-size: clamp(34px, 4.4vw, 72px); }
+.z9-about__title { max-width: 11ch; font-size: clamp(26px, 3.2vw, 52px); }
 .z9-about__cards { display: flex; gap: 12px; padding-right: 76px; } /* clears the floating actions */
 
 /* the two tiles — one black, one white, meeting on a hard 0-radius edge */
@@ -128,9 +128,10 @@
 .z9-loc { padding: 0 0 12vh; }
 .z9-loc__media { height: 84vh; margin-left: 25%; }
 .z9-loc__eyebrow { margin: 20px var(--pad) 0 25%; }
-.z9-loc__statement { margin: 8vh var(--pad) 0; }
+/* block hangs off the image's left edge; lighter than .h-mid's 600 */
+.z9-loc__statement { margin: 8vh var(--pad) 0 25%; font-weight: 450; }
 /* pure-CSS first-line indent — a floated spacer, no text-indent, no fake breaks */
-.z9-loc__indent { float: left; height: 10px; width: 25%; }
+.z9-loc__indent { float: left; height: 10px; width: 33%; }
 .z9-loc__word { margin-top: 22vh; padding: 0 var(--pad); text-align: right; }
 .z9-loc__line { border: 0; border-top: 1px solid rgba(0,0,0,0.22); margin: -1px 0 0; }
 
@@ -176,7 +177,7 @@
   background: linear-gradient(to bottom, rgba(5, 16, 30, 0.82) 0, rgba(5, 16, 30, 0.3) 42vh, rgba(5, 16, 30, 0) 68vh);
 }
 .z9-world__rule {
-  position: relative; z-index: 3;
+  position: relative; z-index: 3; transform-origin: left center;
   border: 0; border-top: 1px solid rgba(255, 255, 255, 0.28); margin: 21vh 0 0;
 }
 .z9-world__grid {
@@ -202,6 +203,13 @@
 }
 /* bottoms sit on one line, so the shorter frame starts further down. The fr
    columns absorb the gutter, so the right frame still runs off the page edge */
+/* sits in the empty first column, top-aligned against the tall right frame */
+.z9-style__title {
+  grid-column: 1; align-self: start; padding-left: var(--pad);
+  /* the <br>s set the three lines; type is sized so the longest one still
+     clears the left frame at 25% */
+  font-size: clamp(20px, 2.2vw, 34px); white-space: nowrap;
+}
 .z9-style__a { grid-column: 2; height: 56vh; }
 .z9-style__b { grid-column: 3; height: 82vh; }
 
@@ -326,6 +334,7 @@
   .z9-tile { width: clamp(120px, 38vw, 200px); }
   .z9-loc__media { margin-left: 0; height: 56vh; }
   .z9-loc__eyebrow { margin-left: var(--pad); }
+  .z9-loc__statement { margin-left: var(--pad); }
   .z9-loc__indent { display: none; }
   .z9-loc__word { margin-top: 12vh; text-align: left; }
   .z9-loc-card { width: calc(85% - 5px); }
@@ -333,6 +342,7 @@
   .z9-world { height: 165vh; }
   .z9-world__figure { height: 78vh; }
   .z9-style { grid-template-columns: 1fr; gap: 4vh; padding: 6vh var(--pad) 8vh; }
+  .z9-style__title { padding-left: 0; white-space: normal; }
   .z9-style__a, .z9-style__b { grid-column: 1; height: 46vh; margin-top: 0; }
   .z9-life__grid, .z9-built__features { grid-template-columns: 1fr; gap: 6vh; }
   .z9-life__col--left { position: static; }

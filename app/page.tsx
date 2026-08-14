@@ -5,7 +5,7 @@ import GlobalMap from '@/components/GlobalMap';
 import { collections } from '@/content/collections';
 import {
   formats, journey, stats, dayCycle, gallery, advantage,
-  products, packing, contact, site, nearby, spaces, facilities,
+  products, packing, contact, site, nearby, spaces, facilities, services,
 } from '@/content/site';
 /* the film-curtain block below is the /z9 layout language — reuse its sheet
    rather than re-declaring .z9-about/.z9-tile here */
@@ -52,7 +52,7 @@ export default function Home() {
           </figure>
           <div className="hero__panel">
             <p className="hero__lede h-mid reveal-lines">
-              Premium vitrified surfaces —<br />crafted in Morbi,<br />designed for the world.
+              Premium vitrified surfaces<br />crafted in Morbi,<br />designed for the world.
             </p>
             <a href="#about" className="hero__scroll" aria-label="Scroll to manufacturing">↓</a>
             <p className="hero__since text-small">Morbi, Gujarat, India</p>
@@ -72,7 +72,7 @@ export default function Home() {
         {/* 00b · FILM CURTAIN — full-bleed loop, headline + two tiles */}
         <section className="section z9-about ui-dark" id="terms" data-polarity="dark">
           <div className="z9-about__media" aria-hidden="true">
-            <video src="/video/hero_marble_1080p.mp4" poster="/img/hero_dusk.jpg" autoPlay muted loop playsInline />
+            <video src="/video/terms_bg.mp4" poster="/img/hero_dusk.jpg" autoPlay muted loop playsInline />
           </div>
 
           <div className="z9-about__inner" data-parallax="0.5">
@@ -109,11 +109,10 @@ export default function Home() {
               alt="Dining room floored and tabled in ORKAY black marble-look porcelain at dusk"
             />
           </figure>
-          <p className="z9-loc__eyebrow text-small">Privilege of Location</p>
           <p className="z9-loc__statement h-mid reveal-lines">
             <span className="z9-loc__indent" aria-hidden="true" />
-            Morbi fires most of the porcelain India ships. Seven of those kilns are ours —
-            raw body to loaded container inside one campus, an hour from Mundra port.
+            Morbi fires most of the porcelain India ships. Seven kilns are ours —
+            raw body to loaded container, an hour from Mundra port.
           </p>
           <div className="z9-loc__word">
             <p className="h-display reveal-lines">Morbi</p>
@@ -171,7 +170,8 @@ export default function Home() {
         {/* 01 · STATEMENT */}
         <section className="section statement ui-light" id="about" data-polarity="light">
           <h2 className="statement__title h-mid reveal-lines">
-            Seven manufacturing units.<br />16,000 sq.m a day.<br />Thirty years of craft reflected<br />in every single surface.
+            Seven manufacturing units. 16,000 sq.m a day. Thirty years of craft
+            reflected in every single surface we press, fire, polish and pack.
           </h2>
           <figure className="statement__media img-reveal img-reveal--r">
             <img src="/img/light_facade.jpg" alt="Building facade clad in ORKAY large-format slabs" />
@@ -180,6 +180,9 @@ export default function Home() {
 
         {/* 01b · STYLE — staggered pair */}
         <section className="section z9-style ui-light" id="style" data-polarity="light">
+          <h2 className="z9-style__title h-mid reveal-lines">
+            Full-slab walls and<br />mirror-polished floors<br />from our own kilns
+          </h2>
           <figure className="z9-style__a img-reveal">
             <img src="/img/app_interior_light.jpg" alt="Entrance hall floored in polished ORKAY marble-look porcelain" />
           </figure>
@@ -220,14 +223,15 @@ export default function Home() {
             across every slab of the same batch — lobby wall to bathroom floor.
           </p>
           <div className="luxury__pair">
-            <figure className="img-reveal" data-parallax="0.94">
+            {/* no reveal, no parallax — the pair reads as one plate, both frames
+                identical width and height */}
+            <figure>
               <img src="/img/lobby_dark.jpg" alt="Hotel lobby clad in dark ORKAY marble slabs" />
             </figure>
-            <figure className="img-reveal img-reveal--r" data-parallax="1.04">
+            <figure>
               <img src="/img/bath_dark.jpg" alt="Bathroom in dark stone-look porcelain" />
             </figure>
           </div>
-          <h2 className="luxury__title h-display reveal-lines">The Luxury<br />of Surface</h2>
         </section>
 
         {/* the wrapper ends the pin, so the gallery is only sticky for the length
@@ -359,17 +363,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 07b · INFRASTRUCTURE — full plate crossing in from the right */}
-        <div className="infra-scroll">
-          <section className="section infra ui-dark" id="infrastructure" data-polarity="dark">
-            <figure className="infra__media">
-              <img src="/img/hero-image.png" alt="Room clad wall and floor in large-format ORKAY slabs" />
-            </figure>
-            <h2 className="infra__title h-display">Infrastructure</h2>
-          </section>
-        </div>
-
-        {/* 07c · APPLICATIONS — arrow carousel, per-slide copy on the images */}
+        {/* 07c · APPLICATIONS — steps on scroll; the arrows drive the scroll */}
+        <div className="amen-scroll">
         <section className="section amen ui-dark" id="applications" data-polarity="dark">
           <div className="amen__panel">
             <p className="amen__label text-small">Infrastructure</p>
@@ -406,6 +401,151 @@ export default function Home() {
             ))}
           </figure>
         </section>
+        </div>
+
+        {/* 07d · RANGE — climbs over the applications panel */}
+        <section className="section park ui-light" id="range" data-polarity="light">
+          <h2 className="park__title h-display reveal-lines">
+            One thousand<br />designs deep
+          </h2>
+          <figure className="park__a img-reveal">
+            <img src="/img/slab_travertino.jpg" alt="Bone Travertino Ivory slab detail" />
+          </figure>
+          <figure className="park__b img-reveal img-reveal--r">
+            <img src="/img/light_interior.jpg" alt="Interior floored with ORKAY statuario slabs" />
+          </figure>
+          <p className="park__note reveal-lines">
+            Travertine, statuario, onyx, concrete, wood and terrazzo — over a thousand faces
+            across every size and finish we press. Pick one, or send us the reference you
+            already have and we will run it.
+          </p>
+        </section>
+
+        {/* 07e · PLATE — pins while the formats panel climbs over it */}
+        <div className="curtain">
+        <section className="section plate ui-dark" data-polarity="dark">
+          <figure className="img-reveal">
+            <img src="/img/dining-table.png" alt="Dining room around a black marble-look ORKAY table at sunset" />
+          </figure>
+        </section>
+
+        {/* 08a · CHOOSE YOUR FORMAT */}
+        <section className="section formats ui-dark" id="formats" data-polarity="dark">
+          <div className="formats__pin">
+            <nav className="formats__tabs text-small" aria-label="Tile formats">
+              {formats.map((f, i) => (
+                <button className={`formats__tab${i === 0 ? ' is-active' : ''}`} data-step={i} key={f.size}>
+                  {f.size}
+                </button>
+              ))}
+            </nav>
+            <div className="formats__panel">
+              <p className="formats__size h-display">
+                <span id="fmt-size">{formats[0].size}</span> <sup className="text-small">MM</sup>
+              </p>
+              <div className="formats__plan" id="fmt-plan">
+                <svg viewBox="0 0 420 360" fill="none" aria-hidden="true">
+                  <rect id="fmt-rect" x="60" y="20" width="160" height="320" stroke="currentColor" strokeWidth="1.5" pathLength="100" />
+                  <line id="fmt-dimv" x1="36" y1="20" x2="36" y2="340" stroke="currentColor" strokeWidth="0.75" />
+                  <line id="fmt-dimh" x1="60" y1="352" x2="220" y2="352" stroke="currentColor" strokeWidth="0.75" />
+                  <text id="fmt-lblv" x="14" y="185" fill="currentColor" fontSize="12" letterSpacing="1" transform="rotate(-90 22 185)">1200</text>
+                  <text id="fmt-lblh" x="128" y="345" fill="currentColor" fontSize="12" letterSpacing="1" textAnchor="middle">600</text>
+                </svg>
+              </div>
+              <p className="formats__desc text-small" id="fmt-desc">{formats[0].desc}</p>
+            </div>
+            <figure className="formats__media">
+              {formats.map((f, i) => (
+                <img key={f.size} src={f.img} alt={f.alt} data-fmt={i} className={i === 0 ? 'is-active' : undefined} />
+              ))}
+            </figure>
+            <p className="formats__kicker text-small">Choose your format</p>
+          </div>
+        </section>
+        </div>
+
+        {/* 07f · TECHNOLOGIES & SERVICES */}
+        <section className="section tech ui-dark" id="services" data-polarity="dark">
+          <figure className="tech__media">
+            {services.map((s, i) => (
+              <img key={s.img} src={s.img} alt={s.alt} className={i === 0 ? 'is-active' : undefined} />
+            ))}
+          </figure>
+          <div className="tech__cards">
+            {services.map((s) => (
+              <article className="tech__card" key={s.name}>
+                <p className="text-small tech__label">{s.name}</p>
+                <p className="text-small tech__desc">{s.desc}</p>
+              </article>
+            ))}
+          </div>
+          <h2 className="tech__title h-mid reveal-lines">
+            Technologies<br />and services
+          </h2>
+        </section>
+
+        {/* 07g · PEAK — same plate treatment as 06b, holds while the next
+            section climbs over it */}
+        <div className="curtain">
+        <section className="section experience experience--free ui-dark" id="peak" data-polarity="dark">
+          <figure className="experience__media">
+            <img src="/img/gal_residential.jpg" alt="Residence floored in polished ORKAY porcelain" />
+          </figure>
+          <p className="experience__caption text-small">
+            Take the surface to the top of the building. The same slab runs from the entrance
+            hall to the terrace threshold — one vein, one shade, one batch, however many floors
+            sit between them.
+          </p>
+          <h2 className="experience__title h-display reveal-lines">
+            Residences with<br />mirror-polished floors
+          </h2>
+        </section>
+
+        {/* 07h · SCALE — tall plate, statement, then two spec frames */}
+        <section className="section penth ui-dark" id="scale" data-polarity="dark">
+          <figure className="penth__tall img-reveal">
+            <img src="/img/gal_goldenhour.jpg" alt="Room at golden hour floored in ORKAY porcelain" />
+          </figure>
+          <p className="penth__lede reveal-lines">
+            Light is what a surface is judged on. A slab that leaves our line flat, dense and
+            polished to the same gloss across the batch keeps a reflection running unbroken from
+            one wall to the next — at any hour of the day.
+          </p>
+
+          <div className="penth__pair">
+            <figure className="penth__fig penth__fig--a img-reveal">
+              <img src="/img/gal_statuario.jpg" alt="Statuario-look slabs in a residential interior" />
+              <figcaption className="penth__stat">
+                <p className="penth__num">1200×2400</p>
+                <p className="text-small penth__cap">Largest format, mm</p>
+              </figcaption>
+            </figure>
+            <figure className="penth__fig penth__fig--b img-reveal img-reveal--r">
+              <img src="/img/fmt_largeformat.jpg" alt="Large-format ORKAY slabs on a feature wall" />
+              <figcaption className="penth__stat">
+                <p className="penth__num">16,000</p>
+                <p className="text-small penth__cap">Sq.m fired every day</p>
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
+        {/* 07i · TERRACES */}
+        <section className="section terr ui-dark" id="terraces" data-polarity="dark">
+          <figure className="terr__media img-reveal">
+            <img src="/img/gal_terrace.jpg" alt="Terrace paved in ORKAY outdoor porcelain" />
+          </figure>
+          <div className="terr__side">
+            <h2 className="terr__title h-mid reveal-lines">
+              Terraces<br />and facades
+            </h2>
+            <p className="terr__note text-small">
+              Outdoor bodies are pressed thicker and rated for frost, sun and rain. Run the same
+              design from the living room across the threshold and out onto the terrace — one
+              floor that happens to cross a wall.
+            </p>
+          </div>
+        </section>
 
         {/* 07a · DIRECT MANUFACTURER ADVANTAGE */}
         <section className="section advantage ui-light" id="advantage" data-polarity="light">
@@ -434,6 +574,7 @@ export default function Home() {
             <Cta label="Talk to the Factory" red href="#partner" />
           </div>
         </section>
+        </div>
 
         {/* 08 · COLLECTIONS */}
         <section className="section collections ui-light" id="collections" data-polarity="light">
@@ -475,40 +616,6 @@ export default function Home() {
           </div>
           <div className="products__cta">
             <Cta label="Request Full Catalogue" red href="#partner" />
-          </div>
-        </section>
-
-        {/* 08a · CHOOSE YOUR FORMAT */}
-        <section className="section formats ui-dark" id="formats" data-polarity="dark">
-          <div className="formats__pin">
-            <nav className="formats__tabs text-small" aria-label="Tile formats">
-              {formats.map((f, i) => (
-                <button className={`formats__tab${i === 0 ? ' is-active' : ''}`} data-step={i} key={f.size}>
-                  {f.size}
-                </button>
-              ))}
-            </nav>
-            <div className="formats__panel">
-              <p className="formats__size h-display">
-                <span id="fmt-size">{formats[0].size}</span> <sup className="text-small">MM</sup>
-              </p>
-              <div className="formats__plan" id="fmt-plan">
-                <svg viewBox="0 0 420 360" fill="none" aria-hidden="true">
-                  <rect id="fmt-rect" x="60" y="20" width="160" height="320" stroke="currentColor" strokeWidth="1.5" pathLength="100" />
-                  <line id="fmt-dimv" x1="36" y1="20" x2="36" y2="340" stroke="currentColor" strokeWidth="0.75" />
-                  <line id="fmt-dimh" x1="60" y1="352" x2="220" y2="352" stroke="currentColor" strokeWidth="0.75" />
-                  <text id="fmt-lblv" x="14" y="185" fill="currentColor" fontSize="12" letterSpacing="1" transform="rotate(-90 22 185)">1200</text>
-                  <text id="fmt-lblh" x="128" y="345" fill="currentColor" fontSize="12" letterSpacing="1" textAnchor="middle">600</text>
-                </svg>
-              </div>
-              <p className="formats__desc text-small" id="fmt-desc">{formats[0].desc}</p>
-            </div>
-            <figure className="formats__media">
-              {formats.map((f, i) => (
-                <img key={f.size} src={f.img} alt={f.alt} data-fmt={i} className={i === 0 ? 'is-active' : undefined} />
-              ))}
-            </figure>
-            <p className="formats__kicker text-small">Choose your format</p>
           </div>
         </section>
 

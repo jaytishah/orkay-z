@@ -74,10 +74,10 @@ export const nearby = [
 ];
 
 export const services = [
-  { name: 'Digital Quality Lab', desc: 'Every production run is shade-mapped and dimension-logged digitally. Your reorder next year matches the batch on your floor today.' },
-  { name: 'OEM & Private Label', desc: 'Your brand, our line. Full private-label manufacturing with dedicated design development and custom packaging.' },
-  { name: 'Export Documentation', desc: 'CE marking, ISO 9001:2015 systems, IEC-registered exports. Compliance paperwork prepared before you ask for it.' },
-  { name: 'Dealer Support', desc: 'Display planning, sampling programs and marketing assets for showrooms — a partnership, not a price list.' },
+  { name: 'Digital Quality Lab', desc: 'Every production run is shade-mapped and dimension-logged digitally. Your reorder next year matches the batch on your floor today.', img: '/img/mfg_qc.jpg', alt: 'Engineer inspecting a glossy slab' },
+  { name: 'OEM & Private Label', desc: 'Your brand, our line. Full private-label manufacturing with dedicated design development and custom packaging.', img: '/img/mfg_press.jpg', alt: 'Hydraulic press forming a porcelain slab' },
+  { name: 'Export Documentation', desc: 'CE marking, ISO 9001:2015 systems, IEC-registered exports. Compliance paperwork prepared before you ask for it.', img: '/img/mfg_container.jpg', alt: 'Container loading at dusk' },
+  { name: 'Dealer Support', desc: 'Display planning, sampling programs and marketing assets for showrooms — a partnership, not a price list.', img: '/img/gal_largeformat.jpg', alt: 'Showroom display of large-format slabs' },
 ];
 
 export const stats = [
