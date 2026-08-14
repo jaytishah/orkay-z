@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import SiteChrome, { Footer } from '@/components/SiteChrome';
 import Motion from '@/components/Motion';
+import GlobalMap from '@/components/GlobalMap';
 import { collections } from '@/content/collections';
 import {
   formats, journey, stats, dayCycle, gallery, advantage,
-  products, packing, contact, site,
+  products, packing, contact, site, nearby, spaces, facilities,
 } from '@/content/site';
+/* the film-curtain block below is the /z9 layout language — reuse its sheet
+   rather than re-declaring .z9-about/.z9-tile here */
+import './z9/z9.css';
 
 /* eslint-disable @next/next/no-img-element -- the design system sizes every
    image with object-fit inside fixed-height figures; next/image adds no value
@@ -30,6 +34,9 @@ export default function Home() {
       <Motion />
 
       <main>
+        {/* the hero pins for one viewport and 00b rides up over it — the wrapper
+            is what ends the pin, so `sticky` never leaks past the curtain */}
+        <div className="z9-open">
         {/* 00 · HERO */}
         <section className="section hero ui-dark" data-polarity="dark">
           <h1 className="sr-only">
@@ -40,19 +47,125 @@ export default function Home() {
             {site.heroVideo ? (
               <video src={site.heroVideo} poster={site.heroImage} autoPlay muted loop playsInline />
             ) : (
-              <img src={site.heroImage} alt="ORKAY manufacturing campus at dusk" />
+              <img src={site.heroImage} alt="Living room clad in large-format ORKAY marble-look slabs" />
             )}
           </figure>
+          <div className="hero__panel">
+            <p className="hero__lede h-mid reveal-lines">
+              Premium vitrified surfaces —<br />crafted in Morbi,<br />designed for the world.
+            </p>
+            <a href="#about" className="hero__scroll" aria-label="Scroll to manufacturing">↓</a>
+            <p className="hero__since text-small">Morbi, Gujarat, India</p>
+          </div>
           <figure className="hero__ambassador">
             <img src="/img/ambassador_hero.webp" alt="The ORKAY brand ambassador" />
           </figure>
-          <div className="hero__caption">
-            <p className="text-small reveal-lines">
-              Crafted in Morbi.<br />Designed for the World.
-            </p>
-            <Cta label="Request Catalogue" red href="#partner" />
+          {/* flex space-between so the glyphs span the viewport exactly,
+              whatever the font metrics do */}
+          <p className="hero__wordmark" aria-hidden="true">
+            {[...'SINCE'].map((c, i) => <span key={i}>{c}</span>)}
+            <span className="hero__wordmark-gap" />
+            {[...'1996'].map((c, i) => <span key={i}>{c}</span>)}
+          </p>
+        </section>
+
+        {/* 00b · FILM CURTAIN — full-bleed loop, headline + two tiles */}
+        <section className="section z9-about ui-dark" id="terms" data-polarity="dark">
+          <div className="z9-about__media" aria-hidden="true">
+            <video src="/video/hero_marble_1080p.mp4" poster="/img/hero_dusk.jpg" autoPlay muted loop playsInline />
           </div>
-          <p className="hero__since text-small">{site.since}</p>
+
+          <div className="z9-about__inner" data-parallax="0.5">
+            <h2 className="z9-about__title h-display reveal-lines">
+              Surfaces on<br />Your Own Terms
+            </h2>
+
+            <div className="z9-about__cards">
+              <a className="z9-tile z9-tile--dark" href="#exhibition">
+                <span className="z9-tile__label text-small">About the factory</span>
+                <span className="z9-tile__play" aria-hidden="true">▶</span>
+              </a>
+
+              <a className="z9-tile z9-tile--light" href="#collections">
+                <span className="z9-tile__label text-small">Private label<br />and mixed loads</span>
+                <span className="z9-tile__mid h-mid">Custom Runs</span>
+                <span className="z9-tile__cta">
+                  <span className="z9-tile__word text-small">
+                    See the range
+                    <i className="z9-tile__rule" aria-hidden="true" />
+                  </span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+        </div>
+
+        {/* 00c · LOCATION */}
+        <section className="section z9-loc ui-light" id="location" data-polarity="light">
+          <figure className="z9-loc__media img-reveal">
+            <img
+              src="/img/privilege_dining.jpg"
+              alt="Dining room floored and tabled in ORKAY black marble-look porcelain at dusk"
+            />
+          </figure>
+          <p className="z9-loc__eyebrow text-small">Privilege of Location</p>
+          <p className="z9-loc__statement h-mid reveal-lines">
+            <span className="z9-loc__indent" aria-hidden="true" />
+            Morbi fires most of the porcelain India ships. Seven of those kilns are ours —
+            raw body to loaded container inside one campus, an hour from Mundra port.
+          </p>
+          <div className="z9-loc__word">
+            <p className="h-display reveal-lines">Morbi</p>
+          </div>
+          <hr className="z9-loc__line" />
+          <div className="z9-loc__strip">
+            {nearby.map((n) => (
+              <figure className="z9-loc-card" key={n.title}>
+                <img src={n.img} alt={n.alt} />
+                <figcaption className="z9-loc-card__lb">
+                  <p className="text-small z9-loc-card__meta">{n.meta}</p>
+                  <p className="h-mid">{n.title}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        {/* 00c2 · EXPORT MAP */}
+        <section className="section exportmap ui-dark" id="exports" data-polarity="dark">
+          <p className="exportmap__label text-small">Export Network</p>
+          <h2 className="exportmap__title h-display reveal-lines">
+            Morbi to<br />40+ countries
+          </h2>
+          <GlobalMap />
+          <p className="exportmap__note text-small">
+            Every lane on this map runs from one gate in Morbi — our own kilns, our own
+            IEC, our own loading yard. Hover a marker for the market.
+          </p>
+        </section>
+
+        {/* 00d · WORLD — two screens */}
+        <section className="section z9-world ui-dark" id="world" data-polarity="dark">
+          <img
+            className="z9-world__bg"
+            src="/img/hero_dusk.jpg"
+            alt="ORKAY-clad facade at blue hour"
+          />
+          <img
+            className="z9-world__figure"
+            src="/img/ambassador_dusk.webp"
+            alt="The ORKAY brand ambassador"
+          />
+          <hr className="z9-world__rule" />
+          <div className="z9-world__grid">
+            <p className="z9-world__eyebrow text-small">It&apos;s a surface that adapts to you</p>
+            <p className="z9-world__statement reveal-lines">
+              It is not just a slab and a finish. It is a floor that holds its polish through
+              thirty years of traffic, a wall that carries one vein end to end, and a factory
+              that answers the phone when you call it.
+            </p>
+          </div>
         </section>
 
         {/* 01 · STATEMENT */}
@@ -65,19 +178,14 @@ export default function Home() {
           </figure>
         </section>
 
-        {/* 02 · SURFACES */}
-        <section className="section surfaces ui-light" data-polarity="light">
-          <div className="surfaces__grid">
-            <figure className="surfaces__img surfaces__img--sm img-reveal" data-parallax="0.92">
-              <img src="/img/slab_travertino.jpg" alt="Bone Travertino Ivory slab detail" />
-            </figure>
-            <figure className="surfaces__img surfaces__img--lg img-reveal img-reveal--r">
-              <img src="/img/light_interior.jpg" alt="Interior floored with ORKAY statuario slabs" />
-            </figure>
-          </div>
-          <h2 className="surfaces__title h-mid reveal-lines">
-            Panoramic slabs<br />and architectural<br />surfaces
-          </h2>
+        {/* 01b · STYLE — staggered pair */}
+        <section className="section z9-style ui-light" id="style" data-polarity="light">
+          <figure className="z9-style__a img-reveal">
+            <img src="/img/app_interior_light.jpg" alt="Entrance hall floored in polished ORKAY marble-look porcelain" />
+          </figure>
+          <figure className="z9-style__b img-reveal img-reveal--r">
+            <img src="/img/style_livingroom.jpg" alt="Living room with a full-height ORKAY book-matched feature wall" />
+          </figure>
         </section>
 
         {/* 03 · MATERIALS collage */}
@@ -87,23 +195,30 @@ export default function Home() {
             {/* Vivian is a white statuario — on the white panel it read as a
                 missing image. Aura's grey body holds an edge without a border,
                 which the design system does not allow. */}
-            <figure className="materials__item materials__item--tall img-reveal" data-parallax="0.90">
+            {/* no img-reveal / parallax here — the collage reads as one plate,
+                so the four slabs land together instead of arriving in pairs */}
+            <figure className="materials__item materials__item--tall">
               <img src="/img/slab_aura.jpg" alt="Aura Silver marble-look slab" />
             </figure>
-            <figure className="materials__item materials__item--circle img-reveal" data-parallax="1.06">
+            <figure className="materials__item materials__item--circle">
               <img src="/img/slab_polar.jpg" alt="Polar Blue stone circle" />
             </figure>
-            <figure className="materials__item materials__item--square img-reveal" data-parallax="0.97">
+            <figure className="materials__item materials__item--square">
               <img src="/img/slab_armani.jpg" alt="Armani Beige slab" />
             </figure>
-            <figure className="materials__item materials__item--disc img-reveal" data-parallax="1.10">
+            <figure className="materials__item materials__item--disc">
               <img src="/img/slab_blue.jpg" alt="Blue onyx surface" />
             </figure>
           </div>
         </section>
 
         {/* 04 · LUXURY */}
-        <section className="section luxury ui-dark" data-polarity="dark">
+        <section className="section luxury ui-light" data-polarity="light">
+          <p className="luxury__caption text-small reveal-lines">
+            Luxury is carried by the finishing material. It is printed into the vein of the
+            porcelain, held in the polish that survives thirty years of traffic, and repeated
+            across every slab of the same batch — lobby wall to bathroom floor.
+          </p>
           <div className="luxury__pair">
             <figure className="img-reveal" data-parallax="0.94">
               <img src="/img/lobby_dark.jpg" alt="Hotel lobby clad in dark ORKAY marble slabs" />
@@ -112,41 +227,37 @@ export default function Home() {
               <img src="/img/bath_dark.jpg" alt="Bathroom in dark stone-look porcelain" />
             </figure>
           </div>
-          <p className="luxury__caption text-small reveal-lines">
-            The most demanding spaces are built on ORKAY surfaces: grand hotel lobbies, dark glossy
-            stone walls, floors that hold their polish for decades.
-          </p>
           <h2 className="luxury__title h-display reveal-lines">The Luxury<br />of Surface</h2>
         </section>
 
-        {/* 05 · GALLERY */}
+        {/* the wrapper ends the pin, so the gallery is only sticky for the length
+            of the day cycle that slides up over it */}
+        <div className="curtain">
+        {/* 05 · GALLERY — collage; the VIEW cursor is a CSS cursor, the lightbox
+            is the same :target modal the z9 film uses */}
         <section className="section gallery ui-dark" id="gallery" data-polarity="dark">
-          <div className="gallery__pin">
+          <div className="gallery__stage">
             {gallery.map((g, i) => (
-              <article className={`gallery__slide${i === 0 ? ' is-active' : ''}`} key={g.title}>
-                <figure className="gallery__media">
-                  <img src={g.img} alt={g.alt} />
-                </figure>
-                <div className="gallery__panel">
-                  <p className="text-small gallery__index">
-                    {String(i + 1).padStart(2, '0')} — {String(gallery.length).padStart(2, '0')}
-                  </p>
-                  <h3 className="h-mid">
-                    {g.title.split('\n').map((line, n) => (
-                      <span key={n}>
-                        {line}
-                        {n === 0 ? <br /> : null}
-                      </span>
-                    ))}
-                  </h3>
-                  <p className="text-small gallery__desc">{g.desc}</p>
-                </div>
-              </article>
+              <a className="gallery__item" href={`#gal-${i}`} key={g.img} aria-label={`View ${g.title.replace(/\n/g, ' ')}`}>
+                <img src={g.img} alt={g.alt} />
+              </a>
             ))}
-            <h2 className="gallery__kicker text-small">
-              Gallery <span className="gallery__count">/{gallery.length} photos</span>
-            </h2>
           </div>
+
+          <h2 className="gallery__title h-display">
+            Gallery <span className="gallery__count text-small">/{gallery.length} photos</span>
+          </h2>
+
+          {gallery.map((g, i) => (
+            <div className="z9-modal" id={`gal-${i}`} key={`lb-${g.img}`} role="dialog" aria-label={g.alt}>
+              <a className="z9-modal__close" href="#gallery" aria-label="Close" />
+              <a className="z9-modal__x text-small" href="#gallery">Close ×</a>
+              <div className="z9-modal__body">
+                <img src={g.img} alt={g.alt} />
+                <p className="z9-modal__note text-small">{g.desc}</p>
+              </div>
+            </div>
+          ))}
         </section>
 
         {/* 06 · DAY CYCLE */}
@@ -163,22 +274,64 @@ export default function Home() {
             ))}
           </div>
           <div className="daycycle__panel">
+            <div className="daycycle__row">
+              <div className="daycycle__clock" aria-live="polite">
+                {dayCycle[0].time}
+              </div>
+              <div className="daycycle__arrows">
+                <button className="arrow arrow--prev" aria-label="Previous time">←</button>
+                <button className="arrow arrow--next" aria-label="Next time">→</button>
+              </div>
+            </div>
             <p className="text-small daycycle__hint reveal-lines">
               One floor. Every light.<br />Watch an ORKAY surface live through the day.
             </p>
-            <div className="daycycle__clock" aria-live="polite">
-              {dayCycle[0].time}
-            </div>
-            <div className="daycycle__arrows">
-              <button className="arrow arrow--prev" aria-label="Previous time">←</button>
-              <button className="arrow arrow--next" aria-label="Next time">→</button>
-            </div>
           </div>
-          <div className="daycycle__ring" aria-hidden="true" />
+          {/* the ring is the dial: Motion swings these two hands to each hour */}
+          <div className="daycycle__ring" aria-hidden="true">
+            <i className="daycycle__hand daycycle__hand--h" />
+            <i className="daycycle__hand daycycle__hand--m" />
+            <i className="daycycle__pivot" />
+          </div>
         </section>
 
+        {/* 06b · EXPERIENCE — rides up over the pinned day cycle */}
+        <section className="section experience ui-dark" id="experience" data-polarity="dark">
+          <figure className="experience__media">
+            <img src="/img/DOG-TILES.png" alt="Black marble-look ORKAY floor in a grand lobby" />
+          </figure>
+          <p className="experience__caption text-small">
+            The lobby is built the way grand hotels are built: two-metre mirrors, dark glossy
+            stone walls, and a floor that holds the reflection of every light above it.
+          </p>
+          <h2 className="experience__title h-display reveal-lines">
+            The Luxury<br />of Experience
+          </h2>
+        </section>
+
+        {/* 06c · SPACES — the panel holds while the photo steps through */}
+        <div className="spaces-scroll">
+          <section className="section spaces ui-dark" id="spaces" data-polarity="dark">
+            <p className="spaces__index text-small">
+              <span className="spaces__current">1</span> — {spaces.length}
+            </p>
+            {spaces.map((s, i) => (
+              <article className={`spaces__slide${i === 0 ? ' is-active' : ''}`} key={s.name}>
+                <div className="spaces__panel">
+                  <h3 className="h-display">{s.name}</h3>
+                  <p className="spaces__desc text-small">{s.desc}</p>
+                </div>
+                <figure className="spaces__media">
+                  <img src={s.img} alt={s.alt} />
+                </figure>
+              </article>
+            ))}
+          </section>
+        </div>
+        </div>
+
         {/* 07 · MANUFACTURING JOURNEY */}
-        <section className="section journey ui-dark" data-polarity="dark">
+        <section className="section journey ui-light" data-polarity="light">
           <div className="journey__pin">
             <p className="journey__pagination text-small">
               <span className="journey__current">1</span> — <span className="journey__total">{journey.length}</span>
@@ -204,6 +357,54 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/* 07b · INFRASTRUCTURE — full plate crossing in from the right */}
+        <div className="infra-scroll">
+          <section className="section infra ui-dark" id="infrastructure" data-polarity="dark">
+            <figure className="infra__media">
+              <img src="/img/hero-image.png" alt="Room clad wall and floor in large-format ORKAY slabs" />
+            </figure>
+            <h2 className="infra__title h-display">Infrastructure</h2>
+          </section>
+        </div>
+
+        {/* 07c · APPLICATIONS — arrow carousel, per-slide copy on the images */}
+        <section className="section amen ui-dark" id="applications" data-polarity="dark">
+          <div className="amen__panel">
+            <p className="amen__label text-small">Infrastructure</p>
+            <h2 className="amen__title h-mid">
+              {facilities[0].title.split('\n').map((line, n) => (
+                <span key={n}>
+                  {line}
+                  {n === 0 ? <br /> : null}
+                </span>
+              ))}
+            </h2>
+            <hr className="amen__rule" />
+            <div className="amen__row">
+              <div className="amen__arrows">
+                <button className="arrow arrow--prev" aria-label="Previous space">←</button>
+                <button className="arrow arrow--next" aria-label="Next space">→</button>
+              </div>
+              <p className="amen__count text-small">
+                <span className="amen__current">1</span> — {facilities.length}
+              </p>
+            </div>
+            <p className="amen__desc text-small" aria-live="polite">{facilities[0].desc}</p>
+          </div>
+          <figure className="amen__media">
+            {facilities.map((f, i) => (
+              <img
+                key={f.img}
+                src={f.img}
+                alt={f.alt}
+                data-title={f.title}
+                data-desc={f.desc}
+                className={i === 0 ? 'is-active' : undefined}
+              />
+            ))}
+          </figure>
         </section>
 
         {/* 07a · DIRECT MANUFACTURER ADVANTAGE */}

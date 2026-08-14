@@ -62,22 +62,9 @@ export default function Motion() {
       };
       burger?.addEventListener('click', burgerHandler);
 
-      /* logo: hero-sized at top → 1x, then the zebra ink clip every frame.
-         The mark is `white-space: nowrap` inside an overflow-hidden body, so
-         a fixed scale clips it mid-letter on narrow screens — cap the hero
-         size to what actually fits instead. Fonts first: measuring the
-         wordmark before Hanken loads gives a fallback-metric width. */
+      /* the hero now carries its own giant wordmark, so the fixed mark stays
+         1x and only runs the zebra ink clip every frame */
       await document.fonts.ready;
-      const logoNode = q('.logo') as HTMLElement | null;
-      if (!reduced && logoNode) {
-        const restWidth = logoNode.getBoundingClientRect().width || 1;
-        const heroScale = Math.min(2.1, (innerWidth - 32) / restWidth);
-        gsap.fromTo(
-          '.logo',
-          { scale: heroScale, y: '28vh' },
-          { scale: 1, y: 0, ease: 'none', scrollTrigger: { start: 0, end: () => innerHeight * 0.9, scrub: true } }
-        );
-      }
       const inkLayer = q('.logo__layer--ink') as HTMLElement | null;
       const logoEl = q('.logo') as HTMLElement | null;
       const lightSections = qa('.ui-light');
@@ -114,7 +101,7 @@ export default function Motion() {
           .join('');
       });
 
-      qa('.img-reveal, .reveal-lines').forEach((el) => {
+      qa('.img-reveal, .reveal-lines, .globalmap').forEach((el) => {
         ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => el.classList.add('is-inview') });
       });
 
@@ -149,37 +136,34 @@ export default function Motion() {
       };
       if (track && slides.length) {
         if (!reduced) {
-          gsap.to(track, {
-            x: () => -(track.scrollWidth - innerWidth),
-            ease: 'none',
+          /* the pin starts one screen early (see .journey margin-top): slide one
+             sits still while the spaces panel slides off it, then the track
+             carries on leftwards. hold = that first screen of the pin. */
+          /* one screen of hold at each end: the first is the spaces panel
+             sliding off, the last is the infrastructure plate crossing over */
+          const hold = 1 / (2 + slides.length * 0.9);
+          const travel = (slides.length * 0.9) / (2 + slides.length * 0.9);
+          gsap.timeline({
             scrollTrigger: {
               trigger: '.journey__pin', pin: true, scrub: 0.6,
-              end: () => `+=${slides.length * innerHeight * 0.9}`,
+              end: () => `+=${innerHeight * 2 + slides.length * innerHeight * 0.9}`,
               onUpdate: (st) => {
-                const i = Math.min(slides.length, Math.max(1, Math.round(st.progress * (slides.length - 1)) + 1));
+                const p = Math.min(1, Math.max(0, (st.progress - hold) / travel));
+                const i = Math.min(slides.length, Math.max(1, Math.round(p * (slides.length - 1)) + 1));
                 if (current) current.textContent = String(i);
-                typewrite(qa('.journey__desc')[Math.round(st.progress * (slides.length - 1))]);
+                typewrite(qa('.journey__desc')[Math.round(p * (slides.length - 1))]);
               },
               invalidateOnRefresh: true,
             },
-          });
+          })
+            .to({}, { duration: hold })
+            .to(track, {
+              x: () => -(track.scrollWidth - innerWidth),
+              ease: 'none', duration: travel,
+            })
+            .to({}, { duration: hold });
         }
         typewrite(qa('.journey__desc')[0]);
-      }
-
-      /* pinned gallery stepper — one slide drops in per scroll step */
-      const gallerySlides = qa('.gallery__slide');
-      if (!reduced && gallerySlides.length) {
-        ScrollTrigger.create({
-          trigger: '.gallery__pin', pin: true, scrub: true, start: 'top top',
-          end: () => `+=${gallerySlides.length * innerHeight * 0.8}`,
-          refreshPriority: 1,
-          onUpdate: (st) => {
-            const i = Math.min(gallerySlides.length - 1, Math.floor(st.progress * gallerySlides.length));
-            gallerySlides.forEach((s, n) => s.classList.toggle('is-active', n === i));
-          },
-          invalidateOnRefresh: true,
-        });
       }
 
       /* pinned horizontal collections track — refreshPriority keeps pin math in document order */
@@ -266,16 +250,89 @@ export default function Motion() {
         }
       }
 
+      /* spaces carousel — the panel is sticky in CSS, so this only picks the
+         slide; no pin, nothing for it to fight with the curtain above */
+      const spaceSlides = qa('.spaces__slide');
+      const spacesWrap = q('.spaces-scroll') as HTMLElement | null;
+      if (spaceSlides.length && spacesWrap) {
+        const cur = q('.spaces__current');
+        const panel = q('.spaces') as HTMLElement | null;
+        let shown = -1;
+        /* read the wrapper's own rect each frame instead of a ScrollTrigger:
+           the pins and sticky curtain above keep moving the trigger's start,
+           and this measurement cannot go stale.
+           The wrapper holds one screen more than it has slides. On that last
+           screen the panel is still stuck and slides out to the left, which
+           uncovers the journey already pinned underneath it. */
+        const pickSpace = () => {
+          const r = spacesWrap.getBoundingClientRect();
+          const span = r.height - innerHeight * 2;
+          const scrolled = -r.top;
+          const p = span > 0 ? Math.min(1, Math.max(0, scrolled / span)) : 0;
+          if (panel && !reduced) {
+            const out = Math.min(1, Math.max(0, (scrolled - span) / innerHeight));
+            panel.style.transform = out ? `translate3d(${-out * 100}%,0,0)` : '';
+          }
+          const i = Math.min(spaceSlides.length - 1, Math.floor(p * spaceSlides.length));
+          if (i === shown) return;
+          shown = i;
+          spaceSlides.forEach((s, n) => s.classList.toggle('is-active', n === i));
+          if (cur) cur.textContent = String(i + 1);
+        };
+        lenis.on('scroll', pickSpace);
+        pickSpace();
+      }
+
+      /* infrastructure plate — crosses the viewport right to left over the
+         journey's held last screen, measured the same rect-first way */
+      const infraWrap = q('.infra-scroll') as HTMLElement | null;
+      const infra = q('.infra') as HTMLElement | null;
+      if (infraWrap && infra && !reduced) {
+        const slideInfra = () => {
+          const p = Math.min(1, Math.max(0, -infraWrap.getBoundingClientRect().top / innerHeight));
+          infra.style.transform = `translate3d(${(1 - p) * 100}%,0,0)`;
+        };
+        lenis.on('scroll', slideInfra);
+        slideInfra();
+      }
+
+      /* applications carousel — copy travels on the images, same as day cycle */
+      const amenImgs = qa('.amen__media img');
+      const amenTitle = q('.amen__title');
+      const amenDesc = q('.amen__desc');
+      const amenCur = q('.amen__current');
+      let amenIdx = 0;
+      const setAmen = (i: number) => {
+        if (!amenImgs.length) return;
+        amenIdx = (i + amenImgs.length) % amenImgs.length;
+        amenImgs.forEach((im, n) => im.classList.toggle('is-active', n === amenIdx));
+        const d = (amenImgs[amenIdx] as HTMLElement).dataset;
+        if (amenTitle) amenTitle.innerHTML = (d.title || '').replace('\n', '<br>');
+        if (amenDesc) amenDesc.textContent = d.desc || '';
+        if (amenCur) amenCur.textContent = String(amenIdx + 1);
+      };
+      q('.amen .arrow--next')?.addEventListener('click', () => setAmen(amenIdx + 1));
+      q('.amen .arrow--prev')?.addEventListener('click', () => setAmen(amenIdx - 1));
+
       /* day cycle stepper */
       const dayImgs = qa('.daycycle__media img');
       const clock = q('.daycycle__clock');
+      const dial = q('.daycycle__ring') as HTMLElement | null;
       let dayIdx = 0;
       const setDay = (i: number) => {
         if (!dayImgs.length || !clock) return;
         dayIdx = (i + dayImgs.length) % dayImgs.length;
         dayImgs.forEach((im, n) => im.classList.toggle('is-active', n === dayIdx));
-        clock.textContent = (dayImgs[dayIdx] as HTMLElement).dataset.time || '';
+        const time = (dayImgs[dayIdx] as HTMLElement).dataset.time || '';
+        clock.textContent = time;
+        /* swing the dial to the same hour — CSS transitions the rotation */
+        const [hh, mm] = time.split(':').map(Number);
+        if (dial && !Number.isNaN(hh)) {
+          dial.style.setProperty('--h', String((hh % 12) * 30 + (mm || 0) * 0.5));
+          dial.style.setProperty('--m', String((mm || 0) * 6));
+        }
       };
+      setDay(0);
       q('.daycycle .arrow--next')?.addEventListener('click', () => setDay(dayIdx + 1));
       q('.daycycle .arrow--prev')?.addEventListener('click', () => setDay(dayIdx - 1));
 

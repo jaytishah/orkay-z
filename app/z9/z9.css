@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════════════════════
+   Z9 LAYOUT — zorge9-style opening sequence, ORKAY tokens.
+   Reuses globals.css: --pad, --ease, --dur, .img-reveal,
+   .reveal-lines, .h-display, .h-mid, .text-small, .btn.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 01 HERO — crossfading carousel + slow zoom ── */
+.z9-hero { height: 100vh; padding: 0; overflow: hidden; display: grid; align-items: end; }
+.z9-hero__slides { position: absolute; inset: 0; }
+.z9-hero__slide {
+  position: absolute; inset: 0; opacity: 0;
+  animation: z9-cycle 21s var(--ease) infinite;
+}
+/* base state, so reduced-motion (which kills the animation) still shows one */
+.z9-hero__slide:first-child { opacity: 1; }
+.z9-hero__slide:nth-child(2) { animation-delay: 7s; }
+.z9-hero__slide:nth-child(3) { animation-delay: 14s; }
+.z9-hero__slide img,
+.z9-hero__slide video {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.78);
+  animation: z9-kenburns 21s linear infinite;
+  animation-delay: inherit;
+}
+@keyframes z9-cycle {
+  0%   { opacity: 0; }
+  4%   { opacity: 1; }
+  33%  { opacity: 1; }
+  38%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes z9-kenburns {
+  0%   { transform: scale(1.02); }
+  38%  { transform: scale(1.12); }
+  100% { transform: scale(1.12); }
+}
+/* floor-up scrim: the type sits on photography, not on a flat panel */
+.z9-hero__slides::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.35) 100%);
+}
+.z9-hero__inner {
+  position: relative; z-index: 2;
+  padding: var(--pad); padding-bottom: calc(var(--pad) * 1.6);
+  display: grid; gap: 40px; justify-items: start;
+}
+.z9-hero__title { max-width: 14ch; }
+.z9-hero__meta {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 40px; width: 100%; padding-right: 76px; /* clears the floating actions */
+}
+.z9-hero__lede { color: var(--c-gray-light); max-width: 34ch; }
+/* dots are decorative — the carousel is not user-driven */
+.z9-hero__dots { position: absolute; right: var(--pad); top: 50%; display: grid; gap: 14px; z-index: 2; }
+.z9-hero__dot { width: 6px; height: 6px; border: 1px solid rgba(255,255,255,0.6); border-radius: 50%; }
+.z9-hero__dot:first-child { background: var(--c-white); }
+.z9-hero__scroll { position: absolute; left: var(--pad); top: 62vh; z-index: 2; color: var(--c-gray-light); writing-mode: vertical-rl; }
+.z9-hero__scroll::after {
+  content: ''; display: block; width: 1px; height: 60px; margin: 12px auto 0;
+  background: currentColor; transform-origin: top;
+  animation: z9-tick 2.4s var(--ease) infinite;
+}
+@keyframes z9-tick { 0%, 100% { transform: scaleY(0.2); opacity: 0.4; } 50% { transform: scaleY(1); opacity: 1; } }
+
+/* ── 01b ABOUT — the hero pins, this rides up over it as a curtain ──
+   Pure sticky: the hero holds for exactly the wrapper's spare 100vh, then
+   releases. No pin script, no negative margins, nothing for Motion to own. */
+/* `> .hero` is the home page's hero — same curtain, different markup */
+.z9-open .z9-hero,
+.z9-open > .hero { position: sticky; top: 0; }
+.z9-about {
+  position: relative; z-index: 1;      /* paints over the pinned hero */
+  height: 100vh; overflow: hidden;
+  display: grid; align-content: end;
+}
+.z9-about__media { position: absolute; inset: 0; }
+/* the global img rule never reaches <video> — the loop needs its own cover */
+.z9-about__media video { width: 100%; height: 100%; object-fit: cover; }
+/* floor-up scrim: the headline sits on footage, not on a panel */
+.z9-about__media::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.22) 54%, rgba(0,0,0,0.42) 100%);
+}
+.z9-about__inner {
+  position: relative; z-index: 2;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: var(--pad);
+}
+.z9-about__title { max-width: 11ch; font-size: clamp(34px, 4.4vw, 72px); }
+.z9-about__cards { display: flex; gap: 12px; padding-right: 76px; } /* clears the floating actions */
+
+/* the two tiles — one black, one white, meeting on a hard 0-radius edge */
+.z9-tile {
+  position: relative; flex: none;
+  width: clamp(130px, 12.5vw, 230px); aspect-ratio: 0.8;
+  padding: 18px;
+}
+.z9-tile--dark  { background: var(--c-black); color: var(--c-white); }
+.z9-tile--light { background: var(--c-white); color: var(--c-black); }
+.z9-tile__label { position: absolute; top: 18px; left: 18px; right: 18px; }
+.z9-tile__mid {
+  position: absolute; top: 50%; left: 20px; right: 20px;
+  transform: translateY(-50%); text-align: center;
+  font-size: clamp(20px, 2.1vw, 34px);   /* h-mid overruns the smaller tile */
+}
+.z9-tile__play {
+  position: absolute; top: 50%; left: 50%; font-size: 26px; line-height: 1;
+  transform: translate(-50%, -50%);
+  transition: transform var(--dur) var(--ease);
+}
+.z9-tile:hover .z9-tile__play { transform: translate(-50%, -50%) scale(1.3); }
+.z9-tile__cta { position: absolute; bottom: 18px; left: 18px; right: 18px; text-align: center; }
+.z9-tile__word { position: relative; display: inline-block; padding-bottom: 7px; }
+/* the underline is replaced, not grown: a red rule wipes in over the plain one */
+.z9-tile__rule { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; overflow: hidden; }
+.z9-tile__rule::before, .z9-tile__rule::after { content: ''; position: absolute; inset: 0; }
+.z9-tile__rule::after { background: currentColor; }
+.z9-tile__rule::before {
+  background: var(--c-red); z-index: 1;
+  transform: translateX(calc(-100% - 8px));
+  transition: transform var(--dur) var(--ease);
+}
+.z9-tile:hover .z9-tile__rule::before { transform: translateX(0); }
+
+/* ── 01c LOCATION — paper section, photo offset 3 of 12 columns ──
+   The photo is the first paint: flush to the section top and the right edge,
+   indented 25% from the left. That 25% edge is reused by the eyebrow and by
+   the statement's first line, so all three share one vertical. */
+.z9-loc { padding: 0 0 12vh; }
+.z9-loc__media { height: 84vh; margin-left: 25%; }
+.z9-loc__eyebrow { margin: 20px var(--pad) 0 25%; }
+.z9-loc__statement { margin: 8vh var(--pad) 0; }
+/* pure-CSS first-line indent — a floated spacer, no text-indent, no fake breaks */
+.z9-loc__indent { float: left; height: 10px; width: 25%; }
+.z9-loc__word { margin-top: 22vh; padding: 0 var(--pad); text-align: right; }
+.z9-loc__line { border: 0; border-top: 1px solid rgba(0,0,0,0.22); margin: -1px 0 0; }
+
+/* amenity strip — native overflow scroll + snap, two cards to a view.
+   ponytail: no carousel JS; add one only if arrows/dots are asked for. */
+.z9-loc__strip {
+  display: flex; gap: 10px; margin-top: var(--pad);
+  padding: 0 var(--pad); overflow-x: auto;
+  scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.z9-loc__strip::-webkit-scrollbar { display: none; }
+.z9-loc-card {
+  position: relative; flex: none; scroll-snap-align: start;
+  width: calc(50% - 5px); aspect-ratio: 1.43; overflow: hidden;
+}
+.z9-loc-card img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
+.z9-loc-card:hover img { transform: scale(1.05); }
+.z9-loc-card__lb {
+  position: absolute; inset: auto 0 0 0; z-index: 2;
+  padding: 26px 30px; color: var(--c-white);
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+}
+.z9-loc-card__meta { color: var(--c-gray-light); margin-bottom: 8px; }
+
+/* ── 01d WORLD — two screens tall, one continuous photo. No pin, no scrub. ──
+   Screen 1 is sky + type; the model's head enters at the fold and he stands
+   full-height across screen 2. Nothing moves on its own — it is all scroll. */
+.z9-world {
+  position: relative; height: 200vh; padding: 0 var(--pad); overflow: hidden;
+  display: grid; align-content: start;
+}
+/* one image across both screens: cover on a 200vh frame is already a ~2× push
+   in; the extra scale takes it further and the low origin drops the horizon */
+.z9-world__bg {
+  position: absolute; inset: 0;
+  transform: scale(1.4); transform-origin: 50% 78%;
+}
+/* top-down scrim so the eyebrow and statement hold over the sky.
+   Lives on the section, not the <img> — replaced elements have no pseudos.
+   Stops are in vh, not %, so a 200vh section is not dimmed to its middle. */
+.z9-world::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(5, 16, 30, 0.82) 0, rgba(5, 16, 30, 0.3) 42vh, rgba(5, 16, 30, 0) 68vh);
+}
+.z9-world__rule {
+  position: relative; z-index: 3;
+  border: 0; border-top: 1px solid rgba(255, 255, 255, 0.28); margin: 21vh 0 0;
+}
+.z9-world__grid {
+  position: relative; z-index: 3;
+  display: grid; grid-template-columns: 1fr 1.9fr; gap: var(--pad); margin-top: 26px;
+}
+.z9-world__eyebrow { max-width: 20ch; }
+.z9-world__statement { font-size: clamp(24px, 2.5vw, 42px); }
+/* anchored to the bottom of the 200vh section: his top edge lands at 92vh, so
+   he is off-screen until the first scroll and fills screen two */
+.z9-world__figure {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0 auto; z-index: 2;
+  width: auto; height: 108vh; object-fit: contain;
+  filter: contrast(1.03) drop-shadow(0 30px 50px rgba(0, 0, 0, 0.6));
+}
+
+/* ── 01e STYLE — staggered pair on paper. Both photos meet on the 50% line;
+   the right one bleeds off the page edge, the left one drops half a screen. ── */
+.z9-style {
+  padding: 10vh 0 14vh;
+  display: grid; grid-template-columns: 25% 1fr 2fr; align-items: end;
+  column-gap: calc(var(--pad) / 2);   /* the gutter between the pair */
+}
+/* bottoms sit on one line, so the shorter frame starts further down. The fr
+   columns absorb the gutter, so the right frame still runs off the page edge */
+.z9-style__a { grid-column: 2; height: 56vh; }
+.z9-style__b { grid-column: 3; height: 82vh; }
+
+/* ── 02 LIFE — two columns, sticky headline, cards ── */
+.z9-life { padding-top: 20vh; padding-bottom: 14vh; }
+.z9-life__grid { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--pad) * 1.5); }
+.z9-life__col--left { position: sticky; top: 22vh; align-self: start; }
+.z9-life__label { color: var(--c-red); margin-bottom: 5vh; }
+.z9-life__title { margin-bottom: 4vh; }
+.z9-life__lede { color: var(--c-gray); max-width: 40ch; }
+
+/* the two clickable cards: image + label, wipe-up reveal on hover */
+.z9-card { position: relative; display: block; overflow: hidden; margin-bottom: calc(var(--pad) / 1.5); }
+.z9-card figure { height: 42vh; }
+.z9-card img { transition: transform var(--dur-slow) var(--ease); }
+.z9-card:hover img { transform: scale(1.06); }
+.z9-card__bar {
+  position: absolute; inset: auto 0 0 0; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  padding: 20px 24px; color: var(--c-white);
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0));
+}
+.z9-card__play {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border: 1px solid rgba(255,255,255,0.6); border-radius: 50%;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.z9-card:hover .z9-card__play { background: var(--c-white); color: var(--c-black); }
+
+/* amenity list — icon + label + distance, hairline rules */
+.z9-near { margin-top: 2vh; border-top: 1px solid rgba(0,0,0,0.18); }
+.z9-near__row {
+  display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 20px;
+  padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.18);
+  transition: color var(--dur) var(--ease);
+}
+.z9-near__row:hover { color: var(--c-red); }
+.z9-near__row svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.2; }
+.z9-near__val { color: var(--c-gray); }
+
+/* ── 03 BUILT — feature blocks + material gallery ── */
+.z9-built { padding-top: 18vh; padding-bottom: 16vh; }
+.z9-built__label { color: var(--c-red); margin-bottom: 5vh; }
+.z9-built__title { max-width: 18ch; margin-bottom: 8vh; }
+.z9-built__media { height: 84vh; margin-bottom: 10vh; }
+.z9-built__features { display: grid; grid-template-columns: repeat(2, 1fr); gap: calc(var(--pad) * 1.5); }
+.z9-built__feature { border-top: 1px solid rgba(255,255,255,0.22); padding-top: 26px; }
+.z9-built__feature h3 { margin-bottom: 16px; }
+.z9-built__feature p { color: var(--c-gray-light); max-width: 42ch; }
+
+.z9-mat { margin-top: 12vh; }
+.z9-mat__head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: 3vh; }
+.z9-mat__count { color: var(--c-gray); }
+.z9-mat__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--pad) / 2); }
+.z9-mat__grid figure { height: 26vh; }
+.z9-mat__grid img { transition: transform var(--dur-slow) var(--ease); }
+.z9-mat__grid figure:hover img { transform: scale(1.06); }
+/* native <details>: the rest of the set stays out of the DOM cost until asked */
+.z9-mat__more { margin-top: calc(var(--pad) / 2); }
+.z9-mat__more > summary {
+  list-style: none; cursor: pointer; color: var(--c-red);
+  display: inline-flex; align-items: center; gap: 12px; padding: 14px 0;
+  border-bottom: 1px solid currentColor;
+}
+.z9-mat__more > summary::-webkit-details-marker { display: none; }
+.z9-mat__more > summary::after { content: '+'; }
+.z9-mat__more[open] > summary::after { content: '−'; }
+.z9-mat__more[open] > summary { color: var(--c-gray-light); }
+.z9-mat__more .z9-mat__grid { margin-top: calc(var(--pad) / 2); }
+
+/* ── 04 LOCATION — offset hero, giant word, snapping rail ── */
+.z9-loc { padding-top: 16vh; padding-bottom: 14vh; }
+.z9-loc__top { margin-left: 25%; }            /* the reference's 3-of-12 offset, minus the grid */
+.z9-loc__hero { height: 78vh; }
+.z9-loc__label { margin-top: 1.2vh; color: var(--c-gray); }
+.z9-loc__lede { margin-top: 4vh; }
+.z9-loc__word { text-align: right; margin-top: 12vh; }
+.z9-loc__rule { border: 0; border-top: 1px solid rgba(0,0,0,0.18); margin: 2vh 0 calc(var(--pad) / 2); }
+
+/* scroll-snap does the carousel: drag, wheel and arrow keys all work natively */
+.z9-loc__rail {
+  display: grid; grid-auto-flow: column;
+  grid-auto-columns: calc(50% - var(--pad) / 4); gap: calc(var(--pad) / 2);
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+}
+.z9-loc__rail::-webkit-scrollbar { display: none; }
+.z9-loc__card { position: relative; height: 52vh; scroll-snap-align: start; }
+.z9-loc__card img { transition: transform var(--dur-slow) var(--ease); }
+.z9-loc__card:hover img { transform: scale(1.06); }
+.z9-loc__cap {
+  position: absolute; inset: auto 0 0 0; z-index: 2;
+  display: grid; gap: 10px; padding: 28px; color: var(--c-white);
+  background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0));
+}
+.z9-loc__cap .text-small { color: var(--c-gray-light); }
+
+/* ── :target modal — no JS, tab order closed when hidden (same trick as .menu) ── */
+.z9-modal {
+  position: fixed; inset: 0; z-index: 80;
+  display: grid; place-items: center; padding: var(--pad);
+  background: rgba(0, 0, 0, 0.94);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur) var(--ease), visibility 0s var(--dur);
+}
+.z9-modal:target { opacity: 1; visibility: visible; transition: opacity var(--dur) var(--ease); }
+.z9-modal__body { width: min(1100px, 100%); }
+.z9-modal__body video { width: 100%; height: auto; display: block; }
+/* the gallery lightbox reuses this shell — contain, so tall shots are not cropped */
+.z9-modal__body img { width: 100%; height: auto; max-height: 82vh; object-fit: contain; }
+.z9-modal__note { color: var(--c-gray-light); margin-top: 20px; max-width: 52ch; }
+/* the backdrop is a link, so click-outside and Esc-free dismissal both work */
+.z9-modal__close { position: absolute; inset: 0; z-index: -1; }
+.z9-modal__x { position: absolute; top: var(--pad); right: var(--pad); z-index: 2; color: var(--c-white); }
+
+@media (prefers-reduced-motion: reduce) {
+  .z9-hero__scroll::after { height: 60px; }
+}
+
+@media (max-width: 900px) {
+  .z9-about__inner { flex-direction: column; align-items: flex-start; gap: 30px; }
+  .z9-about__cards { padding-right: 0; }
+  .z9-tile { width: clamp(120px, 38vw, 200px); }
+  .z9-loc__media { margin-left: 0; height: 56vh; }
+  .z9-loc__eyebrow { margin-left: var(--pad); }
+  .z9-loc__indent { display: none; }
+  .z9-loc__word { margin-top: 12vh; text-align: left; }
+  .z9-loc-card { width: calc(85% - 5px); }
+  .z9-world__grid { grid-template-columns: 1fr; gap: 24px; }
+  .z9-world { height: 165vh; }
+  .z9-world__figure { height: 78vh; }
+  .z9-style { grid-template-columns: 1fr; gap: 4vh; padding: 6vh var(--pad) 8vh; }
+  .z9-style__a, .z9-style__b { grid-column: 1; height: 46vh; margin-top: 0; }
+  .z9-life__grid, .z9-built__features { grid-template-columns: 1fr; gap: 6vh; }
+  .z9-life__col--left { position: static; }
+  .z9-mat__grid { grid-template-columns: repeat(2, 1fr); }
+  .z9-hero__meta { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .z9-hero__scroll, .z9-hero__dots { display: none; }
+  .z9-built__media { height: 46vh; }
+  .z9-loc__top { margin-left: 0; }
+  .z9-loc__hero { height: 46vh; }
+  .z9-loc__rail { grid-auto-columns: 82%; }
+  .z9-loc__card { height: 42vh; }
+}

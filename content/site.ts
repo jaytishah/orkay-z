@@ -16,6 +16,63 @@ export const journey = [
   { title: 'Packed\nfor the World', desc: 'Export-grade packing, container loading and documentation handled in-house. From our yard in Morbi to your port — sealed, insured, on schedule.', img: '/img/mfg_container.jpg', alt: 'Container loading at dusk' },
 ];
 
+/* Arrow-driven carousel under the infrastructure plate */
+export const facilities = [
+  {
+    title: 'Restaurant\nand bar',
+    desc: 'Front-of-house floors take the traffic of a full service every night. Full-body vitrified keeps its polish where a stone floor would have dulled and been ground back twice.',
+    img: '/img/gal_commercial.jpg', alt: 'Restaurant floored in ORKAY stone-look porcelain',
+  },
+  {
+    title: 'Private\ndining',
+    desc: 'Warm travertine-look slabs, matt finished so candlelight sits on the surface instead of glaring off it. Same batch from the entrance through to the private room.',
+    img: '/img/app_interior_warm.jpg', alt: 'Private dining room floored in travertine-look porcelain',
+  },
+  {
+    title: 'Hotel\nlobby',
+    desc: 'The format that leaves the fewest joints in a space people walk across all day — and a surface that survives trolley wheels, grit and cleaning chemicals.',
+    img: '/img/gal_lobby.jpg', alt: 'Hotel lobby clad in ORKAY marble-look slabs',
+  },
+];
+
+/* Scroll-driven carousel of finished spaces — one photo per step */
+export const spaces = [
+  {
+    name: 'Lobby',
+    desc: 'Double-height entrances take the largest formats we run. Fewer joints across the floor, one continuous vein up the feature wall, and a polish that survives the traffic of a commercial entrance.',
+    img: '/img/life_2.jpg', alt: 'Double-height lobby floored in polished statuario porcelain',
+  },
+  {
+    name: 'Living',
+    desc: 'A book-matched fireplace wall in marble-look porcelain: the pattern is printed to the slab, so it never fades, never needs sealing, and repeats exactly on the reorder.',
+    img: '/img/life_3.jpg', alt: 'Living room with a marble-look porcelain fireplace wall',
+  },
+  {
+    name: 'Kitchen',
+    desc: 'Dark full-body vitrified for the island and the splashback. Heat, oil and acid do nothing to a fired surface — the counter looks the same after ten years of cooking.',
+    img: '/img/life_4.jpg', alt: 'Kitchen island clad in dark marble-look porcelain',
+  },
+  {
+    name: 'Bath',
+    desc: 'Matt and anti-skid finishes rated to AS/NZS 4586, so the floor stays safe wet. The same body, same batch, same shade as the wall it meets.',
+    img: '/img/gal_bath.jpg', alt: 'Bathroom in stone-look porcelain',
+  },
+  {
+    name: 'Terrace',
+    desc: 'Outdoor bodies take frost, sun and rain without shade drift. Patterned and plain run to the same thickness, so the paving lands flat across the whole terrace.',
+    img: '/img/life_outdoor.jpg', alt: 'Terrace paved in patterned outdoor tile at golden hour',
+  },
+];
+
+/* What sits inside the Morbi campus — the LOCATION strip under the hero */
+export const nearby = [
+  { title: 'Design studio', meta: 'On campus', img: '/img/mfg_qc.jpg', alt: 'Designer reviewing a slab surface' },
+  { title: 'Press hall', meta: '16,000 sq.m a day', img: '/img/mfg_press.jpg', alt: 'Hydraulic press forming a porcelain slab' },
+  { title: 'Kiln line', meta: 'Seven units', img: '/img/mfg_kiln.jpg', alt: 'Tunnel kiln glowing during firing' },
+  { title: 'Loading yard', meta: 'FCL on site', img: '/img/advantage_yard.jpg', alt: 'Crated slabs in the dispatch yard' },
+  { title: 'Mundra port', meta: '3 hours away', img: '/img/global_port.jpg', alt: 'Container port at dusk' },
+];
+
 export const services = [
   { name: 'Digital Quality Lab', desc: 'Every production run is shade-mapped and dimension-logged digitally. Your reorder next year matches the batch on your floor today.' },
   { name: 'OEM & Private Label', desc: 'Your brand, our line. Full private-label manufacturing with dedicated design development and custom packaging.' },
@@ -57,8 +114,8 @@ export const site = {
   location: 'Morbi · Gujarat · India',
   /* set to '/video/hero_720p.mp4' to run the cinematic hero; null uses the still */
   /* Seedance 2.0 4K master lives in "AI generated content/"; this is its web encode */
-  heroVideo: '/video/hero_marble_1080p.mp4' as string | null,
-  heroImage: '/img/hero_dusk.jpg',
+  heroVideo: null as string | null,
+  heroImage: '/img/hero_interior.jpg',
   /* closing film — same seam as the hero: null falls back to the poster still */
   exhibitionVideo: '/video/exhibition_720p.mp4' as string | null,
   exhibitionPoster: '/img/exhibition_poster.jpg',
