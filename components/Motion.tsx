@@ -61,6 +61,10 @@ export default function Motion() {
         menu?.setAttribute('aria-hidden', String(!menu.classList.contains('is-open')));
       };
       burger?.addEventListener('click', burgerHandler);
+      /* the overlay covers the page, so a link click that leaves it open reads
+         as a dead link — close on any click inside the nav, not per-link */
+      const menuNav = q('.menu__nav');
+      menuNav?.addEventListener('click', burgerHandler);
 
       /* the hero now carries its own giant wordmark, so the fixed mark stays
          1x and only runs the zebra ink clip every frame */
@@ -113,6 +117,17 @@ export default function Motion() {
         });
       }
 
+      /* amenity strip arrows — one card per click, native smooth scroll */
+      const strip = q('.z9-loc__strip') as HTMLElement | null;
+      if (strip) {
+        qa('[data-strip]').forEach((b) => b.addEventListener('click', () => {
+          const card = strip.firstElementChild as HTMLElement | null;
+          const step = (card?.offsetWidth || strip.clientWidth) + 10;
+          const dir = (b as HTMLElement).dataset.strip === 'prev' ? -1 : 1;
+          strip.scrollBy({ left: dir * step, behavior: 'smooth' });
+        }));
+      }
+
       /* split headlines into masked lines */
       qa('.reveal-lines').forEach((el) => {
         el.innerHTML = el.innerHTML
@@ -125,6 +140,7 @@ export default function Motion() {
         ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => el.classList.add('is-inview') });
       });
 
+      let matTeardown = () => {};
       if (!reduced) {
         qa('[data-parallax]').forEach((el) => {
           const speed = parseFloat((el as HTMLElement).dataset.parallax || '1');
@@ -134,6 +150,43 @@ export default function Motion() {
             scrollTrigger: { trigger: el.parentElement as HTMLElement, start: 'top bottom', end: 'bottom top', scrub: true },
           });
         });
+
+        /* materials collage levitation — items drift away from the cursor,
+           each at its own depth, on a heavy 0.05 lerp; the rAF loop IS the
+           easing, so the items carry no CSS transition. Desktop pointer only. */
+        const matItems = qa('.materials__item') as HTMLElement[];
+        if (matItems.length && matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)').matches) {
+          const target = { x: innerWidth / 2, y: innerHeight / 2 };
+          const cur = { ...target };
+          const onMove = (e: MouseEvent) => { target.x = e.clientX; target.y = e.clientY; };
+          addEventListener('mousemove', onMove);
+          /* measure the section (not the stage — the stage carries its own
+             scrub transform) so per-item scroll drift can't feed back */
+          const matSection = q('.materials') as HTMLElement | null;
+          const float = () => {
+            cur.x += (target.x - cur.x) * 0.05;
+            cur.y += (target.y - cur.y) * 0.05;
+            const r = matSection?.getBoundingClientRect();
+            const p = r ? Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))) : 0.5;
+            for (const el of matItems) {
+              const d = parseFloat(el.dataset.depth || '0.8');
+              /* deeper pieces lag the scroll harder — up to ±25vh each on top
+                 of the stage's own drift, so the collage pulls apart in Z */
+              const sy = (0.5 - p) * innerHeight * 0.5 * d;
+              el.style.transform =
+                `translate3d(${((innerWidth / 2 - cur.x) / 15) * d}px, ${((innerHeight / 2 - cur.y) / 15) * d + sy}px, 0)`;
+            }
+          };
+          gsap.ticker.add(float);
+          matTeardown = () => { gsap.ticker.remove(float); removeEventListener('mousemove', onMove); };
+
+          /* the whole plate rides -25vh → 25vh across the section's pass, so
+             the collage scrolls slower than the page around it */
+          gsap.fromTo('.materials__stage', { y: '-25vh' }, {
+            y: '25vh', ease: 'none',
+            scrollTrigger: { trigger: '.materials', start: 'top bottom', end: 'bottom top', scrub: true },
+          });
+        }
 
         /* the sky photo rides up 10vh as the section enters — a lift on the top
            edge only, well inside the slack that scale(1.4) leaves at the bottom */
@@ -187,19 +240,16 @@ export default function Motion() {
       };
       if (track && slides.length) {
         if (!reduced) {
-          /* the pin starts one screen early (see .journey margin-top): slide one
-             sits still while the spaces panel slides off it, then the track
-             carries on leftwards. hold = that first screen of the pin. */
-          /* one screen of hold at each end: the first is the spaces panel
-             sliding off, the last is the infrastructure plate crossing over */
-          const hold = 1 / (2 + slides.length * 0.9);
-          const travel = (slides.length * 0.9) / (2 + slides.length * 0.9);
+          /* one screen of hold at the end: the infrastructure plate crossing
+             over the last (held) slide */
+          const hold = 1 / (1 + slides.length * 0.9);
+          const travel = (slides.length * 0.9) / (1 + slides.length * 0.9);
           gsap.timeline({
             scrollTrigger: {
               trigger: '.journey__pin', pin: true, scrub: 0.6, anticipatePin: 1,
-              end: () => `+=${innerHeight * 2 + slides.length * innerHeight * 0.9}`,
+              end: () => `+=${innerHeight + slides.length * innerHeight * 0.9}`,
               onUpdate: (st) => {
-                const p = Math.min(1, Math.max(0, (st.progress - hold) / travel));
+                const p = Math.min(1, Math.max(0, st.progress / travel));
                 const i = Math.min(slides.length, Math.max(1, Math.round(p * (slides.length - 1)) + 1));
                 if (current) current.textContent = String(i);
                 typewrite(qa('.journey__desc')[Math.round(p * (slides.length - 1))]);
@@ -207,7 +257,6 @@ export default function Motion() {
               invalidateOnRefresh: true,
             },
           })
-            .to({}, { duration: hold })
             .to(track, {
               x: () => -(track.scrollWidth - innerWidth),
               ease: 'none', duration: travel,
@@ -307,23 +356,17 @@ export default function Motion() {
       const spacesWrap = q('.spaces-scroll') as HTMLElement | null;
       if (spaceSlides.length && spacesWrap) {
         const cur = q('.spaces__current');
-        const panel = q('.spaces') as HTMLElement | null;
         let shown = -1;
         /* read the wrapper's own rect each frame instead of a ScrollTrigger:
            the pins and sticky curtain above keep moving the trigger's start,
-           and this measurement cannot go stale.
-           The wrapper holds one screen more than it has slides. On that last
-           screen the panel is still stuck and slides out to the left, which
-           uncovers the journey already pinned underneath it. */
+           and this measurement cannot go stale. When the wrapper runs out the
+           panel simply scrolls away with it — no slide-out, so nothing behind
+           the curtain is ever uncovered. */
         const pickSpace = () => {
           const r = spacesWrap.getBoundingClientRect();
-          const span = r.height - innerHeight * 2;
+          const span = r.height - innerHeight;
           const scrolled = -r.top;
           const p = span > 0 ? Math.min(1, Math.max(0, scrolled / span)) : 0;
-          if (panel && !reduced) {
-            const out = Math.min(1, Math.max(0, (scrolled - span) / innerHeight));
-            panel.style.transform = out ? `translate3d(${-out * 100}%,0,0)` : '';
-          }
           const i = Math.min(spaceSlides.length - 1, Math.floor(p * spaceSlides.length));
           if (i === shown) return;
           shown = i;
@@ -467,7 +510,9 @@ export default function Motion() {
         gsap.ticker.remove(updateLogoInk);
         anchorHandlers.forEach(([a, h]) => a.removeEventListener('click', h));
         burger?.removeEventListener('click', burgerHandler);
+        menuNav?.removeEventListener('click', burgerHandler);
         techTeardown();
+        matTeardown();
         lenis.destroy();
       };
     })();

@@ -124,14 +124,17 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   justify-content: flex-end;
   padding: 28px var(--pad);
   pointer-events: none;
-  mix-blend-mode: difference;
   color: #fff;
 }
 .header a, .header button { pointer-events: auto; }
 
 .header__nav { display: flex; align-items: center; gap: 40px; padding-top: 10px; }
 
-.burger { width: 88px; display: grid; gap: 9px; padding: 16px 0; } /* 44px min touch target */
+/* the difference blend used to sit on .header so the whole nav auto-inverted
+   over light sections. The catalogue pill needs to read as actual white glass,
+   which difference would flip to dark — so the blend lives on the burger now,
+   the only bare-glyph element left that still needs it. */
+.burger { width: 88px; display: grid; gap: 6px; padding: 16px 0; mix-blend-mode: difference; } /* 44px min touch target */
 .burger span { display: block; height: 2px; background: currentColor; transition: transform var(--dur) var(--ease); }
 .burger:hover span:first-child { transform: translateY(-3px); }
 .burger:hover span:last-child { transform: translateY(3px); }
@@ -173,6 +176,20 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   height: 1px; background: currentColor;
 }
 .btn--red { color: var(--c-red); }
+
+/* white glass pill — backdrop-filter is what keeps the label legible when the
+   nav sits over a bright frame; the glaze alone is not enough on light stone */
+.btn--nav {
+  padding: 14px 26px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.btn--nav:hover { background: rgba(255, 255, 255, 0.26); border-color: rgba(255, 255, 255, 0.5); }
 
 .arrow {
   font-size: 28px; line-height: 1; padding: 8px 16px;
@@ -269,13 +286,12 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .curtain > .daycycle { position: sticky; top: 0; z-index: 1; }
 /* taller than the viewport, so it pins by its bottom edge like the gallery */
 .curtain > .experience { position: sticky; top: min(0px, calc(100vh - 80vw)); z-index: 2; }
-/* above the journey, which is above the still-stuck experience plate — that
-   order is what the terrace slide-out uncovers */
+/* covers the still-stuck experience plate all the way to the curtain's end */
 .curtain > .spaces-scroll { position: relative; z-index: 4; }
 
 /* ═══════════ 06c SPACES — pinned panel, photo swaps per scroll step ═══════════ */
-/* five screens of slides + one for the slide-out to the left */
-.spaces-scroll { height: 600vh; }
+/* one screen per slide; the panel scrolls away with the wrapper when done */
+.spaces-scroll { height: 500vh; }
 .spaces { position: sticky; top: 0; height: 100vh; padding: 0; overflow: hidden; }
 .spaces__index { position: absolute; top: 140px; left: var(--pad); z-index: 4; color: var(--c-gray); }
 .spaces__slide {
@@ -306,7 +322,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .curtain > .advantage { position: relative; z-index: 1; }
 .experience__caption { position: absolute; left: var(--pad); top: 66vh; z-index: 2; max-width: 66ch; }
 .experience__title {
-  position: absolute; right: var(--pad); bottom: 7vh; z-index: 2;
+  position: absolute; right: var(--pad); bottom: 14vh; z-index: 2;
   text-align: right; padding-right: 76px;   /* clears the floating actions */
 }
 .gallery__stage { position: absolute; inset: 0; }
@@ -374,9 +390,9 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 }
 
 /* ═══════════ 07 JOURNEY (pinned slider) ═══════════ */
-/* pulled up under the spaces panel's last screen: it is already pinned and
-   showing slide one while the panel slides off it to the left */
-.journey { padding: 0; position: relative; z-index: 3; margin-top: -100vh; }
+/* follows the spaces wrapper in plain flow — no overlap, so the pinned
+   plates inside the curtain above are never uncovered between the two */
+.journey { padding: 0; position: relative; z-index: 3; }
 .journey__pin { height: 100vh; overflow: hidden; position: relative; }
 .journey__pagination { position: absolute; top: 140px; left: var(--pad); z-index: 3; }
 .journey__pagination span:last-child { color: var(--c-gray); }
@@ -449,7 +465,8 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    viewport; the title holds at the top right while the cards scroll past. */
 /* track list matched to the reference: half the viewport for the photo, a
    ~455px card column with a small gutter off the photo, the rest for the title */
-.tech { padding: 0; display: grid; grid-template-columns: 1fr 0.56fr 0.44fr; }
+/* padding-bottom is the black breather before the peak plate climbs in */
+.tech { padding: 0 0 22vh; display: grid; grid-template-columns: 1fr 0.56fr 0.44fr; }
 .tech__media { position: sticky; top: 0; height: 100vh; align-self: start; overflow: hidden; }
 .tech__media img {
   position: absolute; inset: -6% 0; opacity: 0;      /* headroom for the drift */
@@ -461,13 +478,21 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* the column starts below the title, as in the reference */
 .tech__cards {
   display: grid; gap: 30px;
-  padding: 48vh var(--pad) 14vh calc(var(--pad) / 2);
+  padding: 48vh var(--pad) 34vh calc(var(--pad) / 2);
 }
 .tech__card {
   border: 1px solid rgba(255, 255, 255, 0.4); padding: 18px;
   min-height: 38vh; display: grid; align-content: space-between; gap: 24px;
 }
-.tech__desc { color: var(--c-gray-light); }
+/* these two carry .text-small for the tracking, but a 38vh card at 12px is
+   mostly empty box — sized up to the widest the column can take. The 24px
+   ceiling is what the longest milestone (2020, ~160 chars) fills without
+   passing the card's min-height. */
+.tech__label { font-size: clamp(15px, 1.2vw, 22px); line-height: 1.25; letter-spacing: 0.02em; }
+.tech__desc {
+  color: var(--c-gray-light);
+  font-size: clamp(15px, 1.3vw, 24px); line-height: 1.32; letter-spacing: 0.01em;
+}
 /* holds at 26vh whether or not it has stuck yet, so it never jumps */
 .tech__title {
   position: sticky; top: 26vh; align-self: start;
@@ -475,22 +500,12 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   font-size: clamp(20px, 1.8vw, 32px);
 }
 
-/* ═══════════ 07h SCALE — tall plate, big statement, then two spec frames ═══════════ */
-.penth { padding: 0 0 14vh; }
+/* ═══════════ 07h SCALE — tall plate, then the closing statement ═══════════ */
+.penth { padding: 16vh 0 14vh; }
 .curtain > .penth { position: relative; z-index: 1; }
-.penth__tall { width: min(52vw, 760px); height: 96vh; margin: 0 auto; }
+/* landscape plate — the image is 2:1, a portrait frame would crop the view away */
+.penth__tall { width: min(78vw, 1180px); height: 72vh; margin: 0 auto; }
 .penth__lede { padding: 7vh var(--pad) 0; font-size: clamp(21px, 2.5vw, 42px); line-height: 1.22; }
-.penth__pair {
-  display: grid; grid-template-columns: 1fr 1fr; gap: var(--pad);
-  align-items: start; margin-top: 12vh; padding: 0 24px;
-}
-.penth__fig { position: relative; }
-.penth__fig--a { height: 84vh; }
-.penth__fig--b { height: 96vh; margin-top: 20vh; }
-/* the number sits on the photo, bottom left, like a dimension callout */
-.penth__stat { position: absolute; left: 28px; bottom: 26px; z-index: 2; color: var(--c-white); }
-.penth__num { font-size: clamp(34px, 4vw, 68px); line-height: 1; }
-.penth__cap { margin-top: 10px; }
 
 /* ═══════════ 07i TERRACES — wide plate left, title and note stacked right ═══════════ */
 .terr { padding: 10vh 0 12vh; display: grid; grid-template-columns: 75% 25%; }
@@ -560,19 +575,28 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .exportmap__note { color: var(--c-gray-light); margin-top: 5vh; max-width: 46ch; }
 
 .globalmap svg { width: 100%; height: auto; display: block; overflow: visible; }
-.globalmap__land { fill: #15171a; stroke: rgba(255, 255, 255, 0.12); stroke-width: 0.35; }
+.globalmap__land {
+  fill: #101215; stroke: rgba(255, 255, 255, 0.07); stroke-width: 0.3;
+  stroke-linejoin: round;
+}
+.globalmap__glow { opacity: 0; transition: opacity 2s var(--ease) 0.3s; }
+.globalmap.is-inview .globalmap__glow { opacity: 1; }
 
 /* arcs draw themselves — pathLength=1 makes one dash the whole curve */
 .globalmap__arc {
-  fill: none; stroke: var(--c-red); stroke-width: 0.8; opacity: 0.6;
+  fill: none; stroke: var(--c-red); stroke-width: 0.5; opacity: 0.42;
+  stroke-linecap: round;
   stroke-dasharray: 1; stroke-dashoffset: 1;
-  transition: stroke-dashoffset 1.4s var(--ease);
+  transition: stroke-dashoffset 1.8s var(--ease);
 }
 .globalmap.is-inview .globalmap__arc { stroke-dashoffset: 0; }
 
 .globalmap__pin { opacity: 0; transition: opacity 0.5s var(--ease); }
 .globalmap.is-inview .globalmap__pin { opacity: 1; }
 .globalmap__dot { fill: var(--c-red); }
+.globalmap__ring {
+  fill: none; stroke: rgba(255, 255, 255, 0.4); stroke-width: 0.4;
+}
 .globalmap__pulse {
   fill: var(--c-red); opacity: 0;
   transform-box: fill-box; transform-origin: center;
@@ -582,27 +606,16 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .globalmap__origin .globalmap__dot { fill: var(--c-white); }
 .globalmap__origin .globalmap__pulse { fill: var(--c-white); }
 .globalmap__label {
-  fill: var(--c-white); font-size: 9px; letter-spacing: 1.6px; text-anchor: middle;
+  fill: var(--c-white); font-size: 7.5px; letter-spacing: 3px; text-anchor: middle;
+  opacity: 0.85;
 }
-.globalmap__run {
-  fill: var(--c-white); opacity: 0;
-  animation: gm-run 3.2s var(--ease) infinite;
-  animation-play-state: paused;
-}
-/* both loops stay parked until the map is on screen — no off-screen repaints */
-.globalmap.is-inview .globalmap__pulse,
-.globalmap.is-inview .globalmap__run { animation-play-state: running; }
+/* the pulse stays parked until the map is on screen — no off-screen repaints */
+.globalmap.is-inview .globalmap__pulse { animation-play-state: running; }
 
 @keyframes gm-pulse {
   0%   { transform: scale(0.5); opacity: 0.55; }
   70%  { transform: scale(3.4); opacity: 0; }
   100% { transform: scale(3.4); opacity: 0; }
-}
-@keyframes gm-run {
-  0%   { offset-distance: 0%;   opacity: 0; }
-  12%  { opacity: 1; }
-  88%  { opacity: 1; }
-  100% { offset-distance: 100%; opacity: 0; }
 }
 
 /* ═══════════ 10 CAMPUS ═══════════ */
@@ -636,15 +649,26 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .partner__ctas { display: flex; gap: 56px; }
 
 /* ═══════════ 14 FOOTER ═══════════ */
-.footer {
-  position: relative; padding: var(--pad);
+.footer { position: relative; padding: 12vh var(--pad) var(--pad); }
+.footer__grid {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+  gap: calc(var(--pad) / 2); padding-bottom: 8vh;
+}
+.footer__brand { max-width: 38ch; }
+.footer__logo { width: 168px; height: auto; }
+.footer__blurb { color: var(--c-gray-light); margin: 26px 0 30px; }
+.footer__socials { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+/* the columns are link stacks — grid keeps the rhythm without margins */
+.footer__col { display: grid; align-content: start; gap: 14px; font-style: normal; }
+.footer__head { color: var(--c-red); margin-bottom: 6px; }
+.footer__link { color: var(--c-gray-light); transition: color var(--dur) var(--ease); }
+.footer__link:hover { color: var(--c-white); }
+.footer__addr { color: var(--c-gray-light); white-space: pre-line; margin-bottom: 6px; }
+.footer__base {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.22);
 }
 .footer__top { justify-self: center; }
-.footer__logo {
-  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
-  width: 132px; height: auto;
-}
 
 /* ═══════════ 08c PRODUCT RANGE ═══════════ */
 .products { padding-top: 18vh; padding-bottom: 12vh; }
@@ -769,7 +793,8 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .formats__media img.is-active { clip-path: inset(0); transform: translateY(0); }
 .formats__kicker { position: absolute; bottom: calc(var(--pad)); left: var(--pad); color: var(--c-gray); }
 
-.footer__credit { text-align: right; color: var(--c-gray); }
+/* the floating WhatsApp/chat buttons sit over this corner — keep clear of them */
+.footer__credit { text-align: right; color: var(--c-gray); padding-right: 76px; }
 
 /* ═══════════ REVEALS (JS adds .is-inview) ═══════════ */
 .img-reveal { clip-path: inset(0 0 100% 0); }
@@ -819,8 +844,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .terr__title { text-align: left; }
   .terr__note { position: static; margin-top: 3vh; }
   .penth__tall { width: auto; height: 60vh; }
-  .penth__pair { grid-template-columns: 1fr; gap: 4vh; margin-top: 6vh; }
-  .penth__fig--a, .penth__fig--b { height: 46vh; margin-top: 0; }
   .tech { grid-template-columns: 1fr; }
   .tech__media { position: static; height: 52vh; }
   .tech__cards { padding: 6vh var(--pad); }
@@ -859,6 +882,10 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .hero__ambassador { right: auto; left: 50%; transform: translateX(-50%); bottom: 0; height: 52vh; }
   .advantage__grid { grid-template-columns: 1fr; gap: 32px; }
   .products__grid, .contact { grid-template-columns: 1fr; }
+  .footer__grid { grid-template-columns: 1fr 1fr; gap: 6vh calc(var(--pad) / 2); }
+  .footer__brand { grid-column: 1 / -1; max-width: 100%; }
+  .footer__base { grid-template-columns: 1fr auto; row-gap: 16px; }
+  .footer__credit { grid-column: 1 / -1; text-align: left; padding-right: 0; }
   .products__card { border-right: 0; padding-left: 0 !important; padding-right: 0; }
   .floaters { right: 16px; bottom: 16px; }
   .floater { width: 46px; height: 46px; }

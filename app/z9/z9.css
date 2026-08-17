@@ -85,7 +85,13 @@
   position: relative; z-index: 2;
   display: flex; align-items: flex-end; justify-content: space-between; gap: var(--pad);
 }
-.z9-about__title { max-width: 11ch; font-size: clamp(26px, 3.2vw, 52px); }
+/* the <br/> sets the two lines; nowrap stops "Market-matched." breaking at
+   its own hyphen, which no max-width can prevent */
+.z9-about__title {
+  width: max-content; max-width: 100%; white-space: nowrap;
+  font-size: clamp(26px, 3.2vw, 52px);
+  align-self: flex-start;              /* rides up to the tiles' top edge */
+}
 .z9-about__cards { display: flex; gap: 12px; padding-right: 76px; } /* clears the floating actions */
 
 /* the two tiles — one black, one white, meeting on a hard 0-radius edge */
@@ -137,15 +143,30 @@
 
 /* amenity strip — native overflow scroll + snap, two cards to a view.
    ponytail: no carousel JS; add one only if arrows/dots are asked for. */
+/* gutters are margins, not padding: with padding the third card peeked into
+   the padding box, so three read on screen instead of two */
+/* the arrows ARE the cursor — same SVG data-URI trick as the gallery's VIEW
+   cursor, so no follower script. Left half goes back, right half goes on. */
+/* not __rail — that name is already taken by the /z9 page's grid rail below */
+.z9-loc__deck { position: relative; }
+.z9-loc__hit { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 3; }
+.z9-loc__hit--prev {
+  left: 0;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='86'%3E%3Crect x='0.5' y='0.5' width='111' height='85' fill='none' stroke='white'/%3E%3Cpath d='M70 43 h-28 m7 -5 l-7 5 7 5' fill='none' stroke='white'/%3E%3C/svg%3E") 56 43, w-resize;
+}
+.z9-loc__hit--next {
+  right: 0;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='86'%3E%3Crect x='0.5' y='0.5' width='111' height='85' fill='none' stroke='white'/%3E%3Cpath d='M42 43 h28 m-7 -5 l7 5 -7 5' fill='none' stroke='white'/%3E%3C/svg%3E") 56 43, e-resize;
+}
 .z9-loc__strip {
-  display: flex; gap: 10px; margin-top: var(--pad);
-  padding: 0 var(--pad); overflow-x: auto;
+  display: flex; gap: 10px; margin: 16px var(--pad) 0;
+  overflow-x: auto;
   scroll-snap-type: x mandatory; scrollbar-width: none;
 }
 .z9-loc__strip::-webkit-scrollbar { display: none; }
 .z9-loc-card {
   position: relative; flex: none; scroll-snap-align: start;
-  width: calc(50% - 5px); aspect-ratio: 1.43; overflow: hidden;
+  width: calc(50% - 5px); aspect-ratio: 1.25; overflow: hidden;
 }
 .z9-loc-card img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease); }
 .z9-loc-card:hover img { transform: scale(1.05); }
@@ -210,7 +231,10 @@
      clears the left frame at 25% */
   font-size: clamp(20px, 2.2vw, 34px); white-space: nowrap;
 }
+/* narrow frame, landscape photo — the macaw sits in the left eighth, so a
+   centred cover crop would leave nothing but red wall */
 .z9-style__a { grid-column: 2; height: 56vh; }
+.z9-style__a img { object-position: left; }
 .z9-style__b { grid-column: 3; height: 82vh; }
 
 /* ── 02 LIFE — two columns, sticky headline, cards ── */
@@ -338,6 +362,8 @@
   .z9-loc__indent { display: none; }
   .z9-loc__word { margin-top: 12vh; text-align: left; }
   .z9-loc-card { width: calc(85% - 5px); }
+  /* swipe beats a hit area on touch, and the overlay would eat the pan */
+  .z9-loc__hit { display: none; }
   .z9-world__grid { grid-template-columns: 1fr; gap: 24px; }
   .z9-world { height: 165vh; }
   .z9-world__figure { height: 78vh; }

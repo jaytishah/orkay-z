@@ -2,18 +2,20 @@
    All figures verified against the Orkay fact library. */
 
 export const formats = [
-  { size: '600×1200', v: 1200, h: 600, desc: 'Large-format vitrified slabs · Glossy / Matt · Floors, walls and facades', img: '/img/fmt_largeformat.jpg', alt: '600 by 1200 large-format slabs installed' },
-  { size: '600×600', v: 600, h: 600, desc: 'Vitrified double-charge floor tiles · Glossy / Matt · Residential and commercial floors', img: '/img/life_2.jpg', alt: '600 by 600 vitrified floor tiles installed' },
-  { size: '300×450', v: 450, h: 300, desc: 'Ceramic wall tiles · Glossy / Carving · Bathrooms and kitchens', img: '/img/fmt_bath.jpg', alt: '300 by 450 ceramic wall tiles installed' },
-  { size: '400×400', v: 400, h: 400, desc: 'Heavy-duty parking tiles · Matt anti-skid · Driveways, terraces and outdoors', img: '/img/life_outdoor.jpg', alt: '400 by 400 heavy-duty outdoor tiles installed' },
+  { size: '600×1200', v: 1200, h: 600, desc: 'Large-format vitrified slabs · Glossy / Matt · Floors, walls and facades', img: '/img/fmt_600x1200.png', alt: 'Woman in black crossing a terrace paved in 600 by 1200 grey stone-look slabs, concrete villa behind her at dusk' },
+  { size: '600×600', v: 600, h: 600, desc: 'Vitrified double-charge floor tiles · Glossy / Matt · Residential and commercial floors', img: '/img/fmt_600x600.png', alt: 'Black marble-look vitrified slab stood on a salt flat between white horses' },
+  { size: '300×450', v: 450, h: 300, desc: 'Ceramic wall tiles · Glossy / Carving · Bathrooms and kitchens', img: '/img/fmt_300x450.png', alt: 'Stone-look tiled stair treads and risers, a woman stepping up past a glass balustrade' },
+  { size: '400×400', v: 400, h: 400, desc: 'Heavy-duty parking tiles · Matt anti-skid · Driveways, terraces and outdoors', img: '/img/fmt_parking.png', alt: '400 by 400 heavy-duty outdoor tiles installed' },
 ];
 
-export const journey = [
-  { title: 'Raw\nMaterial', desc: 'Selected clays, feldspar and quartz from certified quarries. Every batch is lab-tested before it enters the line — consistency begins before the first press stroke.', img: '/img/mfg_raw.jpg', alt: 'Raw ceramic minerals under warehouse light' },
-  { title: 'Pressing\n& Forming', desc: 'High-tonnage hydraulic presses form each slab with millimetre precision. Density is uniform edge to edge — the reason an ORKAY tile sounds solid when you tap it.', img: '/img/mfg_press.jpg', alt: 'Hydraulic press forming a porcelain slab' },
-  { title: 'Firing', desc: 'Tunnel kilns hold the body at peak temperature until vitrification is complete. What comes out is dense, inert, and ready for thirty years of traffic.', img: '/img/mfg_kiln.jpg', alt: 'Tunnel kiln glowing during firing' },
-  { title: '5-Step\nQuality Control', desc: 'Dimension, flatness, shade, strength, surface. Five gates between the kiln and the crate — a slab that misses one never ships.', img: '/img/mfg_qc.jpg', alt: 'Engineer inspecting a glossy slab' },
-  { title: 'Packed\nfor the World', desc: 'Export-grade packing, container loading and documentation handled in-house. From our yard in Morbi to your port — sealed, insured, on schedule.', img: '/img/mfg_container.jpg', alt: 'Container loading at dusk' },
+/* The six categories we manufacture — mirrors the ranges on orkaytiles.com */
+export const tileTypes = [
+  { title: 'Porcelain\nTiles', desc: 'Full-body and double-charge vitrified, pressed dense and fired to near-zero porosity. Floors, walls, wet areas — one body that takes traffic, water and cleaning chemicals without changing.', img: '/img/type_porcelain.png', alt: 'Man leaning on a beige marble-look porcelain wall beside brown veined slabs' },
+  { title: 'Porcelain\nSlabs', desc: 'Large format up to 600×1200 and beyond, for floors, feature walls and facades. Fewer joints across a space, and a vein that runs on from one slab to the next.', img: '/img/type_slabs.png', alt: 'Lit corridor floored in polished large-format marble-look porcelain slabs' },
+  { title: 'Ceramic\nWall Tiles', desc: 'Glossy, matt and carved faces for kitchens, bathrooms and backsplashes. Light bodies made to be cut and set fast on a wall, in shades that match the floor they meet.', img: '/img/type_ceramic.png', alt: 'Hotel lobby walled in stone-look tile, a guest crossing the polished floor' },
+  { title: 'Wooden\nPlank', desc: 'Plank formats printed with real timber grain, then fired. The look of oak or walnut with none of the sealing, swelling or refinishing — and it takes a wet floor.', img: '/img/life_gym.png', alt: 'Wood-look porcelain plank flooring' },
+  { title: 'Counter\nTops', desc: 'Non-porous, heat- and stain-resistant surfaces for islands, vanities and worktops. Nothing to seal each year, and the pattern is fired in, so acid and oil do not mark it.', img: '/img/type_countertop.png', alt: 'Grey stone-look porcelain slab stood in a mirrored studio, a man beside it for scale' },
+  { title: 'Outdoor\nTiles', desc: 'Anti-skid matt bodies for terraces, driveways, platforms and parking decks. Rated for frost, sun and standing water — the finish stays the same through the seasons.', img: '/img/type_outdoor.png', alt: 'Station platform floored in dark marble-look ORKAY porcelain at sunrise' },
 ];
 
 /* Arrow-driven carousel under the infrastructure plate */
@@ -40,17 +42,17 @@ export const spaces = [
   {
     name: 'Lobby',
     desc: 'Double-height entrances take the largest formats we run. Fewer joints across the floor, one continuous vein up the feature wall, and a polish that survives the traffic of a commercial entrance.',
-    img: '/img/life_2.jpg', alt: 'Double-height lobby floored in polished statuario porcelain',
+    img: '/img/life_lobby.png', alt: 'Dark entrance hall floored and clad in charcoal marble-look ORKAY slabs',
   },
   {
     name: 'Living',
     desc: 'A book-matched fireplace wall in marble-look porcelain: the pattern is printed to the slab, so it never fades, never needs sealing, and repeats exactly on the reorder.',
-    img: '/img/life_3.jpg', alt: 'Living room with a marble-look porcelain fireplace wall',
+    img: '/img/life_living.png', alt: 'Living room floored in polished brown marble-look ORKAY porcelain, a horse sculpture on the feature wall',
   },
   {
     name: 'Kitchen',
     desc: 'Dark full-body vitrified for the island and the splashback. Heat, oil and acid do nothing to a fired surface — the counter looks the same after ten years of cooking.',
-    img: '/img/life_4.jpg', alt: 'Kitchen island clad in dark marble-look porcelain',
+    img: '/img/life_kitchen.jpg', alt: 'Dark kitchen with a black marble-look porcelain island and splashback, grey stone-look floor',
   },
   {
     name: 'Bath',
@@ -58,26 +60,31 @@ export const spaces = [
     img: '/img/gal_bath.jpg', alt: 'Bathroom in stone-look porcelain',
   },
   {
-    name: 'Terrace',
-    desc: 'Outdoor bodies take frost, sun and rain without shade drift. Patterned and plain run to the same thickness, so the paving lands flat across the whole terrace.',
-    img: '/img/life_outdoor.jpg', alt: 'Terrace paved in patterned outdoor tile at golden hour',
+    name: 'Gym',
+    desc: 'Wood-look porcelain takes dropped plates and sweat the way timber never could. Matt, anti-skid, and unaffected by the disinfectant a gym floor is cleaned with every night.',
+    img: '/img/life_gym.png', alt: 'Home gym floored in wood-look ORKAY porcelain, rack and bench against a stone-look wall',
   },
 ];
 
 /* What sits inside the Morbi campus — the LOCATION strip under the hero */
 export const nearby = [
-  { title: 'Design studio', meta: 'On campus', img: '/img/mfg_qc.jpg', alt: 'Designer reviewing a slab surface' },
-  { title: 'Press hall', meta: '16,000 sq.m a day', img: '/img/mfg_press.jpg', alt: 'Hydraulic press forming a porcelain slab' },
-  { title: 'Kiln line', meta: 'Seven units', img: '/img/mfg_kiln.jpg', alt: 'Tunnel kiln glowing during firing' },
+  { title: 'Showroom', meta: 'On campus', img: '/img/design_studio.png', alt: 'Buyers reviewing full slabs with the ORKAY team in the campus showroom' },
+  { title: 'Seven units', meta: 'One standard', img: '/img/seven_units.png', alt: 'ORKAY production campus lit at dusk, long concrete facade above a porcelain-paved approach' },
+  { title: 'Design studio', meta: '1,000+ designs', img: '/img/design_studio_hall.png', alt: 'Decoration line running patterned and plain tiles side by side' },
   { title: 'Loading yard', meta: 'FCL on site', img: '/img/advantage_yard.jpg', alt: 'Crated slabs in the dispatch yard' },
-  { title: 'Mundra port', meta: '3 hours away', img: '/img/global_port.jpg', alt: 'Container port at dusk' },
+  { title: 'Mundra port', meta: '3 hours away', img: '/img/mundra_port.png', alt: 'Crated ORKAY slabs on pallets at Mundra port at sunrise, a container ship loading behind them' },
 ];
 
+/* Growth milestones, verbatim from orkaytiles.com/about-us — one card per
+   step up in daily output. Figures are the company's own published ones.
+   Numerals kept in international format: this site reads outside India. */
 export const services = [
-  { name: 'Digital Quality Lab', desc: 'Every production run is shade-mapped and dimension-logged digitally. Your reorder next year matches the batch on your floor today.', img: '/img/mfg_qc.jpg', alt: 'Engineer inspecting a glossy slab' },
-  { name: 'OEM & Private Label', desc: 'Your brand, our line. Full private-label manufacturing with dedicated design development and custom packaging.', img: '/img/mfg_press.jpg', alt: 'Hydraulic press forming a porcelain slab' },
-  { name: 'Export Documentation', desc: 'CE marking, ISO 9001:2015 systems, IEC-registered exports. Compliance paperwork prepared before you ask for it.', img: '/img/mfg_container.jpg', alt: 'Container loading at dusk' },
-  { name: 'Dealer Support', desc: 'Display planning, sampling programs and marketing assets for showrooms — a partnership, not a price list.', img: '/img/gal_largeformat.jpg', alt: 'Showroom display of large-format slabs' },
+  { name: '1996 · 5,000 sq.m a day', desc: 'Late Shri Avcharbhai Patel fires the first ORKAY tile in Morbi. One line, one shift, and a standard set higher than the town was asking for.', img: '/img/milestone_1996.png', alt: 'White statuario-look ORKAY porcelain slab stood on red velvet beneath a crystal chandelier' },
+  { name: '2008 · 15,000 sq.m a day', desc: 'Output trebles in twelve years, and the first containers leave for buyers who had never heard of Morbi.', img: '/img/milestone_2008.png', alt: 'Woman in gold crossing a lobby walled and floored in beige stone-look ORKAY porcelain' },
+  { name: '2013 · 35,000 sq.m a day', desc: 'Digital printing arrives on the line. A thousand faces become possible where a handful of screens used to decide the whole range.', img: '/img/milestone_2013.png', alt: 'Living room floored in polished grey marble-look ORKAY porcelain, a lit fireplace along the far wall' },
+  { name: '2016 · 65,000 sq.m a day', desc: 'Glazed and double-charge vitrified run side by side, shade-mapped batch by batch, so a reorder still matches the floor already laid.', img: '/img/milestone_2016.png', alt: 'Woman in black seated against a wall of beige and brown stone-look ORKAY slabs above the sea, mirrored in the polished floor' },
+  { name: '2019 · 85,000 sq.m a day', desc: 'Capacity built for the export book: CE marking, ISO 9001:2015 systems, and our own IEC on every shipment that leaves the yard.', img: '/img/milestone_2019.png', alt: 'Barefoot woman in black crossing a candlelit hall floored in polished marble-look ORKAY porcelain' },
+  { name: '2020 · 100,000 sq.m a day', desc: 'Porcelain slabs join the range — large format to 1200×2400, and a scale that puts ORKAY among the largest lines in the town that fires most of India’s porcelain.', img: '/img/statement_slabs.png', alt: 'Large-format ORKAY porcelain slabs stood in the yard' },
 ];
 
 export const stats = [
