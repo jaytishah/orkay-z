@@ -268,17 +268,33 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .materials__item { position: absolute; }
 /* geometry traced off the zorge9 /style plate: slab behind, block in front of
    it, disc on the right with the plinth over it, metal and glass on top */
-.materials__item--slab   { width: 18vw;   height: 47vh;  left: 43%; top: 1vh;  z-index: 1; }
-.materials__item--disc   { width: 18.5vw; height: 18.5vw; left: 61%; top: 6vh; border-radius: 50%; z-index: 2; }
+.materials__item--slab   { width: 18vw;   height: 66vh;  left: 43%; top: 1vh;  z-index: 1; }
+.materials__item--disc   { width: 18.5vw; height: 18.5vw; left: 61%; top: 8vh; border-radius: 50%; z-index: 2; }
 .materials__item--disc img { object-position: 100% 100%; }
-.materials__item--block  { width: 16.5vw; height: 49vh;  left: 30%; top: 10vh; z-index: 3; }
-.materials__item--plinth { width: 19vw;   height: 34vh;  left: 56%; top: 31vh; z-index: 4; }
+/* overflow visible: the ::before side face lives outside the figure box and
+   the global figure rule would clip it */
+.materials__item--block  { width: 11.6vw; height: 52vh; left: 34%; top: 11vh; z-index: 3; perspective: 1400px; overflow: visible; }
+/* the reference block is a solid, not a plate — a receding side face in light
+   grey. rotateY under the parent perspective foreshortens it into a trapezoid
+   on its own; a skew would give a parallelogram and read flat */
+.materials__item--block::before {
+  content: ''; position: absolute; top: 0; bottom: 0; right: 100%; width: 8vw;
+  transform-origin: right center; transform: rotateY(-58deg);
+  background: linear-gradient(90deg, #d4d4d0, #b0b0ac);
+}
+.materials__item--plinth { width: 19vw; height: 34vh; left: 56%; top: 38vh; z-index: 4; perspective: 1400px; overflow: visible; }
+/* the reference wood is a solid too — a lit top face the glass rests on */
+.materials__item--plinth::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: 7vh;
+  transform-origin: center bottom; transform: rotateX(-62deg);
+  background: linear-gradient(180deg, #b98a5e, #8f6440);
+}
 .materials__item--block, .materials__item--plinth { box-shadow: 0 3vh 6vh rgba(0, 0, 0, 0.16); }
 /* brass half-disc sinking behind the block, bottom left of the plate.
    Polished brass, not mosaic: the reference plate carries a smooth metal
    sweep here, and the joint grid was the one element reading as a tile. */
 .materials__item--brass  {
-  width: 17vw; height: 17vw; left: 21%; top: 38vh; border-radius: 50%; z-index: 1;
+  width: 17vw; height: 17vw; left: 21%; top: 47vh; border-radius: 50%; z-index: 1;
   background:
     radial-gradient(circle at 66% 28%, rgba(255, 253, 240, 0.9), rgba(255, 253, 240, 0) 52%),
     linear-gradient(118deg, #8a6829, #c49f52 28%, #f3e2ab 50%, #d8b268 68%, #96712f);
@@ -286,7 +302,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* polished, not matt: banded metal underneath, specular hot spot and warm
    bounce light on top — a flat radial gradient reads as painted plaster */
 .materials__item--sphere {
-  width: 6vw; height: 6vw; left: 43%; top: 16vh; border-radius: 50%; z-index: 5;
+  width: 6vw; height: 6vw; left: 43%; top: 18vh; border-radius: 50%; z-index: 5;
   background:
     radial-gradient(circle at 31% 25%, rgba(255, 255, 255, 0.95) 0 4%, rgba(255, 255, 255, 0) 28%),
     radial-gradient(circle at 70% 78%, rgba(255, 236, 178, 0.6), rgba(255, 236, 178, 0) 46%),
@@ -295,7 +311,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 }
 /* glass cylinder laid across the plinth */
 .materials__item--cyl {
-  width: 28vw; height: 6vh; left: 52%; top: 34vh; border-radius: 3vh; z-index: 5;
+  width: 28vw; height: 7.4vh; left: 52%; top: 31vh; border-radius: 3.7vh; z-index: 5;
   background: linear-gradient(180deg,
     rgba(255, 255, 255, 0.92), rgba(186, 195, 204, 0.55) 38%,
     rgba(88, 98, 110, 0.5) 68%, rgba(255, 255, 255, 0.85));

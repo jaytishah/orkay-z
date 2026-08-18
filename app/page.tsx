@@ -190,10 +190,11 @@ export default function Home() {
         <section className="section materials ui-light" data-polarity="light">
           <h2 className="materials__label h-display reveal-lines">Premium<br />Materials</h2>
           <div className="materials__stage">
-            {/* tone map traced off the reference plate: dark block in front, white
-                statuario panel behind it, black disc right, warm body bottom-right.
-                Nero is the only dark slab we own, so it carries both the block and
-                the disc — different crops, see --disc img object-position. */}
+            {/* tone map traced off the reference plate: dark stone block in front,
+                white statuario panel behind it, veined black disc right, walnut
+                plinth over it. The dark stone, the veined black and the walnut are
+                crops lifted out of shots we already ship — see the note in the
+                image folder; nothing here is a stock texture. */}
             {/* no img-reveal here — the collage reads as one plate, so the four
                 slabs land together; motion comes from the levitation loop in
                 Motion.tsx (mouse lerp per item + scroll drift on the stage) */}
@@ -204,13 +205,13 @@ export default function Home() {
                 plate needs no render assets we do not own */}
             <span className="materials__item materials__item--brass" data-depth="0.5" aria-hidden="true" />
             <figure className="materials__item materials__item--disc" data-depth="0.6">
-              <img src="/img/slab_nero.jpg" alt="Nero Marquina black marble-look disc" />
+              <img src="/img/slab_nero_veined.jpg" alt="Veined black marble-look porcelain disc" />
             </figure>
             <figure className="materials__item materials__item--block" data-depth="1">
-              <img src="/img/slab_nero.jpg" alt="Nero Marquina black marble-look slab" />
+              <img src="/img/stone_dark.jpg" alt="Charcoal stone-look porcelain block" />
             </figure>
             <figure className="materials__item materials__item--plinth" data-depth="0.85">
-              <img src="/img/slab_armani.jpg" alt="Armani Beige marble-look porcelain plinth" />
+              <img src="/img/wood_walnut.jpg" alt="Walnut wood-look porcelain plank plinth" />
             </figure>
             <span className="materials__item materials__item--sphere" data-depth="1.15" aria-hidden="true" />
             <span className="materials__item materials__item--cyl" data-depth="1.05" aria-hidden="true" />
