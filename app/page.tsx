@@ -190,32 +190,27 @@ export default function Home() {
         <section className="section materials ui-light" data-polarity="light">
           <h2 className="materials__label h-display reveal-lines">Premium<br />Materials</h2>
           <div className="materials__stage">
-            {/* our own composition: statuario arch left, dark landscape slab
-                below centre, veined black pill column right anchored by a walnut
-                plank, brass ring and glass rod in the air between them. The dark
-                stone, the veined black and the walnut are crops lifted out of
-                shots we already ship — see the note in the image folder; nothing
-                here is a stock texture. */}
-            {/* no img-reveal here — the collage reads as one plate, so the four
+            {/* the plate: white statuario circle behind a tall veined-black slab,
+                fluted dark wood panel in front, travertine half-dome lower left,
+                brass rod and sphere, hollow glass capsule across the front */}
+            {/* no img-reveal here — the collage reads as one plate, so the
                 slabs land together; motion comes from the levitation loop in
                 Motion.tsx (mouse lerp per item + scroll drift on the stage) */}
-            <figure className="materials__item materials__item--slab" data-depth="0.7">
-              <img src="/img/slab_realistik.jpg" alt="Statuario white marble-look arch" />
+            <figure className="materials__item materials__item--circle" data-depth="0.6">
+              <img src="/img/slab_realistik.jpg" alt="Statuario white marble-look disc" />
             </figure>
-            {/* metal and glass are shapes, not photographs — drawn in CSS so the
-                plate needs no render assets we do not own */}
-            <span className="materials__item materials__item--brass" data-depth="0.5" aria-hidden="true" />
-            <figure className="materials__item materials__item--disc" data-depth="0.6">
-              <img src="/img/slab_nero_veined.jpg" alt="Veined black marble-look porcelain column" />
+            <figure className="materials__item materials__item--nero" data-depth="1">
+              <img src="/img/slab_nero_veined.jpg" alt="Veined black marble-look porcelain slab" />
             </figure>
-            <figure className="materials__item materials__item--block" data-depth="1">
-              <img src="/img/stone_dark.jpg" alt="Charcoal stone-look porcelain block" />
+            {/* the fluting, metal, stone and glass shapes are drawn in CSS so
+                the plate needs no render assets we do not own */}
+            <figure className="materials__item materials__item--wood" data-depth="0.85">
+              <img src="/img/wood_walnut.jpg" alt="Fluted dark wood-look porcelain panel" />
             </figure>
-            <figure className="materials__item materials__item--plinth" data-depth="0.85">
-              <img src="/img/wood_walnut.jpg" alt="Walnut wood-look porcelain plank" />
-            </figure>
+            <span className="materials__item materials__item--dome" data-depth="0.7" aria-hidden="true" />
+            <span className="materials__item materials__item--rod" data-depth="1.1" aria-hidden="true" />
             <span className="materials__item materials__item--sphere" data-depth="1.15" aria-hidden="true" />
-            <span className="materials__item materials__item--cyl" data-depth="1.05" aria-hidden="true" />
+            <span className="materials__item materials__item--capsule" data-depth="1.05" aria-hidden="true" />
           </div>
         </section>
 
