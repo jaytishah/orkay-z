@@ -311,9 +311,19 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 }
 .materials__item--dome {
   width: 21vw; height: 18vh; left: 18%; top: 47vh; border-radius: 999px 999px 0 0; z-index: 2;
+  /* real stone, not a beige fill. dome_stone.jpg is a 2:1 band lifted out of
+     slab_aura.jpg and resized — the full slab is 672KB and 1200x2400, far too
+     much to pull onto the homepage for a 400x195 decorative shape. The
+     gradients stay on top of it: a photo alone reads as a flat sticker, and
+     these are what roll the surface away to the right. */
   background:
-    linear-gradient(0deg, rgba(255, 240, 214, 0.35), transparent 22%),
-    radial-gradient(125% 105% at 26% 4%, #f2ebdf, #ddd3c2 46%, #bcaf99 78%, #9d9080);
+    linear-gradient(0deg, rgba(255, 240, 214, 0.4), transparent 24%),
+    radial-gradient(125% 108% at 24% 2%,
+      rgba(255, 251, 242, 0.62), rgba(255, 248, 236, 0.1) 42%,
+      rgba(104, 90, 70, 0.14) 78%, rgba(80, 68, 52, 0.3)),
+    /* the crop runs cool next to the travertine tones around it */
+    linear-gradient(rgba(214, 180, 128, 0.16), rgba(214, 180, 128, 0.16)),
+    url('/img/dome_stone.jpg') center / cover no-repeat;
   box-shadow: 0 3vh 7vh rgba(0, 0, 0, 0.18);
 }
 .materials__item--rod {
