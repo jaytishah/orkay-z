@@ -263,6 +263,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .materials__label {
   position: relative; z-index: 2; mix-blend-mode: normal;
   text-align: right; font-size: clamp(22px, 2.4vw, 38px);
+  letter-spacing: 0.08em; line-height: 1.18;
 }
 .materials__stage { position: relative; height: 70vh; }
 .materials__item { position: absolute; }
@@ -274,7 +275,9 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    not on raw white */
 .materials__stage::before {
   content: ''; position: absolute; inset: -6% 8%;
-  background: radial-gradient(50% 55% at 48% 45%, rgba(214, 205, 192, 0.35), transparent 70%);
+  background:
+    radial-gradient(46% 52% at 48% 42%, rgba(216, 206, 190, 0.42), transparent 70%),
+    radial-gradient(34% 8% at 47% 86%, rgba(52, 41, 28, 0.22), transparent 72%);
 }
 /* white-on-white: without its own shadow the disc's silhouette vanishes */
 .materials__item--circle { width: 30vw; height: 30vw; left: 45%; top: 2vh; border-radius: 50%; z-index: 1; box-shadow: 0 3vh 9vh rgba(0, 0, 0, 0.15); }
@@ -282,7 +285,11 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* polished marble carries a specular sweep */
 .materials__item--nero::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.14) 45%, transparent 60%);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 6%),
+    linear-gradient(115deg,
+      transparent 26%, rgba(255, 255, 255, 0.06) 38%,
+      rgba(255, 255, 255, 0.20) 45%, rgba(255, 255, 255, 0.06) 52%, transparent 64%);
 }
 .materials__item--wood   { width: 24vw; height: 36vh; left: 44%; top: 29vh; z-index: 4; box-shadow: 0 4vh 8vh rgba(0, 0, 0, 0.24); }
 /* the reference wood is fluted wenge — vertical ribs and a dark wash drawn
@@ -291,18 +298,29 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   content: ''; position: absolute; inset: 0;
   background:
     repeating-linear-gradient(90deg,
-      rgba(24, 12, 6, 0.55) 0 2px, rgba(255, 246, 235, 0.07) 2px 4px,
-      rgba(24, 12, 6, 0.12) 4px 11px),
-    linear-gradient(rgba(46, 26, 14, 0.45), rgba(46, 26, 14, 0.45));
+      rgba(14, 7, 2, 0.72) 0px,
+      rgba(38, 21, 10, 0.34) 4px,
+      rgba(255, 234, 202, 0.13) 8.5px,
+      rgba(255, 242, 220, 0.19) 9.5px,
+      rgba(38, 21, 10, 0.34) 14px,
+      rgba(14, 7, 2, 0.72) 18px),
+    linear-gradient(90deg,
+      rgba(10, 5, 2, 0.42), transparent 16%,
+      transparent 82%, rgba(10, 5, 2, 0.5)),
+    linear-gradient(rgba(52, 30, 16, 0.28), rgba(34, 18, 8, 0.52));
 }
 .materials__item--dome {
   width: 21vw; height: 18vh; left: 18%; top: 47vh; border-radius: 999px 999px 0 0; z-index: 2;
-  background: linear-gradient(150deg, #ded5c6, #c6bba8);
+  background:
+    linear-gradient(0deg, rgba(255, 240, 214, 0.35), transparent 22%),
+    radial-gradient(125% 105% at 26% 4%, #f2ebdf, #ddd3c2 46%, #bcaf99 78%, #9d9080);
   box-shadow: 0 3vh 7vh rgba(0, 0, 0, 0.18);
 }
 .materials__item--rod {
   width: 14vw; height: 1.6vh; left: 22%; top: 17vh; border-radius: 0.8vh; z-index: 5;
-  background: linear-gradient(180deg, #f3e2ab, #c49f52 55%, #8a6829);
+  background: linear-gradient(180deg,
+    #8a6a26, #f7ecc4 22%, #e0bd6d 40%, #a67f2f 68%, #6b4d14 88%, #b08c3c);
+  box-shadow: 0 1.1vh 2.4vh rgba(0, 0, 0, 0.2);
 }
 /* polished, not matt: banded metal underneath, specular hot spot and warm
    bounce light on top — a flat radial gradient reads as painted plaster */
@@ -867,8 +885,10 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   transition: transform var(--dur-slow) var(--ease);
 }
 
-.reveal-lines .line { display: block; overflow: hidden; }
-.reveal-lines .line > span { display: block; transform: translateY(110%); }
+.reveal-lines .line { display: block; overflow: hidden; padding: 0.12em 0.03em; margin: -0.12em -0.03em; }
+/* 125% not 110%: the mask is now 0.24em taller than the line box, so a 110%
+   slide left the glyph tops peeking above the seam */
+.reveal-lines .line > span { display: block; transform: translateY(125%); }
 .reveal-lines.is-inview .line > span {
   transform: translateY(0);
   transition: transform var(--dur-slow) var(--ease);
