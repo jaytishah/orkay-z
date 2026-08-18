@@ -314,19 +314,18 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
     linear-gradient(100deg, #7a4f16, #c99a2e 22%, #f7e39a 43%, #fffdf2 50%, #f0d47a 58%, #b8862a 78%, #6d4512);
   box-shadow: 0 1.4vh 3vh rgba(0, 0, 0, 0.28);
 }
-/* hollow glass capsule — transparent body, bright rim, slight blur of
-   whatever sits behind it */
+/* hollow glass capsule — clear body, thin bright rim, what sits behind it
+   stays sharp */
 .materials__item--capsule {
-  width: 44vw; height: 17vh; left: 33%; top: 33vh; border-radius: 8.5vh; z-index: 6;
+  width: 32vw; height: 12vh; left: 37%; top: 37vh; border-radius: 6vh; z-index: 6;
   background: linear-gradient(180deg,
-    rgba(255, 255, 255, 0.55), rgba(228, 233, 238, 0.12) 30%,
-    rgba(168, 180, 192, 0.14) 70%, rgba(255, 255, 255, 0.5));
+    rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.03) 30%,
+    rgba(168, 180, 192, 0.05) 70%, rgba(255, 255, 255, 0.18));
   box-shadow:
-    inset 0 0 0 2px rgba(255, 255, 255, 0.7),
-    inset 0 -1.2vh 2.4vh rgba(120, 135, 150, 0.3),
-    inset 0 1.2vh 2.4vh rgba(255, 255, 255, 0.5),
-    0 2vh 4vh rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(2px);
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.85),
+    inset 0 -0.8vh 1.8vh rgba(120, 135, 150, 0.18),
+    inset 0 0.8vh 1.8vh rgba(255, 255, 255, 0.35),
+    0 1.5vh 3.5vh rgba(0, 0, 0, 0.1);
 }
 
 /* ═══════════ 04 LUXURY ═══════════ */
@@ -931,7 +930,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .materials__item--dome { width: 36vw; height: 14vh; left: 0%; top: 50vh; }
   .materials__item--rod { width: 20vw; left: 6%; }
   .materials__item--sphere { width: 12vw; height: 12vw; left: 26%; }
-  .materials__item--capsule { width: 66vw; height: 13vh; left: 24%; top: 42vh; border-radius: 6.5vh; }
+  .materials__item--capsule { width: 54vw; height: 10vh; left: 28%; top: 44vh; border-radius: 5vh; }
   .daycycle { height: auto; }
   .daycycle__media { height: 56vh; }
   .journey__media { height: 50vh; }
