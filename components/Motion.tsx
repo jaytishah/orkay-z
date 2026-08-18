@@ -180,10 +180,10 @@ export default function Motion() {
               /* idle levitation — each piece bobs on its own phase (seeded off
                  its depth) so the plate breathes even with the cursor still.
                  Set here, not in CSS: the loop owns `transform` every frame. */
-              const bob = Math.sin(t * 0.6 + d * 7) * 9 * d;
-              const sway = Math.cos(t * 0.4 + d * 4) * 5 * d;
+              const bob = Math.sin(t * 0.45 + d * 7) * 26 * d;
+              const sway = Math.cos(t * 0.32 + d * 4) * 14 * d;
               el.style.transform =
-                `translate3d(${((innerWidth / 2 - cur.x) / 15) * d + sway}px, ${((innerHeight / 2 - cur.y) / 15) * d + sy + bob}px, 0) rotate(${Math.sin(t * 0.5 + d * 3) * 0.5 * d}deg)`;
+                `translate3d(${((innerWidth / 2 - cur.x) / 15) * d + sway}px, ${((innerHeight / 2 - cur.y) / 15) * d + sy + bob}px, 0) rotate(${Math.sin(t * 0.38 + d * 3) * 1.3 * d}deg)`;
             }
           };
           gsap.ticker.add(float);
