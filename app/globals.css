@@ -270,10 +270,21 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    over the slab's right edge, travertine half-dome lower left, brass rod
    crossing the slab, gold sphere at the floor line, hollow glass capsule
    across slab and wood. Pieces share a floor line around 80vh */
+/* a warm pool of light behind the cluster so the plate sits in a lit room,
+   not on raw white */
+.materials__stage::before {
+  content: ''; position: absolute; inset: -6% 8%;
+  background: radial-gradient(50% 55% at 48% 45%, rgba(214, 205, 192, 0.35), transparent 70%);
+}
 /* white-on-white: without its own shadow the disc's silhouette vanishes */
-.materials__item--circle { width: 21vw; height: 21vw; left: 68%; top: 6vh; border-radius: 50%; z-index: 1; box-shadow: 0 2vh 7vh rgba(0, 0, 0, 0.13); }
-.materials__item--nero   { width: 13vw; height: 48vh; left: 30%; top: 16vh; z-index: 3; box-shadow: 0 3vh 7vh rgba(0, 0, 0, 0.22); }
-.materials__item--wood   { width: 16vw; height: 30vh; left: 48%; top: 34vh; z-index: 4; box-shadow: 0 3vh 6vh rgba(0, 0, 0, 0.2); }
+.materials__item--circle { width: 21vw; height: 21vw; left: 49%; top: 4vh; border-radius: 50%; z-index: 1; box-shadow: 0 3vh 9vh rgba(0, 0, 0, 0.15); }
+.materials__item--nero   { width: 13vw; height: 48vh; left: 38%; top: 14vh; z-index: 3; box-shadow: 0 4vh 9vh rgba(0, 0, 0, 0.28); }
+/* polished marble carries a specular sweep */
+.materials__item--nero::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.14) 45%, transparent 60%);
+}
+.materials__item--wood   { width: 16vw; height: 30vh; left: 48%; top: 32vh; z-index: 4; box-shadow: 0 4vh 8vh rgba(0, 0, 0, 0.24); }
 /* the reference wood is fluted wenge — vertical ribs and a dark wash drawn
    over our walnut so the panel reads ribbed without a new asset */
 .materials__item--wood::after {
@@ -285,18 +296,18 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
     linear-gradient(rgba(46, 26, 14, 0.45), rgba(46, 26, 14, 0.45));
 }
 .materials__item--dome {
-  width: 14.5vw; height: 15vh; left: 3%; top: 49vh; border-radius: 999px 999px 0 0; z-index: 2;
+  width: 14.5vw; height: 15vh; left: 26%; top: 47vh; border-radius: 999px 999px 0 0; z-index: 2;
   background: linear-gradient(150deg, #ded5c6, #c6bba8);
-  box-shadow: 0 2vh 5vh rgba(0, 0, 0, 0.14);
+  box-shadow: 0 3vh 7vh rgba(0, 0, 0, 0.18);
 }
 .materials__item--rod {
-  width: 10vw; height: 1.2vh; left: 24%; top: 22vh; border-radius: 0.6vh; z-index: 5;
+  width: 10vw; height: 1.2vh; left: 32%; top: 20vh; border-radius: 0.6vh; z-index: 5;
   background: linear-gradient(180deg, #f3e2ab, #c49f52 55%, #8a6829);
 }
 /* polished, not matt: banded metal underneath, specular hot spot and warm
    bounce light on top — a flat radial gradient reads as painted plaster */
 .materials__item--sphere {
-  width: 4.2vw; height: 4.2vw; left: 17%; top: 57vh; border-radius: 50%; z-index: 7;
+  width: 4.2vw; height: 4.2vw; left: 36.5%; top: 55vh; border-radius: 50%; z-index: 7;
   background:
     radial-gradient(circle at 31% 25%, rgba(255, 255, 255, 0.95) 0 4%, rgba(255, 255, 255, 0) 28%),
     radial-gradient(circle at 70% 78%, rgba(255, 236, 178, 0.6), rgba(255, 236, 178, 0) 46%),
@@ -306,7 +317,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* hollow glass capsule — transparent body, bright rim, slight blur of
    whatever sits behind it */
 .materials__item--capsule {
-  width: 40vw; height: 14vh; left: 40%; top: 38vh; border-radius: 7vh; z-index: 6;
+  width: 30vw; height: 14vh; left: 40%; top: 36vh; border-radius: 7vh; z-index: 6;
   background: linear-gradient(180deg,
     rgba(255, 255, 255, 0.55), rgba(228, 233, 238, 0.12) 30%,
     rgba(168, 180, 192, 0.14) 70%, rgba(255, 255, 255, 0.5));
