@@ -332,18 +332,42 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
     linear-gradient(100deg, #7a4f16, #c99a2e 22%, #f7e39a 43%, #fffdf2 50%, #f0d47a 58%, #b8862a 78%, #6d4512);
   box-shadow: 0 1.4vh 3vh rgba(0, 0, 0, 0.28);
 }
-/* hollow glass capsule — clear body, thin bright rim, what sits behind it
-   stays sharp */
+/* hollow glass tube. The uniform 1.5px stroke all the way round read as a
+   drawn outline, not glass — a real tube is bright where the key grazes the
+   crown, thin and cool along the underside, and thick enough at the domed
+   ends to go grey. Narrower than the wood panel so it crosses the plate as a
+   detail rather than a bar across it. */
 .materials__item--capsule {
-  width: 32vw; height: 12vh; left: 37%; top: 37vh; border-radius: 6vh; z-index: 6;
+  width: 21vw; height: 12vh; left: 42%; top: 37vh; border-radius: 6vh; z-index: 6;
+  /* clear enough to read the fluting through — a sheen on the crown, a cool
+     bounce off the floor, nothing milky between them */
   background: linear-gradient(180deg,
-    rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.03) 30%,
-    rgba(168, 180, 192, 0.05) 70%, rgba(255, 255, 255, 0.18));
+    rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.02) 26%,
+    rgba(255, 255, 255, 0) 62%, rgba(190, 202, 214, 0.07) 85%,
+    rgba(255, 255, 255, 0.15));
+  /* glass is never optically perfect; a sub-pixel blur and a little
+     saturation is the whole difference between a tube and a sticker */
+  -webkit-backdrop-filter: blur(1.1px) saturate(1.08) brightness(1.03);
+  backdrop-filter: blur(1.1px) saturate(1.08) brightness(1.03);
   box-shadow:
-    inset 0 0 0 1.5px rgba(255, 255, 255, 0.85),
-    inset 0 -0.8vh 1.8vh rgba(120, 135, 150, 0.18),
-    inset 0 0.8vh 1.8vh rgba(255, 255, 255, 0.35),
-    0 1.5vh 3.5vh rgba(0, 0, 0, 0.1);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.55),
+    /* the wall thickens toward the domed ends, so the glass greys there */
+    inset 2.4vw 0 2.6vw -2.2vw rgba(116, 130, 146, 0.3),
+    inset -2.4vw 0 2.6vw -2.2vw rgba(116, 130, 146, 0.3),
+    inset 0 -1vh 1.8vh -0.7vh rgba(108, 122, 138, 0.22),
+    inset 0 1vh 1.8vh -0.9vh rgba(255, 255, 255, 0.5),
+    0 1.2vh 3vh rgba(0, 0, 0, 0.09);
+}
+/* the specular: one crisp streak along the crown, stopping short of the far
+   end. A full-width wash is what made the body look like frosted plastic. */
+.materials__item--capsule::after {
+  content: ''; position: absolute; left: 7%; right: 33%; top: 15%; height: 15%;
+  border-radius: 999px; filter: blur(1.5px);
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8) 38%,
+    rgba(255, 255, 255, 0.5) 72%, rgba(255, 255, 255, 0));
 }
 
 /* ═══════════ 04 LUXURY ═══════════ */
@@ -950,7 +974,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .materials__item--dome { width: 36vw; height: 14vh; left: 0%; top: 50vh; }
   .materials__item--rod { width: 20vw; left: 6%; }
   .materials__item--sphere { width: 12vw; height: 12vw; left: 26%; }
-  .materials__item--capsule { width: 54vw; height: 10vh; left: 28%; top: 44vh; border-radius: 5vh; }
+  .materials__item--capsule { width: 38vw; height: 10vh; left: 36%; top: 44vh; border-radius: 5vh; }
   .daycycle { height: auto; }
   .daycycle__media { height: 56vh; }
   .journey__media { height: 50vh; }
