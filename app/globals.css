@@ -266,53 +266,40 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 }
 .materials__stage { position: relative; height: 90vh; }
 .materials__item { position: absolute; }
-/* geometry traced off the zorge9 /style plate: slab behind, block in front of
-   it, disc on the right with the plinth over it, metal and glass on top */
-.materials__item--slab   { width: 18vw;   height: 66vh;  left: 43%; top: 1vh;  z-index: 1; }
-.materials__item--disc   { width: 18.5vw; height: 18.5vw; left: 61%; top: 8vh; border-radius: 50%; z-index: 2; }
-.materials__item--disc img { object-position: 100% 100%; }
-/* overflow visible: the ::before side face lives outside the figure box and
-   the global figure rule would clip it */
-.materials__item--block  { width: 11.6vw; height: 52vh; left: 34%; top: 11vh; z-index: 3; perspective: 1400px; overflow: visible; }
-/* the reference block is a solid, not a plate — a receding side face in light
-   grey. rotateY under the parent perspective foreshortens it into a trapezoid
-   on its own; a skew would give a parallelogram and read flat */
-.materials__item--block::before {
-  content: ''; position: absolute; top: 0; bottom: 0; right: 100%; width: 8vw;
-  transform-origin: right center; transform: rotateY(-58deg);
-  background: linear-gradient(90deg, #d4d4d0, #b0b0ac);
-}
-.materials__item--plinth { width: 19vw; height: 34vh; left: 56%; top: 38vh; z-index: 4; perspective: 1400px; overflow: visible; }
-/* the reference wood is a solid too — a lit top face the glass rests on */
-.materials__item--plinth::before {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: 7vh;
-  transform-origin: center bottom; transform: rotateX(-62deg);
-  background: linear-gradient(180deg, #b98a5e, #8f6440);
-}
+/* our own plate, not the reference's: an arch on the left, a landscape slab
+   below centre, a pill column on the right anchored by a plank, a brass ring
+   floating in the middle air. Same levitation UX, different geometry — the
+   pieces get room to breathe instead of the reference's tight cluster */
+/* white-on-white: the arch needs its own shadow or the silhouette vanishes */
+.materials__item--slab   { width: 19vw; height: 58vh; left: 10%; top: 5vh; z-index: 1; border-radius: 9.5vw 9.5vw 0 0; box-shadow: 0 2vh 7vh rgba(0, 0, 0, 0.14); }
+.materials__item--disc   { width: 14vw; height: 54vh; left: 68%; top: 8vh; border-radius: 7vw; z-index: 2; }
+.materials__item--disc img { object-position: 50% 100%; }
+.materials__item--block  { width: 22vw; height: 32vh; left: 27%; top: 42vh; z-index: 3; }
+.materials__item--plinth { width: 24vw; height: 15vh; left: 58%; top: 58vh; z-index: 4; }
 .materials__item--block, .materials__item--plinth { box-shadow: 0 3vh 6vh rgba(0, 0, 0, 0.16); }
-/* brass half-disc sinking behind the block, bottom left of the plate.
-   Polished brass, not mosaic: the reference plate carries a smooth metal
-   sweep here, and the joint grid was the one element reading as a tile. */
+/* brass ring, not a solid disc — the metal sweep masked to an annulus */
 .materials__item--brass  {
-  width: 17vw; height: 17vw; left: 21%; top: 47vh; border-radius: 50%; z-index: 1;
+  width: 11vw; height: 11vw; left: 47%; top: 8vh; border-radius: 50%; z-index: 1;
   background:
     radial-gradient(circle at 66% 28%, rgba(255, 253, 240, 0.9), rgba(255, 253, 240, 0) 52%),
     linear-gradient(118deg, #8a6829, #c49f52 28%, #f3e2ab 50%, #d8b268 68%, #96712f);
+  -webkit-mask: radial-gradient(circle, transparent 0 58%, #000 59%);
+  mask: radial-gradient(circle, transparent 0 58%, #000 59%);
 }
 /* polished, not matt: banded metal underneath, specular hot spot and warm
    bounce light on top — a flat radial gradient reads as painted plaster */
 .materials__item--sphere {
-  width: 6vw; height: 6vw; left: 43%; top: 18vh; border-radius: 50%; z-index: 5;
+  width: 5.5vw; height: 5.5vw; left: 24%; top: 9vh; border-radius: 50%; z-index: 5;
   background:
     radial-gradient(circle at 31% 25%, rgba(255, 255, 255, 0.95) 0 4%, rgba(255, 255, 255, 0) 28%),
     radial-gradient(circle at 70% 78%, rgba(255, 236, 178, 0.6), rgba(255, 236, 178, 0) 46%),
     linear-gradient(100deg, #7a4f16, #c99a2e 22%, #f7e39a 43%, #fffdf2 50%, #f0d47a 58%, #b8862a 78%, #6d4512);
   box-shadow: 0 1.4vh 3vh rgba(0, 0, 0, 0.28);
 }
-/* glass cylinder laid across the plinth */
+/* glass rod stood upright between the slab and the plank */
 .materials__item--cyl {
-  width: 28vw; height: 7.4vh; left: 52%; top: 31vh; border-radius: 3.7vh; z-index: 5;
-  background: linear-gradient(180deg,
+  width: 4.5vw; height: 28vh; left: 52%; top: 34vh; border-radius: 2.25vw; z-index: 5;
+  background: linear-gradient(90deg,
     rgba(255, 255, 255, 0.92), rgba(186, 195, 204, 0.55) 38%,
     rgba(88, 98, 110, 0.5) 68%, rgba(255, 255, 255, 0.85));
   box-shadow: 0 1vh 2.4vh rgba(0, 0, 0, 0.2);
@@ -914,13 +901,13 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .collections__card figure { height: 34vh; }
   .statement__title { max-width: 100%; }
   /* same stack, widened — the plate still reads as one composition on a phone */
-  .materials__item--slab { width: 42vw; height: 40vh; left: 30%; }
-  .materials__item--disc { width: 40vw; height: 40vw; left: 52%; }
-  .materials__item--block { width: 38vw; height: 42vh; left: 6%; }
-  .materials__item--plinth { width: 44vw; height: 24vh; left: 44%; }
-  .materials__item--brass { width: 34vw; height: 34vw; left: 2%; }
-  .materials__item--sphere { width: 13vw; height: 13vw; left: 38%; }
-  .materials__item--cyl { width: 58vw; height: 5vh; left: 38%; border-radius: 2.5vh; }
+  .materials__item--slab { width: 38vw; height: 40vh; left: 4%; border-radius: 19vw 19vw 0 0; }
+  .materials__item--disc { width: 26vw; height: 42vh; left: 66%; border-radius: 13vw; }
+  .materials__item--block { width: 46vw; height: 24vh; left: 26%; }
+  .materials__item--plinth { width: 48vw; height: 12vh; left: 46%; }
+  .materials__item--brass { width: 20vw; height: 20vw; left: 42%; }
+  .materials__item--sphere { width: 11vw; height: 11vw; left: 26%; }
+  .materials__item--cyl { width: 9vw; height: 22vh; left: 50%; border-radius: 4.5vw; }
   .daycycle { height: auto; }
   .daycycle__media { height: 56vh; }
   .journey__media { height: 50vh; }
