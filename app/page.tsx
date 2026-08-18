@@ -190,24 +190,30 @@ export default function Home() {
         <section className="section materials ui-light" data-polarity="light">
           <h2 className="materials__label h-display reveal-lines">Premium<br />Materials</h2>
           <div className="materials__stage">
-            {/* Vivian is a white statuario — on the white panel it read as a
-                missing image. Aura's grey body holds an edge without a border,
-                which the design system does not allow. */}
+            {/* tone map traced off the reference plate: dark block in front, white
+                statuario panel behind it, black disc right, warm body bottom-right.
+                Nero is the only dark slab we own, so it carries both the block and
+                the disc — different crops, see --disc img object-position. */}
             {/* no img-reveal here — the collage reads as one plate, so the four
                 slabs land together; motion comes from the levitation loop in
                 Motion.tsx (mouse lerp per item + scroll drift on the stage) */}
-            <figure className="materials__item materials__item--tall" data-depth="1">
-              <img src="/img/slab_aura.jpg" alt="Aura Silver marble-look slab" />
+            <figure className="materials__item materials__item--slab" data-depth="0.7">
+              <img src="/img/slab_realistik.jpg" alt="Statuario white marble-look slab" />
             </figure>
-            <figure className="materials__item materials__item--circle" data-depth="0.85">
-              <img src="/img/slab_polar.jpg" alt="Polar Blue stone circle" />
-            </figure>
-            <figure className="materials__item materials__item--square" data-depth="0.7">
-              <img src="/img/slab_armani.jpg" alt="Armani Beige slab" />
-            </figure>
+            {/* metal and glass are shapes, not photographs — drawn in CSS so the
+                plate needs no render assets we do not own */}
+            <span className="materials__item materials__item--brass" data-depth="0.5" aria-hidden="true" />
             <figure className="materials__item materials__item--disc" data-depth="0.6">
-              <img src="/img/slab_blue.jpg" alt="Blue onyx surface" />
+              <img src="/img/slab_nero.jpg" alt="Nero Marquina black marble-look disc" />
             </figure>
+            <figure className="materials__item materials__item--block" data-depth="1">
+              <img src="/img/slab_nero.jpg" alt="Nero Marquina black marble-look slab" />
+            </figure>
+            <figure className="materials__item materials__item--plinth" data-depth="0.85">
+              <img src="/img/slab_armani.jpg" alt="Armani Beige marble-look porcelain plinth" />
+            </figure>
+            <span className="materials__item materials__item--sphere" data-depth="1.15" aria-hidden="true" />
+            <span className="materials__item materials__item--cyl" data-depth="1.05" aria-hidden="true" />
           </div>
         </section>
 
