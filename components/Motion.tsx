@@ -20,6 +20,9 @@ export default function Motion() {
       if (cancelled) return;
 
       gsap.registerPlugin(ScrollTrigger);
+      /* touch-only: a mobile URL bar collapsing fires a resize, and refreshing
+         every pin mid-scroll jumps the page. Desktop resize still refreshes. */
+      ScrollTrigger.config({ ignoreMobileResize: true });
       const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const q = (s: string) => document.querySelector(s);
       const qa = (s: string) => Array.from(document.querySelectorAll(s));

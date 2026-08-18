@@ -1003,3 +1003,153 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .cd-cta { flex-direction: column; gap: 24px; }
   .inquiry__grid { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE PASS — everything below is inside a max-width query,
+   so the desktop cascade is untouched. Rules that restate an
+   earlier @media (max-width: 900px) declaration win on order.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* ── fixed chrome ──
+     the tagline's 0.42em tracking makes the mark ~140px wide, which
+     lands under the nav pill on a phone. The wordmark alone still reads. */
+  .logo__tag { display: none; }
+  /* the 2.7x blow-up over the location section is half a phone wide — it
+     printed straight through the nav. The giant MORBI in-section carries it. */
+  .logo--xl { transform: none; }
+  .header { padding: 22px var(--pad); }
+  .header__nav { gap: 14px; padding-top: 2px; }
+  .btn--nav { padding: 12px 16px; font-size: 11px; letter-spacing: 0; }
+  .burger { width: 30px; gap: 5px; }
+  /* a 3px progress rail means nothing on touch, and mix-blend-mode on a
+     full-height fixed element costs a compositing layer for the whole page */
+  .scrollbar { display: none; }
+
+  /* ── 00 hero ──
+     svh, not vh: with the URL bar showing, the wordmark sat below the fold.
+     The stack is a grid, not a 38vh inset: the panel is static on mobile so
+     its z-index never applied, and on a short screen the absolute film simply
+     painted over the scroll arrow and the location line. Rows let the copy
+     take what it needs and hand the rest to the film. */
+  .hero { height: 100svh; display: grid; grid-template-rows: auto 1fr; }
+  .hero__panel { order: 1; padding-top: 11vh; }
+  .hero__media { order: 2; position: relative; inset: auto; }
+  /* lifted clear of the floating actions rather than narrowed to dodge them */
+  .hero__wordmark { bottom: 12vh; }
+
+  /* ── 05 gallery ──
+     the scatter's per-frame sizes are :nth-child (0,2,0), so the stacked
+     `.gallery__item { width: auto }` above never reached them and the grid
+     kept the 22vw × 54vh slivers. Matched specificity, so it lands. */
+  .gallery__item:nth-child(n) { width: auto; height: 26vh; }
+
+  /* ── 01 statement ── justified type rivers badly in a 350px column */
+  .statement { padding-top: 14vh; }
+  .statement__title { text-align: left; text-indent: 12%; }
+  .statement__media { height: 42vh; }
+
+  /* ── 04 luxury ── two stacked 86vh frames is 1.7 screens of photograph */
+  .luxury__pair figure { height: 42vh; }
+
+  /* ── 09b export map ──
+     the map is drawn at 1000×436; at 350px wide every dot, arc and label
+     falls under a pixel. Re-weight the geometry rather than redraw it. */
+  .exportmap { padding-top: 12vh; padding-bottom: 12vh; }
+  .globalmap__arc { stroke-width: 1.6; opacity: 0.5; }
+  .globalmap__dot { r: 6; }
+  .globalmap__pulse { r: 8; }
+  .globalmap__ring { r: 26; stroke-width: 1.6; }
+  .globalmap__label { font-size: 26px; letter-spacing: 8px; }
+
+  /* ── 06 day cycle ──
+     the 92vh dial straddled the photo/panel seam, and that seam is gone
+     once the section stacks — so it sits inside the photo instead */
+  .daycycle__ring { width: 46vh; height: 46vh; top: 28vh; }
+  .daycycle__row { padding-right: 0; }
+
+  /* ── 06b / 07g experience ──
+     the caption was pinned to a left edge with no right one, so it ran
+     off the page; "mirror-polished" alone overruns 44px in 350px */
+  .experience::after {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 62%);
+  }
+  .experience__caption { right: var(--pad); top: auto; bottom: 26vh; max-width: 100%; }
+  .experience__title { bottom: 11vh; padding-right: 0; font-size: clamp(28px, 8.5vw, 44px); }
+
+  /* ── 06c spaces ──
+     the 50/50 split leaves a 175px text column, so the photo goes
+     full-bleed and the panel sits on it under a scrim. The scroll-driven
+     step is untouched — only the slide's internal layout changes. */
+  .spaces__slide { grid-template-columns: 1fr; }
+  .spaces__media { position: absolute; inset: 0; }
+  .spaces__panel {
+    z-index: 2; align-content: end;
+    padding: var(--pad) var(--pad) 15vh;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 34%, rgba(0, 0, 0, 0));
+  }
+  .spaces__panel .h-display { font-size: clamp(34px, 10vw, 56px); }
+  .spaces__desc { position: static; max-width: 100%; margin-top: 16px; }
+  .spaces__index { color: var(--c-gray-light); }
+
+  /* ── 07e plate ── a landscape photo cropped to 100vh on a phone is a slice */
+  .plate { height: 62vh; padding: 0 var(--pad); }
+
+  /* ── 08a formats ──
+     same pinned stepper, one column: the photo goes behind, the panel
+     sits on it, and the tabs scroll rather than wrap */
+  .formats__pin { grid-template-columns: 1fr; }
+  .formats__media { position: absolute; inset: 0; height: 100%; z-index: 0; }
+  .formats__media::after {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.86) 0%, rgba(0, 0, 0, 0.15) 58%, rgba(0, 0, 0, 0.55) 100%);
+  }
+  .formats__tabs {
+    top: 96px; left: 0; right: 0; gap: 18px;
+    padding: 0 var(--pad); overflow-x: auto; scrollbar-width: none;
+  }
+  .formats__tabs::-webkit-scrollbar { display: none; }
+  .formats__tab { flex: none; }
+  .formats__panel {
+    position: relative; z-index: 2;
+    align-content: end; gap: 18px; padding: 0 var(--pad) 12vh;
+  }
+  .formats__plan { width: 150px; }
+  .formats__desc { max-width: 100%; color: #ddd; }
+  .formats__kicker { bottom: 5vh; z-index: 2; }
+
+  /* ── 07f services ──
+     un-sticking the photo with `position: static` handed its absolutely
+     positioned images the whole section as a containing block, so they
+     covered the cards. `relative` un-sticks it and keeps them in the frame. */
+  .tech__media { position: relative; }
+  .tech__card { min-height: 0; }
+
+  /* ── 07h scale ── the plate is 2:1; 60vh of it is a letterbox slice */
+  .penth { padding: 10vh 0 10vh; }
+  .penth__tall { height: 34vh; }
+
+  /* ── 14 footer ──
+     the floating actions sit over the credit line and the back-to-top arrow */
+  .footer { padding-bottom: calc(var(--pad) + 56px); }
+  .footer__base { padding-right: 56px; }
+
+  /* stacked, the two buttons mask a 104px-tall column of running text on
+     every dark section they pass; side by side they mask one line */
+  .floaters { grid-auto-flow: column; }
+
+  /* ── collection detail ── */
+  .cd-header { padding: 18px var(--pad); }
+  .cd-logo { font-size: 22px; }
+  .cd-hero__panel { padding-top: 14vh; gap: 28px; }
+  /* the spec values sit on the right edge, under the floating actions */
+  .cd-specs > div { padding-right: 56px; }
+  .cd-apps { padding-top: 10vh; padding-bottom: 10vh; }
+  .cd-cta { padding-bottom: 12vh; }
+}
+
+/* the catalogue pill and the wordmark run out of room together on the
+   narrowest phones — the burger still reaches every destination */
+@media (max-width: 380px) {
+  .btn--nav { display: none; }
+}

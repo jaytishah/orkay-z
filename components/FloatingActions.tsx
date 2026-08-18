@@ -62,7 +62,9 @@ export default function FloatingActions() {
           </svg>
         </button>
       ) : (
-        <a className="floater floater--chat" href="#partner" aria-label="Send an export inquiry">
+        /* #partner is not rendered on any page — the fallback was a dead
+           button. #contact is the footer's phone/email block. */
+        <a className="floater floater--chat" href="#contact" aria-label="Contact the ORKAY export team">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path
               fill="currentColor"

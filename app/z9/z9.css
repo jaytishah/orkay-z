@@ -381,3 +381,22 @@
   .z9-loc__rail { grid-auto-columns: 82%; }
   .z9-loc__card { height: 42vh; }
 }
+
+/* ── mobile: same reason as globals.css — svh so bottom-anchored content
+      is not parked under the URL bar on first paint ── */
+@media (max-width: 900px) {
+  .z9-hero, .z9-about { height: 100svh; }
+  /* the floating actions own the bottom-right corner; the tiles are
+     bottom-aligned, so the white tile's CTA landed under them */
+  .z9-about { padding-bottom: 76px; }
+  /* stacked, the headline sits where the desktop scrim has already faded to
+     0.22 — and the loop runs through frames of bright marble */
+  .z9-about__media::after {
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.84) 0%, rgba(0,0,0,0.6) 36%, rgba(0,0,0,0.22) 66%, rgba(0,0,0,0.45) 100%);
+  }
+  /* at clamp(120px, 38vw) the tile is too small to hold label + mid + CTA,
+     and on a narrow phone the three overlap. Half the row each, and taller. */
+  .z9-about__cards { width: 100%; }
+  .z9-tile { width: calc(50% - 6px); aspect-ratio: 0.72; }
+}
