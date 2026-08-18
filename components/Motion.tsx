@@ -171,13 +171,19 @@ export default function Motion() {
             cur.y += (target.y - cur.y) * 0.05;
             const r = matSection?.getBoundingClientRect();
             const p = r ? Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))) : 0.5;
+            const t = gsap.ticker.time;
             for (const el of matItems) {
               const d = parseFloat(el.dataset.depth || '0.8');
               /* deeper pieces lag the scroll harder — up to ±25vh each on top
                  of the stage's own drift, so the collage pulls apart in Z */
               const sy = (0.5 - p) * innerHeight * 0.5 * d;
+              /* idle levitation — each piece bobs on its own phase (seeded off
+                 its depth) so the plate breathes even with the cursor still.
+                 Set here, not in CSS: the loop owns `transform` every frame. */
+              const bob = Math.sin(t * 0.6 + d * 7) * 9 * d;
+              const sway = Math.cos(t * 0.4 + d * 4) * 5 * d;
               el.style.transform =
-                `translate3d(${((innerWidth / 2 - cur.x) / 15) * d}px, ${((innerHeight / 2 - cur.y) / 15) * d + sy}px, 0)`;
+                `translate3d(${((innerWidth / 2 - cur.x) / 15) * d + sway}px, ${((innerHeight / 2 - cur.y) / 15) * d + sy + bob}px, 0) rotate(${Math.sin(t * 0.5 + d * 3) * 0.5 * d}deg)`;
             }
           };
           gsap.ticker.add(float);
