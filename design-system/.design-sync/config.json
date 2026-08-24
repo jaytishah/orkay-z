@@ -1,0 +1,66 @@
+{
+  "projectId": "ec44692a-f6b6-4e31-9e09-f003471ea36d",
+  "shape": "package",
+  "pkg": "@orkay/ds",
+  "globalName": "OrkayDS",
+  "buildCmd": "npm run build",
+  "cssEntry": "src/styles.css",
+  "docsDir": "docs",
+  "guidelinesGlob": [
+    "docs/guides/**/*.md"
+  ],
+  "extraFonts": [
+    "src/fonts/hanken-600.woff2",
+    "src/fonts/hanken-700.woff2"
+  ],
+  "overrides": {
+    "Logo": {
+      "cardMode": "single",
+      "primaryStory": "Default"
+    },
+    "Header": {
+      "cardMode": "single",
+      "primaryStory": "WithCatalogueCta"
+    },
+    "Menu": {
+      "cardMode": "single",
+      "primaryStory": "Open"
+    },
+    "Scrollbar": {
+      "cardMode": "single",
+      "primaryStory": "NearTop"
+    },
+    "FloatingActions": {
+      "cardMode": "single",
+      "primaryStory": "ContactFallback"
+    },
+    "Section": {
+      "cardMode": "column"
+    },
+    "Wordmark": {
+      "cardMode": "column"
+    },
+    "CollectionCard": {
+      "cardMode": "column"
+    },
+    "LocCard": {
+      "cardMode": "column"
+    },
+    "StatItem": {
+      "cardMode": "column"
+    },
+    "Tile": {
+      "cardMode": "column"
+    },
+    "InquiryForm": {
+      "cardMode": "column"
+    },
+    "Display": {
+      "cardMode": "column"
+    },
+    "Mid": {
+      "cardMode": "column"
+    }
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
