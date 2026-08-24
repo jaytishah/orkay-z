@@ -20,3 +20,7 @@ Thumbs.db
 
 # tooling caches
 .impeccable/
+
+# admin CMS local store + uploads
+.data/
+public/uploads/
