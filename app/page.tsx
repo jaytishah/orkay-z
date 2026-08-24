@@ -1,6 +1,5 @@
 import SiteChrome, { Footer } from '@/components/SiteChrome';
 import Motion from '@/components/Motion';
-import GlobalMap from '@/components/GlobalMap';
 import {
   formats, tileTypes, dayCycle,
   site, nearby, spaces, facilities, timeline,
@@ -12,6 +11,20 @@ import './z9/z9.css';
 /* eslint-disable @next/next/no-img-element -- the design system sizes every
    image with object-fit inside fixed-height figures; next/image adds no value
    here and would fight the clip-path reveals. */
+
+/* ORKAY stretch wordmark — slices of "ARKAY text 1-02" laid into a canvas
+   sized to the fully-stretched word (the R band doubled). Motion.tsx scales
+   the o/r bands on scroll; geometry baked by scripts/slice-wordmark.py.
+   Percentages: left/width of canvas width, top/height of canvas height. */
+const wordParts: Record<string, { l: number; t: number; w: number; h: number }> = {
+  'o-top': { l: 0, t: 0, w: 21.42, h: 15.62 },
+  'o-band': { l: 0, t: 15.62, w: 21.42, h: 21.011 },
+  'o-bot': { l: 0, t: 36.632, w: 21.42, h: 16.827 },
+  'r-top': { l: 23.895, t: 0.276, w: 17.449, h: 29.57 },
+  'r-band': { l: 23.895, t: 29.846, w: 17.449, h: 33.173 },
+  'r-bot': { l: 23.895, t: 63.019, w: 17.449, h: 3.793 },
+  kay: { l: 44.327, t: 0.276, w: 55.673, h: 31.822 },
+};
 
 export default function Home() {
   return (
@@ -123,17 +136,30 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 00c2 · EXPORT MAP */}
-        <section className="section exportmap ui-dark" id="exports" data-polarity="dark">
-          <p className="exportmap__label text-small">Export Network</p>
-          <h2 className="exportmap__title h-display reveal-lines">
-            Morbi to<br />40+ countries
-          </h2>
-          <GlobalMap />
-          <p className="exportmap__note text-small">
-            Every lane on this map runs from one gate in Morbi — our own kilns, our own
-            IEC, our own loading yard. Hover a marker for the market.
-          </p>
+        {/* 00c2 · BRAND WORDMARK */}
+        <section className="section exportmap ui-light" id="exports" data-polarity="light">
+          <h2 className="sr-only">ORKAY</h2>
+          {/* the O and R pull downward as the section scrolls — Motion.tsx
+              drives the band scales, the R travelling twice as far */}
+          <div className="exportmap__word" aria-hidden="true">
+            {Object.entries(wordParts).map(([name, p]) => (
+              <img
+                key={name}
+                data-part={name}
+                src={`/img/wordmark-${name}.png`}
+                alt=""
+                style={{
+                  left: `${p.l}%`, top: `${p.t}%`, width: `${p.w}%`,
+                  /* 1px bleed on any slice with a neighbour below: at a
+                     fractional box edge two alpha edges composite to ~84%
+                     and the light section shows through as a hairline. The
+                     joint rows are constant-width columns, so the extra
+                     pixel of stretch is invisible. */
+                  height: /-(top|band)$/.test(name) ? `calc(${p.h}% + 1px)` : `${p.h}%`,
+                }}
+              />
+            ))}
+          </div>
         </section>
 
         {/* 00d · WORLD — two screens */}

@@ -616,9 +616,13 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
    Motion adds .is-inview to .globalmap; every stage below hangs off that class,
    and the per-element delays are inline in GlobalMap.tsx (40 arcs, 40 pins). */
 .exportmap { padding-top: 16vh; padding-bottom: 16vh; }
-.exportmap__label { color: var(--c-red); margin-bottom: 4vh; }
-.exportmap__title { margin-bottom: 6vh; }
-.exportmap__note { color: var(--c-gray-light); margin-top: 5vh; max-width: 46ch; }
+/* stretch wordmark: the canvas is the fully-stretched extent, so the letters
+   grow into reserved space instead of pushing the map around. The bands must
+   stretch, not crop — hence `fill` against the global cover rule. */
+.exportmap__word { position: relative; width: 100%; aspect-ratio: 10224 / 6882; }
+.exportmap__word img { position: absolute; object-fit: fill; pointer-events: none; }
+.exportmap__word [data-part$='-band'] { transform-origin: top center; will-change: transform; }
+.exportmap__word [data-part$='-bot'] { will-change: transform; }
 
 .globalmap svg { width: 100%; height: auto; display: block; overflow: visible; }
 .globalmap__land {

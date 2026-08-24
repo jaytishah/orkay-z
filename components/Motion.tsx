@@ -169,6 +169,35 @@ export default function Motion() {
         ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => el.classList.add('is-inview') });
       });
 
+      /* export-map wordmark: the O and R middle bands scale from 0 (compact
+         word) as the section scrolls; the bottom caps ride the band edge.
+         U = o-band/r-band drawn heights, so both grow at the same px rate;
+         the R then carries on alone to double its drawn band. */
+      const word = q('.exportmap__word');
+      if (word) {
+        const part = (n: string) => word.querySelector(`[data-part="${n}"]`) as HTMLElement;
+        const bands = { o: part('o-band'), r: part('r-band') };
+        const bots = { o: part('o-bot'), r: part('r-bot') };
+        const U = 0.6334;
+        const v = reduced ? { o: 1, r: 2 } : { o: 0, r: 0 };
+        const apply = () =>
+          (['o', 'r'] as const).forEach((k) => {
+            gsap.set(bands[k], { scaleY: v[k] });
+            gsap.set(bots[k], { y: -(1 - v[k]) * bands[k].offsetHeight });
+          });
+        apply();
+        if (!reduced) {
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: '.exportmap', start: 'top 55%', end: 'bottom bottom',
+              scrub: 2, invalidateOnRefresh: true,
+            },
+          })
+            .to(v, { o: 1, r: U, duration: 1, ease: 'none', onUpdate: apply }, 0)
+            .to(v, { r: 2, duration: (2 - U) / U, ease: 'none', onUpdate: apply }, 1);
+        }
+      }
+
       if (!reduced) {
         qa('[data-parallax]').forEach((el) => {
           const speed = parseFloat((el as HTMLElement).dataset.parallax || '1');
