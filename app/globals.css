@@ -28,8 +28,11 @@
   --dur: 0.8s;
   --dur-slow: 1.2s;
   --pad: clamp(20px, 3vw, 56px);
-  /* the lockup's one knob — .brandmark is sized in em off whatever mounts it */
+  /* the lockup's one knob — .brandmark is sized in em off whatever mounts it.
+     --logo-h is what the fixed mark actually occupies, so the hero can clear
+     it instead of guessing at a vh that only holds on a tall window */
   --logo-size: clamp(20px, 3.8vw, 66px);
+  --logo-h: calc(var(--logo-size) * 1.55);
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -306,7 +309,9 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
 .hero__media video { width: 100%; height: 100%; object-fit: cover; }
 .hero__panel {
   position: absolute; left: 0; top: 0; bottom: 0; width: 34%; z-index: 3;
-  padding: var(--pad); padding-top: 16vh;
+  padding: var(--pad);
+  /* 28px is the fixed mark's own top offset, 40px the air under it */
+  padding-top: max(16vh, calc(28px + var(--logo-h) + 40px));
   display: grid; align-content: start; justify-items: start; gap: 40px;
 }
 .hero__lede { font-size: clamp(20px, 2.1vw, 32px); }
@@ -915,7 +920,7 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
   .partner__ctas { flex-direction: column; gap: 24px; }
   /* no column for the panel on a phone — the split stacks instead */
   .hero__media { inset: 38vh 0 0 0; }
-  .hero__panel { position: static; width: 100%; padding-top: 14vh; gap: 28px; }
+  .hero__panel { position: static; width: 100%; padding-top: max(14vh, calc(28px + var(--logo-h) + 28px)); gap: 28px; }
   .hero__wordmark { font-size: 13vw; right: var(--pad); }
   .hero__ambassador { right: auto; left: 50%; transform: translateX(-50%); bottom: 0; height: 52vh; }
   .advantage__grid { grid-template-columns: 1fr; gap: 32px; }
@@ -1021,7 +1026,7 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
      painted over the scroll arrow and the location line. Rows let the copy
      take what it needs and hand the rest to the film. */
   .hero { height: 100svh; display: grid; grid-template-rows: auto 1fr; }
-  .hero__panel { order: 1; padding-top: 11vh; }
+  .hero__panel { order: 1; padding-top: max(11vh, calc(28px + var(--logo-h) + 24px)); }
   .hero__media { order: 2; position: relative; inset: auto; }
   /* lifted clear of the floating actions rather than narrowed to dodge them */
   .hero__wordmark { bottom: 12vh; }
