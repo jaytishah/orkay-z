@@ -84,7 +84,27 @@ export default function Motion() {
       /* dark photos that sit inside a light section — the ink layer has to stop
          at their left edge or the mark goes black over black */
       const darkInserts = qa('.ui-light .z9-loc__media');
+      /* the nav pills are white glass — over a light section they read as
+         nothing, so the same light-band test that inks the wordmark flips
+         them to black. The burger is left alone: its difference blend
+         already inverts it, and forcing it black would erase it. */
+      const headerEl = q('.header') as HTMLElement | null;
+      const navEl = q('.header__nav') as HTMLElement | null;
+      const overLight = (r: DOMRect) =>
+        lightSections.some((sec) => {
+          const s = sec.getBoundingClientRect();
+          return s.bottom > r.top && s.top < r.bottom;
+        }) &&
+        !darkInserts.some((el) => {
+          const m = el.getBoundingClientRect();
+          return m.bottom > r.top && m.top < r.bottom && m.right > r.left && m.left < r.right;
+        });
       const updateLogoInk = () => {
+        if (headerEl && navEl)
+          headerEl.classList.toggle(
+            'is-light',
+            overLight(navEl.getBoundingClientRect()) && !menu?.classList.contains('is-open')
+          );
         if (!inkLayer || !logoEl) return;
         const r = logoEl.getBoundingClientRect();
         let top: number | null = null;

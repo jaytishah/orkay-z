@@ -304,6 +304,21 @@
 .z9-mat__more[open] > summary { color: var(--c-gray-light); }
 .z9-mat__more .z9-mat__grid { margin-top: calc(var(--pad) / 2); }
 
+/* ── 03b RANGE — the six categories are globals' .products__* verbatim. Only
+   the collection grid is new: the same .collections__card, freed from the
+   pinned track's fixed 24vw so it can sit in a plain 3-up grid. ── */
+.z9-cols { margin-top: 13vh; }
+.z9-cols__head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 24px; margin-bottom: 3vh;
+  border-top: 1px solid rgba(0,0,0,0.18); padding-top: 26px;
+}
+.z9-cols__note { color: var(--c-gray); max-width: 34ch; text-align: right; }
+.z9-cols__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--pad) / 2) var(--pad); }
+/* beats globals' .collections__card width in both the base and the 900px rule */
+.z9-cols .collections__card { width: auto; }
+.z9-cols .collections__card figure { height: 34vh; }
+
 /* ── 04 LOCATION — offset hero, giant word, snapping rail ── */
 .z9-loc { padding-top: 16vh; padding-bottom: 14vh; }
 .z9-loc__top { margin-left: 25%; }            /* the reference's 3-of-12 offset, minus the grid */
@@ -376,6 +391,9 @@
   .z9-hero__meta { flex-direction: column; align-items: flex-start; gap: 24px; }
   .z9-hero__scroll, .z9-hero__dots { display: none; }
   .z9-built__media { height: 46vh; }
+  .z9-cols__grid { grid-template-columns: repeat(2, 1fr); }
+  .z9-cols__note { text-align: left; }
+  .z9-cols__head { flex-direction: column; align-items: flex-start; gap: 14px; }
   .z9-loc__top { margin-left: 0; }
   .z9-loc__hero { height: 46vh; }
   .z9-loc__rail { grid-auto-columns: 82%; }

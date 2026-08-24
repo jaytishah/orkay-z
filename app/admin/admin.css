@@ -13,9 +13,8 @@
   padding: 18px var(--pad); background: var(--c-black);
   border-bottom: 1px solid rgba(255, 255, 255, 0.22);
 }
-.adm-top__brand { display: flex; align-items: baseline; gap: 14px; }
-.adm-top__logo { font-size: 22px; font-weight: 700; letter-spacing: var(--logo-track); white-space: nowrap; }
-.adm-top__logo .logo__o { vertical-align: -0.08em; }
+.adm-top__brand { display: flex; align-items: center; gap: 14px; }
+.adm-top__logo { font-size: 22px; font-weight: 700; white-space: nowrap; }
 .adm-top__tag { color: var(--c-gray-light); }
 .adm-top__nav { display: flex; align-items: center; gap: 28px; }
 .adm-top__nav a[aria-current='page'] { color: var(--c-red); }

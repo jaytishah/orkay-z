@@ -1,5 +1,8 @@
+import Link from 'next/link';
 import SiteChrome from '@/components/SiteChrome';
 import Motion from '@/components/Motion';
+import { collections } from '@/content/collections';
+import { products } from '@/content/site';
 import './z9.css';
 
 /* eslint-disable @next/next/no-img-element -- same reason as app/page.tsx:
@@ -232,6 +235,53 @@ export default function Z9() {
           </div>
         </section>
 
+
+        {/* ═══ 03b · THE RANGE — categories on paper, then the named collections ═══
+           Reuses .products__* and .collections__card from globals.css; both were
+           left orphaned when the home page dropped these blocks. */}
+        <section className="section products ui-light" id="ranges" data-polarity="light">
+          <p className="products__label text-small">Our Products</p>
+          <h2 className="products__title h-display reveal-lines">
+            Six ways<br />to build a surface
+          </h2>
+
+          <div className="products__grid">
+            {products.map((p) => (
+              <article className="products__card" key={p.name}>
+                <p className="text-small products__meta">{p.meta}</p>
+                <h3 className="h-mid products__name">{p.name}</h3>
+                <p className="text-small products__desc">{p.desc}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="z9-cols" id="collections">
+            <div className="z9-cols__head">
+              <h3 className="h-mid reveal-lines">Collections</h3>
+              <p className="z9-cols__note text-small">
+                1,000+ designs in the book — six from the current export range.
+              </p>
+            </div>
+
+            <div className="z9-cols__grid">
+              {collections.map((c) => (
+                <Link className="collections__card" href={`/collections/${c.slug}`} key={c.slug}>
+                  <figure className="img-reveal img-reveal--r">
+                    <img src={c.img} alt={c.name} />
+                  </figure>
+                  <p className="text-small">{c.name}</p>
+                  <p className="text-small collections__meta">{c.meta}</p>
+                  <span className="btn btn--underline btn--red collections__view">
+                    <span className="btn__mask">
+                      <span className="btn__text">View Collection</span>
+                      <span className="btn__text btn__text--clone">View Collection</span>
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
         {/* ═══ 04 · LOCATION — offset hero, giant word, snapping rail ═══ */}
         <section className="section z9-loc ui-light" id="location" data-polarity="light">
           <div className="z9-loc__top">

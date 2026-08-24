@@ -1,41 +1,41 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import LangSwitcher from '@/components/LangSwitcher';
+import Logo from '@/components/Logo';
 import { contact, site } from '@/content/site';
 import { company, legalPages, nav } from '@/content/pages';
+
+/* The homepage is one long document, so its nav is hash-only. Off the
+   homepage those hashes point at sections that are not on the page — the
+   prefix sends them home first. #top and #contact exist on every page. */
+function useHashBase() {
+  return usePathname() === '/' ? '' : '/';
+}
 
 /* The fixed brand mark rides above the whole page. Two stacked layers:
    a white base and a black "ink" clone whose clip-path Motion.tsx
    recomputes every frame against the light sections beneath it.
    Lockup per CR G-02 option B: the tag reads "TILES" only — the year lives
    in the hero wordmark and the footer, so it is not repeated in one view. */
-function LogoLayers() {
-  return (
-    <>
-      <span className="logo__o">
-        <span className="logo__dot" />
-      </span>
-      <span className="logo__rest">RKAY</span>
-      <span className="logo__reg">™</span>
-      <span className="logo__tag">Tiles</span>
-    </>
-  );
-}
-
 export default function SiteChrome() {
+  const base = useHashBase();
+
   return (
     <>
       <a href="#top" className="logo" aria-label="ORKAY — back to top">
         <span className="logo__layer logo__layer--base">
-          <LogoLayers />
+          <Logo variant="white" />
         </span>
         <span className="logo__layer logo__layer--ink" aria-hidden="true">
-          <LogoLayers />
+          <Logo />
         </span>
       </a>
 
       <header className="header">
         <nav className="header__nav">
+          <LangSwitcher />
           <Link href="/downloads" className="btn btn--nav">
             <span className="btn__mask">
               <span className="btn__text">Request Catalogue</span>
@@ -70,18 +70,15 @@ export default function SiteChrome() {
 }
 
 export function Footer() {
+  const base = useHashBase();
+
   return (
     <footer className="footer ui-dark" id="contact">
       <div className="footer__grid">
         <div className="footer__brand">
-          {/* set in type rather than the old PNG so the ™ (CR G-01) is code */}
-          <p className="footer__wordmark" aria-label="ORKAY Tiles">
-            <span className="logo__o">
-              <span className="logo__dot" />
-            </span>
-            RKAY<span className="logo__reg">™</span>
+          <p className="footer__wordmark">
+            <Logo variant="white" />
           </p>
-          <p className="text-small footer__since">Tiles · since 1996</p>
           <p className="text-small footer__blurb">
             Ceramic tiles, vitrified porcelain tiles and porcelain slab tiles —
             pressed, fired and packed on seven units we own in Morbi.

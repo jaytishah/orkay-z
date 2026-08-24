@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 import { nav } from '@/content/pages';
 
 /* Sub-page chrome. Carries the same three elements as the homepage header —
@@ -40,10 +41,9 @@ export default function PageChrome({
     <>
       <header className={`cd-header${polarity === 'dark' || open ? ' cd-header--dark' : ''}`}>
         <Link href="/" className="cd-logo" aria-label="ORKAY — back to homepage">
-          <span className="logo__o">
-            <span className="logo__dot" />
-          </span>
-          RKAY<span className="logo__reg">™</span>
+          {/* the header inverts over dark sections and behind the open menu —
+              the mark is artwork now, so swap the colourway instead of color */}
+          <Logo variant={polarity === 'dark' || open ? 'white' : 'dark'} />
         </Link>
 
         <nav className="cd-nav">

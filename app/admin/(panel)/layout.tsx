@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 import { redirect } from 'next/navigation';
 import { requireSession } from '@/lib/auth';
 import LogoutButton from '@/components/admin/LogoutButton';
@@ -22,10 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="adm-top text-small">
         <div className="adm-top__brand">
           <Link href="/admin" className="adm-top__logo" aria-label="ORKAY admin home">
-            <span className="logo__o">
-              <span className="logo__dot" />
-            </span>
-            RKAY<span className="logo__reg">™</span>
+            <Logo variant="white" />
           </Link>
           <span className="adm-top__tag">Product CMS</span>
         </div>

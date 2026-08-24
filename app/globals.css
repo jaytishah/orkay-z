@@ -28,10 +28,8 @@
   --dur: 0.8s;
   --dur-slow: 1.2s;
   --pad: clamp(20px, 3vw, 56px);
-  /* the wordmark's two knobs — the tracking is consumed in three places
-     (.logo, the .logo__o gap, .cd-logo), so it lives here, not inline */
+  /* the lockup's one knob — .brandmark is sized in em off whatever mounts it */
   --logo-size: clamp(20px, 3.8vw, 66px);
-  --logo-track: 0.3em;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -84,7 +82,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   display: block; transform-origin: top left;
   font-size: var(--logo-size);
   font-weight: 700;
-  letter-spacing: var(--logo-track);
   line-height: 0.9;
   white-space: nowrap;
   transition: transform var(--dur) var(--ease);
@@ -92,29 +89,15 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* over the location section the mark blows up to the reference's half-viewport
    wordmark — same element, so the small one never doubles up */
 .logo--xl { transform: scale(2.7); }
-.logo__layer { display: block; color: var(--c-white); }
+.logo__layer { display: block; }
 .logo__layer--ink {
-  position: absolute; inset: 0; color: var(--c-black);
+  position: absolute; inset: 0;
   clip-path: inset(0 0 100% 0);
 }
-.logo__o {
-  position: relative; display: inline-block;
-  width: 0.86em; height: 0.86em;
-  border: 0.13em solid currentColor; border-radius: 50%;
-  vertical-align: -0.08em; margin-right: var(--logo-track);
-}
-.logo__dot {
-  position: absolute; inset: 18%; border-radius: 50%;
-  background: var(--c-red);
-}
-.logo__rest { letter-spacing: inherit; }
-.logo__reg { font-size: 0.22em; vertical-align: 1.6em; letter-spacing: 0; }
-.logo__tag {
-  /* em-based so it tracks the wordmark instead of drifting on small screens */
-  display: block; font-size: clamp(8px, 0.115em, 11px); font-weight: 600;
-  letter-spacing: 0.42em; line-height: 1; margin-top: 0.18em;
-  color: inherit;
-}
+/* the lockup is one artwork now — every mount just sets a font-size and the
+   image tracks it, so the fixed mark, the page headers and the footer stay
+   in proportion with no per-site-area magic numbers */
+.brandmark { display: block; height: 1.55em; width: auto; }
 
 /* ═══════════ FIXED NAV (monochrome — blend inversion is fine here) ═══════════ */
 .header {
@@ -131,14 +114,84 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 
 .header__nav { display: flex; align-items: center; gap: 40px; padding-top: 10px; }
 
-/* the difference blend used to sit on .header so the whole nav auto-inverted
-   over light sections. The catalogue pill needs to read as actual white glass,
-   which difference would flip to dark — so the blend lives on the burger now,
-   the only bare-glyph element left that still needs it. */
-.burger { width: 88px; display: grid; gap: 6px; padding: 16px 0; mix-blend-mode: difference; } /* 44px min touch target */
-.burger span { display: block; height: 2px; background: currentColor; transition: transform var(--dur) var(--ease); }
+/* the nav used to auto-invert with mix-blend-mode: difference, which turns a
+   mid-tone photo into a muddy half-invert rather than black or white. Every
+   piece of chrome now swaps on .is-light instead — see the rule below. */
+.burger { width: 88px; display: grid; gap: 6px; padding: 16px 0; } /* 44px min touch target */
+.burger span {
+  display: block; height: 2px; background: currentColor;
+  transition: transform var(--dur) var(--ease), background 0.3s var(--ease);
+}
 .burger:hover span:first-child { transform: translateY(-3px); }
 .burger:hover span:last-child { transform: translateY(3px); }
+
+/* ═══════════ LANGUAGE SWITCHER ═══════════
+   Google's translator supplies the words; this supplies the button. The
+   widget's own gadget and its top banner are pushed out of sight — the
+   banner is an iframe Google appends to <body> and offsets the page for. */
+.lang { position: relative; }
+.lang__btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 16px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px; letter-spacing: 0.36px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+.lang__btn:hover { background: rgba(255, 255, 255, 0.26); border-color: rgba(255, 255, 255, 0.5); }
+.lang__code { text-transform: uppercase; }
+.lang__caret {
+  width: 6px; height: 6px; margin-left: 2px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+.lang__flag { width: 20px; height: 14px; object-fit: cover; border-radius: 2px; flex: none; }
+
+.lang__list {
+  position: absolute; top: calc(100% + 10px); right: 0;
+  width: 210px; max-height: 320px; overflow-y: auto; overscroll-behavior: contain;
+  list-style: none;
+  background: #fff; color: var(--c-black);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  padding: 8px 0;
+  pointer-events: auto; /* .header disables them; the list has to take the wheel */
+  text-transform: none; /* the global uppercase mangles non-Latin scripts */
+}
+.lang__item {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 10px 16px;
+  font-size: 14px; text-align: left; color: inherit;
+  transition: background 0.2s var(--ease);
+}
+.lang__item:hover { background: rgba(0, 0, 0, 0.06); }
+.lang__item.is-active { color: var(--c-red); }
+
+/* Google's chrome: the gadget stays in the DOM (we drive its <select>) but
+   never on screen, and its highlight/banner never touch the layout */
+#google_translate_element { position: absolute; left: -9999px; top: 0; }
+iframe.skiptranslate { display: none !important; }
+body { top: 0 !important; } /* the banner offsets the page even when hidden */
+
+/* White glass over a light section reads as nothing. Motion.tsx flips
+   .is-light on the header as the nav crosses a .ui-light band; the
+   collection header is on white for its whole length, so it is always on. */
+.cd-header nav { display: flex; align-items: center; gap: 24px; }
+.header.is-light .lang__btn,
+.header.is-light .btn--nav,
+.cd-header .lang__btn {
+  color: var(--c-black);
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.16);
+}
+.header.is-light .burger { color: var(--c-black); }
+.header.is-light .lang__btn:hover,
+.header.is-light .btn--nav:hover,
+.cd-header .lang__btn:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.3); }
 
 /* ═══════════ MENU OVERLAY ═══════════ */
 .menu {
@@ -225,7 +278,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
 }
 .btn--nav:hover { background: rgba(255, 255, 255, 0.26); border-color: rgba(255, 255, 255, 0.5); }
 
@@ -513,6 +566,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   gap: calc(var(--pad) / 2); margin-top: 10vh;
   border-top: 1px solid rgba(0,0,0,0.18);
 }
+.advantage__grid--pair { grid-template-columns: 1fr 1fr; } /* mission + vision */
 .advantage__item { padding-top: 24px; }
 .advantage__item-desc { color: var(--c-gray); margin-top: 14px; }
 .advantage__bar { color: var(--c-gray); margin-top: 8vh; }
@@ -724,6 +778,8 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .contact__link { transition: color var(--dur) var(--ease); }
 .contact__link:hover { color: var(--c-red); }
 .contact__socials { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+.contact__socials--stacked { margin-top: 20px; }
+.contact__addr { white-space: pre-line; }
 
 /* ═══════════ FLOATING ACTIONS — WhatsApp + chat ═══════════ */
 /* square, not round: the design system runs 0px radius everywhere */
@@ -889,10 +945,9 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* padding is what makes the 20px of glyph a real 44px touch target */
 .cd-logo {
   display: inline-block; padding: 13px 0;
-  font-size: 30px; font-weight: 700; letter-spacing: var(--logo-track);
+  font-size: 30px; font-weight: 700;
   line-height: 0.9; white-space: nowrap;
 }
-.cd-logo .logo__o { vertical-align: -0.08em; }
 .cd-hero { min-height: 100vh; display: grid; grid-template-columns: 1.2fr 1fr; background: var(--c-white); color: var(--c-black); }
 .cd-hero__media { height: 100vh; }
 .cd-hero__panel { display: grid; align-content: center; gap: 40px; padding: var(--pad); padding-top: 18vh; }
@@ -943,16 +998,15 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    earlier @media (max-width: 900px) declaration win on order.
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-  /* ── fixed chrome ──
-     the tagline's 0.42em tracking makes the mark ~140px wide, which
-     lands under the nav pill on a phone. The wordmark alone still reads. */
-  .logo__tag { display: none; }
+  /* ── fixed chrome ── */
   /* the 2.7x blow-up over the location section is half a phone wide — it
      printed straight through the nav. The giant MORBI in-section carries it. */
   .logo--xl { transform: none; }
   .header { padding: 22px var(--pad); }
   .header__nav { gap: 14px; padding-top: 2px; }
   .btn--nav { padding: 12px 16px; font-size: 11px; letter-spacing: 0; }
+  .lang__btn { padding: 11px 12px; gap: 6px; font-size: 11px; }
+  .lang__list { width: 186px; max-height: 260px; }
   /* the 30px glyph is the design; content-box + side padding keeps the
      lines at 30px while the tap area meets the 44px minimum */
   .burger { width: 30px; gap: 5px; padding: 16px 8px; box-sizing: content-box; }
@@ -1093,13 +1147,10 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .spaces__stack { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
 .spaces__stack img { width: 100%; height: 100%; object-fit: cover; }
 
-/* footer mark set in type, so the ™ is code and not baked into a PNG */
 .footer__wordmark {
   display: inline-block; font-size: 30px; font-weight: 700;
-  letter-spacing: var(--logo-track); line-height: 0.9; white-space: nowrap;
+  line-height: 0.9; white-space: nowrap;
 }
-.footer__wordmark .logo__o { vertical-align: -0.08em; }
-.footer__since { color: var(--c-gray-light); margin-top: 10px; letter-spacing: 0.36em; }
 .footer__legal {
   display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: center;
   padding: 22px 0 0; margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.22);

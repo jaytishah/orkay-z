@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 import { collections, getCollection } from '@/content/collections';
 import { site } from '@/content/site';
 import { Footer } from '@/components/SiteChrome';
 import CollectionReveal from '@/components/CollectionReveal';
+import LangSwitcher from '@/components/LangSwitcher';
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -43,12 +45,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
       <header className="cd-header">
         <Link href="/" className="cd-logo" aria-label="ORKAY — back to homepage">
-          <span className="logo__o">
-            <span className="logo__dot" />
-          </span>
-          RKAY<span className="logo__reg">®</span>
+          <Logo />
         </Link>
         <nav>
+          <LangSwitcher />
           <Link href="/#collections" className="btn">
             <span className="btn__mask">
               <span className="btn__text">← All Collections</span>
