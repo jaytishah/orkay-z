@@ -13,9 +13,9 @@ export default function GlobalMap() {
         <defs>
           {/* soft heat under the hub — a gradient, not a filter, so it costs nothing to paint */}
           <radialGradient id="gm-hub">
-            <stop offset="0%" stopColor="#ed1c24" stopOpacity="0.34" />
-            <stop offset="55%" stopColor="#ed1c24" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#ed1c24" stopOpacity="0" />
+            <stop offset="0%" stopColor="#DE2025" stopOpacity="0.34" />
+            <stop offset="55%" stopColor="#DE2025" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#DE2025" stopOpacity="0" />
           </radialGradient>
         </defs>
 

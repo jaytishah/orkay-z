@@ -20,7 +20,8 @@
 :root {
   --c-white: #fff;
   --c-black: #000;
-  --c-red: #ed1c24; /* ORKAY brand red, sampled from the logo */
+  --c-red: #DE2025; /* ORKAY brand red — CR G-07 */
+  --c-ink: #2B2A29; /* brand black, used for type on white grounds only; grounds stay #000 */
   --c-gray: #666;
   --c-gray-light: #aaa;
   --ease: cubic-bezier(0.7, 0, 0.3, 1);
@@ -142,18 +143,55 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* ═══════════ MENU OVERLAY ═══════════ */
 .menu {
   /* above the fixed wordmark (40) or the mark prints straight through the
-     menu links; the header climbs past it so the burger still closes */
+     menu links; the header climbs past it so the burger still closes.
+     The container is the scrim over the left half; the panel is .menu__nav. */
   position: fixed; inset: 0; z-index: 42;
-  background: var(--c-black); color: var(--c-white);
-  display: grid; place-items: center;
-  clip-path: inset(0 0 100% 0);
+  background: rgba(0, 0, 0, 0.55); color: var(--c-white);
+  opacity: 0;
   visibility: hidden; /* keeps closed-menu links out of the tab order */
-  transition: clip-path var(--dur) var(--ease), visibility 0s var(--dur);
+  transition: opacity var(--dur) var(--ease), visibility 0s var(--dur);
 }
-.menu.is-open { clip-path: inset(0); visibility: visible; transition: clip-path var(--dur) var(--ease); }
-.menu__nav { display: grid; gap: 28px; text-align: center; }
-.menu__nav a { font-size: clamp(28px, 4vw, 56px); transition: color var(--dur) var(--ease); }
+.menu.is-open { opacity: 1; visibility: visible; transition: opacity var(--dur) var(--ease); }
+
+/* the drawer: right half of the screen, wiped in from the right edge */
+.menu__nav {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 50%;
+  background: var(--c-black);
+  display: grid; align-content: center; justify-items: start;
+  gap: clamp(10px, 2.1vh, 26px); padding: 12vh var(--pad);
+  overflow-y: auto; overscroll-behavior: contain;
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path var(--dur) var(--ease);
+}
+.menu.is-open .menu__nav { clip-path: inset(0); }
+
+/* links follow the panel in, one after another, each sliding in from the right */
+.menu__nav a {
+  font-size: clamp(20px, 3.3vw, 46px); line-height: 1.15;
+  opacity: 0; transform: translateX(56px);
+  transition:
+    color var(--dur) var(--ease),
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
 .menu__nav a:hover { color: var(--c-red); }
+.menu.is-open .menu__nav a { opacity: 1; transform: none; }
+/* stagger: colour keeps no delay so hover still answers instantly */
+.menu.is-open .menu__nav a:nth-child(1) { transition-delay: 0s, 0.14s, 0.14s; }
+.menu.is-open .menu__nav a:nth-child(2) { transition-delay: 0s, 0.21s, 0.21s; }
+.menu.is-open .menu__nav a:nth-child(3) { transition-delay: 0s, 0.28s, 0.28s; }
+.menu.is-open .menu__nav a:nth-child(4) { transition-delay: 0s, 0.35s, 0.35s; }
+.menu.is-open .menu__nav a:nth-child(5) { transition-delay: 0s, 0.42s, 0.42s; }
+.menu.is-open .menu__nav a:nth-child(6) { transition-delay: 0s, 0.49s, 0.49s; }
+.menu.is-open .menu__nav a:nth-child(7) { transition-delay: 0s, 0.56s, 0.56s; }
+.menu.is-open .menu__nav a:nth-child(8) { transition-delay: 0s, 0.63s, 0.63s; }
+.menu.is-open .menu__nav a:nth-child(n+9) { transition-delay: 0s, 0.7s, 0.7s; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* house rule: kill transforms, keep opacity */
+  .menu__nav, .menu.is-open .menu__nav { clip-path: none; transition: none; }
+  .menu__nav a { transform: none; transition: color var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+}
 
 /* ═══════════ SCROLL PROGRESS ═══════════ */
 .scrollbar {
@@ -253,146 +291,9 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   text-align: justify; text-indent: 30%; }
 .statement__media { height: 80vh; }
 
-/* ═══════════ 03 MATERIALS ═══════════ */
-/* the label sits at the section top and this section is 130vh tall, so
-   without the pad it parks under the fixed wordmark for a whole viewport
-   — black on black, not a passing overlap like the other headlines */
-/* the stage carries its own 90vh; no min-height padding it out below */
-.materials { padding-top: 6vh; }
-/* top-right corner, sized down to the reference's label scale */
-.materials__label {
-  position: relative; z-index: 2; mix-blend-mode: normal;
-  text-align: right; font-size: clamp(22px, 2.4vw, 38px);
-  letter-spacing: 0.08em; line-height: 1.18;
-}
-.materials__stage { position: relative; height: 70vh; }
-.materials__item { position: absolute; }
-/* the plate: white circle behind, nero slab in front of it, fluted wood panel
-   over the slab's right edge, travertine half-dome lower left, brass rod
-   crossing the slab, gold sphere at the floor line, hollow glass capsule
-   across slab and wood. Pieces share a floor line around 80vh */
-/* a warm pool of light behind the cluster so the plate sits in a lit room,
-   not on raw white */
-.materials__stage::before {
-  content: ''; position: absolute; inset: -6% 8%;
-  background:
-    radial-gradient(46% 52% at 48% 42%, rgba(216, 206, 190, 0.42), transparent 70%),
-    radial-gradient(34% 8% at 47% 86%, rgba(52, 41, 28, 0.22), transparent 72%);
-}
-/* white-on-white: without its own shadow the disc's silhouette vanishes */
-.materials__item--circle { width: 30vw; height: 30vw; left: 45%; top: 2vh; border-radius: 50%; z-index: 1; box-shadow: 0 3vh 9vh rgba(0, 0, 0, 0.15); }
-.materials__item--nero   { width: 19vw; height: 55vh; left: 30%; top: 10vh; z-index: 3; box-shadow: 0 4vh 9vh rgba(0, 0, 0, 0.28); }
-/* polished marble carries a specular sweep */
-.materials__item--nero::after {
-  content: ''; position: absolute; inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 6%),
-    linear-gradient(115deg,
-      transparent 26%, rgba(255, 255, 255, 0.06) 38%,
-      rgba(255, 255, 255, 0.20) 45%, rgba(255, 255, 255, 0.06) 52%, transparent 64%);
-}
-.materials__item--wood   { width: 24vw; height: 36vh; left: 44%; top: 29vh; z-index: 4; box-shadow: 0 4vh 8vh rgba(0, 0, 0, 0.24); }
-/* the reference wood is fluted wenge — vertical ribs and a dark wash drawn
-   over our walnut so the panel reads ribbed without a new asset */
-.materials__item--wood::after {
-  content: ''; position: absolute; inset: 0;
-  background:
-    repeating-linear-gradient(90deg,
-      rgba(14, 7, 2, 0.72) 0px,
-      rgba(38, 21, 10, 0.34) 4px,
-      rgba(255, 234, 202, 0.13) 8.5px,
-      rgba(255, 242, 220, 0.19) 9.5px,
-      rgba(38, 21, 10, 0.34) 14px,
-      rgba(14, 7, 2, 0.72) 18px),
-    linear-gradient(90deg,
-      rgba(10, 5, 2, 0.42), transparent 16%,
-      transparent 82%, rgba(10, 5, 2, 0.5)),
-    linear-gradient(rgba(52, 30, 16, 0.28), rgba(34, 18, 8, 0.52));
-}
-.materials__item--dome {
-  width: 21vw; height: 18vh; left: 18%; top: 47vh; border-radius: 999px 999px 0 0; z-index: 2;
-  /* real stone, not a beige fill. dome_stone.jpg is a 2:1 band lifted out of
-     slab_aura.jpg and resized — the full slab is 672KB and 1200x2400, far too
-     much to pull onto the homepage for a 400x195 decorative shape. The
-     gradients stay on top of it: a photo alone reads as a flat sticker, and
-     these are what roll the surface away to the right. */
-  background:
-    linear-gradient(0deg, rgba(255, 240, 214, 0.4), transparent 24%),
-    radial-gradient(125% 108% at 24% 2%,
-      rgba(255, 251, 242, 0.62), rgba(255, 248, 236, 0.1) 42%,
-      rgba(104, 90, 70, 0.14) 78%, rgba(80, 68, 52, 0.3)),
-    /* the crop runs cool next to the travertine tones around it */
-    linear-gradient(rgba(214, 180, 128, 0.16), rgba(214, 180, 128, 0.16)),
-    url('/img/dome_stone.jpg') center / cover no-repeat;
-  box-shadow: 0 3vh 7vh rgba(0, 0, 0, 0.18);
-}
-.materials__item--rod {
-  width: 14vw; height: 1.6vh; left: 22%; top: 17vh; border-radius: 0.8vh; z-index: 5;
-  background: linear-gradient(180deg,
-    #8a6a26, #f7ecc4 22%, #e0bd6d 40%, #a67f2f 68%, #6b4d14 88%, #b08c3c);
-  box-shadow: 0 1.1vh 2.4vh rgba(0, 0, 0, 0.2);
-}
-/* a render, not gradients: the stacked radials gave one flat sheet of
-   specular down the middle and read as painted plaster. sphere_gold.png is
-   goldenball.jpg cut to a circular alpha — the source ships its transparency
-   baked in as a checkerboard, so it can't be used directly. */
-.materials__item--sphere {
-  width: 6vw; height: 6vw; left: 32%; top: 55vh; border-radius: 50%; z-index: 7;
-  background: url('/img/sphere_gold.png') center / contain no-repeat;
-  /* the render carries its own shading; the border-radius is here only so
-     the cast shadow follows the silhouette instead of boxing it */
-  box-shadow: 0 1.4vh 3vh rgba(0, 0, 0, 0.28);
-}
-/* hollow glass tube. The uniform 1.5px stroke all the way round read as a
-   drawn outline, not glass — a real tube is bright where the key grazes the
-   crown, thin and cool along the underside, and thick enough at the domed
-   ends to go grey. Narrower than the wood panel so it crosses the plate as a
-   detail rather than a bar across it. */
-.materials__item--capsule {
-  width: 21vw; height: 12vh; left: 42%; top: 37vh; border-radius: 6vh; z-index: 6;
-  /* clear enough to read the fluting through — a sheen on the crown, a cool
-     bounce off the floor, nothing milky between them */
-  background: linear-gradient(180deg,
-    rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.02) 26%,
-    rgba(255, 255, 255, 0) 62%, rgba(190, 202, 214, 0.07) 85%,
-    rgba(255, 255, 255, 0.15));
-  /* glass is never optically perfect; a sub-pixel blur and a little
-     saturation is the whole difference between a tube and a sticker */
-  -webkit-backdrop-filter: blur(1.1px) saturate(1.08) brightness(1.03);
-  backdrop-filter: blur(1.1px) saturate(1.08) brightness(1.03);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.55),
-    /* the wall thickens toward the domed ends, so the glass greys there */
-    inset 2.4vw 0 2.6vw -2.2vw rgba(116, 130, 146, 0.3),
-    inset -2.4vw 0 2.6vw -2.2vw rgba(116, 130, 146, 0.3),
-    inset 0 -1vh 1.8vh -0.7vh rgba(108, 122, 138, 0.22),
-    inset 0 1vh 1.8vh -0.9vh rgba(255, 255, 255, 0.5),
-    0 1.2vh 3vh rgba(0, 0, 0, 0.09);
-}
-/* the specular: one crisp streak along the crown, stopping short of the far
-   end. A full-width wash is what made the body look like frosted plastic. */
-.materials__item--capsule::after {
-  content: ''; position: absolute; left: 7%; right: 33%; top: 15%; height: 15%;
-  border-radius: 999px; filter: blur(1.5px);
-  background: linear-gradient(90deg,
-    rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8) 38%,
-    rgba(255, 255, 255, 0.5) 72%, rgba(255, 255, 255, 0));
-}
-
 /* ═══════════ 04 LUXURY ═══════════ */
-.luxury { padding-top: 4vh; }
-.luxury__pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--pad); }
-.luxury__pair figure { height: 86vh; }
-/* sits above the pair, three short lines at caption size — same as the reference */
-.luxury__caption { max-width: 68ch; margin: 0 0 3vh; color: var(--c-gray); }
 
-/* ═══════════ 05 GALLERY — scattered collage, click a frame to enlarge ═══════════ */
-.gallery { --gal-h: 152vh; min-height: var(--gal-h); padding: 0; overflow: hidden; }
-/* curtain: the collage holds once its bottom meets the viewport floor, then the
-   day cycle rides up over it. Same trick as the hero, offset for a tall section. */
-.curtain > .gallery { position: sticky; top: calc(100vh - var(--gal-h)); }
+/* curtain: the day cycle holds (stuck) while the experience plate rides up over it */
 .curtain > .daycycle { position: sticky; top: 0; z-index: 1; }
 /* taller than the viewport, so it pins by its bottom edge like the gallery */
 .curtain > .experience { position: sticky; top: min(0px, calc(100vh - 80vw)); z-index: 2; }
@@ -403,7 +304,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* one screen per slide; the panel scrolls away with the wrapper when done */
 .spaces-scroll { height: 500vh; }
 .spaces { position: sticky; top: 0; height: 100vh; padding: 0; overflow: hidden; }
-.spaces__index { position: absolute; top: 140px; left: var(--pad); z-index: 4; color: var(--c-gray); }
 .spaces__slide {
   position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr;
   opacity: 0; transition: opacity var(--dur-slow) var(--ease);
@@ -435,28 +335,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   position: absolute; right: var(--pad); bottom: 14vh; z-index: 2;
   text-align: right; padding-right: 76px;   /* clears the floating actions */
 }
-.gallery__stage { position: absolute; inset: 0; }
-/* the scatter: eight frames, four of them running off the page edge */
-.gallery__item { position: absolute; overflow: hidden; }
-.gallery__item:nth-child(1) { left: -3%;  top: 14vh;  width: 22vw; height: 54vh; }
-.gallery__item:nth-child(2) { left: 25%;  top: -5vh;  width: 30vw; height: 22vh; }
-.gallery__item:nth-child(3) { right: -4%; top: 1vh;   width: 20vw; height: 46vh; }
-.gallery__item:nth-child(4) { left: 33%;  top: 30vh;  width: 34vw; height: 76vh; }
-.gallery__item:nth-child(5) { right: -3%; top: 62vh;  width: 26vw; height: 42vh; }
-.gallery__item:nth-child(6) { left: -2%;  top: 92vh;  width: 25vw; height: 32vh; }
-.gallery__item:nth-child(7) { left: 31%;  top: 114vh; width: 22vw; height: 30vh; }
-.gallery__item:nth-child(8) { right: 7%;  top: 110vh; width: 24vw; height: 34vh; }
-.gallery__item img { transition: transform var(--dur-slow) var(--ease); }
-.gallery__item:hover img { transform: scale(1.05); }
-/* the VIEW cursor is the cursor itself — an SVG data URI, so no follower script */
-.gallery__item {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='86'%3E%3Crect x='0.5' y='0.5' width='111' height='85' fill='none' stroke='white'/%3E%3Ctext x='12' y='23' fill='white' font-family='Helvetica,Arial' font-size='11' letter-spacing='1.6'%3EVIEW%3C/text%3E%3Cpath d='M92 66 l7 5 -7 5' fill='none' stroke='white'/%3E%3C/svg%3E") 56 43, pointer;
-}
-.gallery__title {
-  position: absolute; top: 50vh; left: 50%; transform: translateX(-50%);
-  z-index: 3; display: flex; align-items: flex-start; gap: 10px; white-space: nowrap;
-}
-.gallery__count { color: var(--c-white); }
 
 /* ═══════════ 06 DAY CYCLE ═══════════ */
 .daycycle { height: 100vh; padding: 0; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
@@ -471,14 +349,13 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   display: grid; grid-template-rows: 1fr auto 1fr; justify-items: start;
   padding: var(--pad);
 }
-/* time and arrows share one line, centred in the panel — as in the reference */
-/* time left, arrows pushed to the panel's right edge (clear of the floating
-   actions) — they are not a pair, they book-end the row */
-.daycycle__row {
-  grid-row: 2; width: 100%; padding-right: 76px;
-  display: flex; align-items: center; justify-content: space-between; gap: 44px;
-}
-.daycycle__clock { font-size: clamp(44px, 4.5vw, 72px); font-weight: 600; }
+/* time sits centred in the panel — as in the reference */
+.daycycle__clock { grid-row: 2; display: grid; gap: 10px; font-size: clamp(44px, 4.5vw, 72px); font-weight: 600; }
+.daycycle__label { color: var(--c-gray-light); }
+.daycycle__cue { grid-row: 3; align-self: end; justify-self: end; color: var(--c-gray-light); transition: opacity var(--dur) var(--ease); }
+.daycycle.is-moving .daycycle__cue { opacity: 0; }
+/* one screen per hour, scrolled behind the stuck section (which covers it) */
+.daycycle-dwell { height: 300vh; }
 .daycycle__hint { grid-row: 3; align-self: end; color: var(--c-gray-light); }
 /* the ring straddles the seam between photo and panel, and is the clock face */
 .daycycle__ring {
@@ -504,8 +381,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    plates inside the curtain above are never uncovered between the two */
 .journey { padding: 0; position: relative; z-index: 3; }
 .journey__pin { height: 100vh; overflow: hidden; position: relative; }
-.journey__pagination { position: absolute; top: 140px; left: var(--pad); z-index: 3; }
-.journey__pagination span:last-child { color: var(--c-gray); }
 .journey__track { display: flex; height: 100%; width: max-content; }
 .journey__slide { width: 100vw; height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
 .journey__info { display: grid; align-content: center; gap: 40px; padding: var(--pad); padding-top: 20vh; }
@@ -524,12 +399,10 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* photo left, panel right — order, so the stacked mobile case follows too */
 .amen__media { order: 1; }
 .amen__panel { order: 2; position: relative; display: grid; align-content: center; padding: var(--pad); }
-.amen__label { color: var(--c-gray); margin-bottom: 4vh; }
 .amen__title { max-width: 12ch; }
 .amen__rule { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.25); margin: 8vh 0 0; }
 .amen__row { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
 .amen__arrows { display: flex; gap: 8px; margin-left: -16px; }
-.amen__count { color: var(--c-gray); }
 .amen__desc {
   position: absolute; left: var(--pad); right: var(--pad); bottom: var(--pad);
   max-width: 52ch; color: var(--c-gray-light);
@@ -600,6 +473,9 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    ceiling is what the longest milestone (2020, ~160 chars) fills without
    passing the card's min-height. */
 .tech__label { font-size: clamp(15px, 1.2vw, 22px); line-height: 1.25; letter-spacing: 0.02em; }
+.tech__body { display: grid; gap: 10px; }
+.tech__product { font-size: clamp(14px, 1.1vw, 20px); line-height: 1.25; }
+.tech__meta { color: var(--c-gray-light); }
 .tech__desc {
   color: var(--c-gray-light);
   font-size: clamp(15px, 1.3vw, 24px); line-height: 1.32; letter-spacing: 0.01em;
@@ -762,7 +638,8 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 /* ═══════════ 14 FOOTER ═══════════ */
 .footer { position: relative; padding: 12vh var(--pad) var(--pad); }
 .footer__grid {
-  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+  /* five columns: brand + explore + ranges + trade + contact */
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1.2fr;
   gap: calc(var(--pad) / 2); padding-bottom: 8vh;
 }
 .footer__brand { max-width: 38ch; }
@@ -869,7 +746,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 .formats__pin { height: 100vh; position: relative; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
 .formats__tabs {
   position: absolute; top: 126px; left: var(--pad); z-index: 3;
-  display: flex; gap: 28px;
+  display: flex; gap: 28px; flex-wrap: wrap; max-width: calc(100% - 2 * var(--pad));
 }
 .formats__tab {
   color: var(--c-gray); padding: 14px 0;
@@ -882,9 +759,10 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    and 340px plan it ran past the bottom and the copy landed on the kicker —
    the drawing is the flexible one, so it gives up the space. */
 .formats__panel { display: grid; align-content: center; gap: 28px; padding: var(--pad); padding-top: 24vh; padding-bottom: 12vh; }
-.formats__size sup { color: var(--c-gray-light); }
-.formats__size, .formats__desc { transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.formats__sizes { color: var(--c-gray-light); letter-spacing: 0.04em; }
+.formats__size, .formats__sizes, .formats__desc { transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .formats__panel.is-switching .formats__size,
+.formats__panel.is-switching .formats__sizes,
 .formats__panel.is-switching .formats__desc { opacity: 0; transform: translateY(-16px); }
 .formats__plan { width: min(260px, 20vw); color: var(--c-white); }
 .formats__plan svg { width: 100%; height: auto; display: block; }
@@ -969,24 +847,11 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .amen { grid-template-columns: 1fr; height: auto; position: static; }
   .amen__media { height: 46vh; }
   .amen__desc { position: static; margin-top: 4vh; }
-  .gallery__stage {
-    position: static; display: grid; grid-template-columns: 1fr 1fr;
-    gap: calc(var(--pad) / 2);
-  }
-  .gallery__item { position: static; width: auto; height: 26vh; }
-  .gallery__title { position: static; transform: none; margin-bottom: 4vh; }
   .collections__card { width: 60vw; }
   .collections__card figure { height: 34vh; }
   .statement__title { max-width: 100%; }
-  /* same stack, widened — the plate still reads as one composition on a phone */
-  .materials__item--circle { width: 56vw; height: 56vw; left: 40%; }
-  .materials__item--nero { width: 36vw; height: 52vh; left: 16%; }
-  .materials__item--wood { width: 44vw; height: 30vh; left: 42%; top: 34vh; }
-  .materials__item--dome { width: 36vw; height: 14vh; left: 0%; top: 50vh; }
-  .materials__item--rod { width: 20vw; left: 6%; }
-  .materials__item--sphere { width: 12vw; height: 12vw; left: 26%; }
-  .materials__item--capsule { width: 38vw; height: 10vh; left: 36%; top: 44vh; border-radius: 5vh; }
-  .daycycle { height: auto; }
+  /* still stuck while the dwell scrolls behind it, so it has to fill the screen */
+  .daycycle { height: auto; min-height: 100vh; }
   .daycycle__media { height: 56vh; }
   .journey__media { height: 50vh; }
   .journey__slide { grid-template-rows: auto 1fr; }
@@ -1012,8 +877,21 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 }
 
 /* ═══════════ COLLECTION DETAIL PAGE ═══════════ */
-.cd-header { position: fixed; inset: 0 0 auto 0; z-index: 40; display: flex; justify-content: space-between; align-items: center; padding: 28px var(--pad); color: var(--c-black); }
-.cd-logo { font-size: 30px; font-weight: 700; letter-spacing: var(--logo-track); line-height: 0.9; white-space: nowrap; }
+.cd-header { position: fixed; inset: 0 0 auto 0; z-index: 46; display: flex; justify-content: space-between; align-items: center; padding: 28px var(--pad); color: var(--c-black); pointer-events: none; }
+.cd-header a, .cd-header button { pointer-events: auto; }
+/* the mark is flat colour on sub-pages (Motion's per-frame ink clipping does
+   not run here), so it is told which polarity it sits over */
+.cd-header--dark { color: var(--c-white); }
+.cd-nav { display: flex; align-items: center; gap: clamp(16px, 3vw, 40px); }
+/* the burger is a fixed 88px rule-stack; as a flex item it would otherwise be
+   shrunk below the 44px touch minimum on a narrow screen */
+.cd-nav .burger { flex: none; }
+/* padding is what makes the 20px of glyph a real 44px touch target */
+.cd-logo {
+  display: inline-block; padding: 13px 0;
+  font-size: 30px; font-weight: 700; letter-spacing: var(--logo-track);
+  line-height: 0.9; white-space: nowrap;
+}
 .cd-logo .logo__o { vertical-align: -0.08em; }
 .cd-hero { min-height: 100vh; display: grid; grid-template-columns: 1.2fr 1fr; background: var(--c-white); color: var(--c-black); }
 .cd-hero__media { height: 100vh; }
@@ -1075,7 +953,9 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   .header { padding: 22px var(--pad); }
   .header__nav { gap: 14px; padding-top: 2px; }
   .btn--nav { padding: 12px 16px; font-size: 11px; letter-spacing: 0; }
-  .burger { width: 30px; gap: 5px; }
+  /* the 30px glyph is the design; content-box + side padding keeps the
+     lines at 30px while the tap area meets the 44px minimum */
+  .burger { width: 30px; gap: 5px; padding: 16px 8px; box-sizing: content-box; }
   /* a 3px progress rail means nothing on touch, and mix-blend-mode on a
      full-height fixed element costs a compositing layer for the whole page */
   .scrollbar { display: none; }
@@ -1092,19 +972,12 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   /* lifted clear of the floating actions rather than narrowed to dodge them */
   .hero__wordmark { bottom: 12vh; }
 
-  /* ── 05 gallery ──
-     the scatter's per-frame sizes are :nth-child (0,2,0), so the stacked
-     `.gallery__item { width: auto }` above never reached them and the grid
-     kept the 22vw × 54vh slivers. Matched specificity, so it lands. */
-  .gallery__item:nth-child(n) { width: auto; height: 26vh; }
 
   /* ── 01 statement ── justified type rivers badly in a 350px column */
   .statement { padding-top: 14vh; }
   .statement__title { text-align: left; text-indent: 12%; }
   .statement__media { height: 42vh; }
 
-  /* ── 04 luxury ── two stacked 86vh frames is 1.7 screens of photograph */
-  .luxury__pair figure { height: 42vh; }
 
   /* ── 09b export map ──
      the map is drawn at 1000×436; at 350px wide every dot, arc and label
@@ -1120,7 +993,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
      the 92vh dial straddled the photo/panel seam, and that seam is gone
      once the section stacks — so it sits inside the photo instead */
   .daycycle__ring { width: 46vh; height: 46vh; top: 28vh; }
-  .daycycle__row { padding-right: 0; }
 
   /* ── 06b / 07g experience ──
      the caption was pinned to a left edge with no right one, so it ran
@@ -1144,7 +1016,6 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
   }
   .spaces__panel .h-display { font-size: clamp(34px, 10vw, 56px); }
   .spaces__desc { position: static; max-width: 100%; margin-top: 16px; }
-  .spaces__index { color: var(--c-gray-light); }
 
   /* ── 07e plate ── a landscape photo cropped to 100vh on a phone is a slice */
   .plate { height: 62vh; padding: 0 var(--pad); }
@@ -1195,6 +1066,7 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
 
   /* ── collection detail ── */
   .cd-header { padding: 18px var(--pad); }
+  .menu__nav { width: 100%; }
   .cd-logo { font-size: 22px; }
   .cd-hero__panel { padding-top: 14vh; gap: 28px; }
   /* the spec values sit on the right edge, under the floating actions */
@@ -1207,4 +1079,50 @@ sup { font-size: 12px; letter-spacing: 0.36px; vertical-align: super; }
    narrowest phones — the burger still reaches every destination */
 @media (max-width: 380px) {
   .btn--nav { display: none; }
+}
+
+
+/* ═══════════ CR Rev 1 — brand black for type on white, merged lobby media, footer legal ═══════════ */
+.ui-light { color: var(--c-ink); }
+.logo__layer--ink { color: var(--c-ink); }
+.cd-header:not(.cd-header--dark) { color: var(--c-ink); }
+
+/* Lobby slide: the reception / bathroom pair folds in beside the main frame */
+.spaces__media--split { display: grid; grid-template-columns: 2fr 1fr; gap: 6px; }
+.spaces__media--split > img { grid-column: 1; }
+.spaces__stack { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; }
+.spaces__stack img { width: 100%; height: 100%; object-fit: cover; }
+
+/* footer mark set in type, so the ™ is code and not baked into a PNG */
+.footer__wordmark {
+  display: inline-block; font-size: 30px; font-weight: 700;
+  letter-spacing: var(--logo-track); line-height: 0.9; white-space: nowrap;
+}
+.footer__wordmark .logo__o { vertical-align: -0.08em; }
+.footer__since { color: var(--c-gray-light); margin-top: 10px; letter-spacing: 0.36em; }
+.footer__legal {
+  display: flex; flex-wrap: wrap; gap: 10px 28px; align-items: center;
+  padding: 22px 0 0; margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.22);
+  color: var(--c-gray-light);
+}
+.footer__legal a { color: var(--c-gray-light); transition: color var(--dur) var(--ease); }
+.footer__legal a:hover { color: var(--c-white); }
+
+/* cookie consent — a black panel in the corner, two actions, no chrome */
+.consent {
+  position: fixed; left: var(--pad); bottom: var(--pad); z-index: 70;
+  width: min(420px, calc(100vw - 2 * var(--pad)));
+  background: var(--c-black); color: var(--c-white);
+  border: 1px solid rgba(255,255,255,0.28); padding: 22px;
+  display: grid; gap: 16px;
+}
+.consent__text { color: var(--c-gray-light); }
+.consent__text a { color: var(--c-white); text-decoration: underline; text-underline-offset: 4px; }
+.consent__actions { display: flex; flex-wrap: wrap; gap: 28px; }
+
+@media (max-width: 900px) {
+  .spaces__media--split { grid-template-columns: 1fr; grid-template-rows: 2fr 1fr; }
+  .spaces__stack { grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; }
+  .footer__legal { gap: 8px 18px; }
+  .consent { left: 12px; right: 12px; bottom: 12px; width: auto; }
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { consentText } from '@/content/pages';
 
 /* B2B inquiry intake. Forwards to a GoHighLevel inbound webhook when
    GHL_WEBHOOK_URL is set; logs locally otherwise so the form is testable
@@ -12,6 +13,8 @@ type Body = {
   phone?: string;
   interest?: string;
   message?: string;
+  consentContact?: string | boolean;
+  consentMarketing?: string | boolean;
 };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -30,6 +33,8 @@ export async function POST(request: Request) {
   if (!body.country?.trim()) errors.country = 'Required';
   if (!body.email?.trim()) errors.email = 'Required';
   else if (!EMAIL.test(body.email.trim())) errors.email = 'Enter a valid email';
+  const contactOk = body.consentContact === 'on' || body.consentContact === true;
+  if (!contactOk) errors.consentContact = 'We need your consent to reply to this enquiry';
 
   if (Object.keys(errors).length) {
     return NextResponse.json({ ok: false, errors }, { status: 400 });
@@ -44,6 +49,14 @@ export async function POST(request: Request) {
     interest: body.interest?.trim() || '',
     message: body.message?.trim() || '',
     source: 'orkaytiles.com — website inquiry',
+    /* CR L-05: explicit opt-in captured with the wording and the moment it was given */
+    consent: {
+      contact: true,
+      contactText: consentText.contact,
+      marketing: body.consentMarketing === 'on' || body.consentMarketing === true,
+      marketingText: consentText.marketing,
+      at: new Date().toISOString(),
+    },
   };
 
   const webhook = process.env.GHL_WEBHOOK_URL;

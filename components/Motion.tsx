@@ -68,6 +68,12 @@ export default function Motion() {
          as a dead link — close on any click inside the nav, not per-link */
       const menuNav = q('.menu__nav');
       menuNav?.addEventListener('click', burgerHandler);
+      /* the drawer takes the right half; the container is the scrim over the
+         left half, and a click on it (not on the panel) closes the menu */
+      const scrimHandler = (e: Event) => {
+        if (e.target === menu) burgerHandler();
+      };
+      menu?.addEventListener('click', scrimHandler);
 
       /* the hero now carries its own giant wordmark, so the fixed mark stays
          1x and only runs the zebra ink clip every frame */
@@ -143,7 +149,6 @@ export default function Motion() {
         ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => el.classList.add('is-inview') });
       });
 
-      let matTeardown = () => {};
       if (!reduced) {
         qa('[data-parallax]').forEach((el) => {
           const speed = parseFloat((el as HTMLElement).dataset.parallax || '1');
@@ -154,49 +159,6 @@ export default function Motion() {
           });
         });
 
-        /* materials collage levitation — items drift away from the cursor,
-           each at its own depth, on a heavy 0.05 lerp; the rAF loop IS the
-           easing, so the items carry no CSS transition. Desktop pointer only. */
-        const matItems = qa('.materials__item') as HTMLElement[];
-        if (matItems.length && matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)').matches) {
-          const target = { x: innerWidth / 2, y: innerHeight / 2 };
-          const cur = { ...target };
-          const onMove = (e: MouseEvent) => { target.x = e.clientX; target.y = e.clientY; };
-          addEventListener('mousemove', onMove);
-          /* measure the section (not the stage — the stage carries its own
-             scrub transform) so per-item scroll drift can't feed back */
-          const matSection = q('.materials') as HTMLElement | null;
-          const float = () => {
-            cur.x += (target.x - cur.x) * 0.05;
-            cur.y += (target.y - cur.y) * 0.05;
-            const r = matSection?.getBoundingClientRect();
-            const p = r ? Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height))) : 0.5;
-            const t = gsap.ticker.time;
-            for (const el of matItems) {
-              const d = parseFloat(el.dataset.depth || '0.8');
-              /* deeper pieces lag the scroll harder — up to ±25vh each on top
-                 of the stage's own drift, so the collage pulls apart in Z */
-              const sy = (0.5 - p) * innerHeight * 0.5 * d;
-              /* idle levitation — each piece bobs on its own phase (seeded off
-                 its depth) so the plate breathes even with the cursor still.
-                 Set here, not in CSS: the loop owns `transform` every frame. */
-              const bob = Math.sin(t * 0.45 + d * 7) * 26 * d;
-              const sway = Math.cos(t * 0.32 + d * 4) * 14 * d;
-              el.style.transform =
-                `translate3d(${((innerWidth / 2 - cur.x) / 15) * d + sway}px, ${((innerHeight / 2 - cur.y) / 15) * d + sy + bob}px, 0) rotate(${Math.sin(t * 0.38 + d * 3) * 1.3 * d}deg)`;
-            }
-          };
-          gsap.ticker.add(float);
-          matTeardown = () => { gsap.ticker.remove(float); removeEventListener('mousemove', onMove); };
-
-          /* the whole plate rides -25vh → 25vh across the section's pass, so
-             the collage scrolls slower than the page around it */
-          gsap.fromTo('.materials__stage', { y: '-25vh' }, {
-            y: '25vh', ease: 'none',
-            scrollTrigger: { trigger: '.materials', start: 'top bottom', end: 'bottom top', scrub: true },
-          });
-        }
-
         /* the sky photo rides up 10vh as the section enters — a lift on the top
            edge only, well inside the slack that scale(1.4) leaves at the bottom */
         const worldBg = q('.z9-world__bg');
@@ -204,16 +166,6 @@ export default function Motion() {
           gsap.fromTo(worldBg, { y: '10vh' }, {
             y: 0, ease: 'none',
             scrollTrigger: { trigger: '.z9-world', start: 'top bottom', end: 'top top', scrub: true },
-          });
-        }
-
-        /* the collage drifts up inside its own frame while the section is held,
-           so the pinned plate never reads as a still image */
-        const galleryStage = q('.gallery__stage');
-        if (galleryStage) {
-          gsap.fromTo(galleryStage, { y: '8vh' }, {
-            y: '-8vh', ease: 'none',
-            scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true },
           });
         }
 
@@ -232,7 +184,6 @@ export default function Motion() {
       /* pinned manufacturing journey */
       const track = q('.journey__track') as HTMLElement | null;
       const slides = qa('.journey__slide');
-      const current = q('.journey__current');
       const typed = new WeakSet<Element>();
       const typewrite = (el?: Element) => {
         if (!el || typed.has(el) || reduced) return;
@@ -259,8 +210,6 @@ export default function Motion() {
               end: () => `+=${innerHeight + slides.length * innerHeight * 0.9}`,
               onUpdate: (st) => {
                 const p = Math.min(1, Math.max(0, st.progress / travel));
-                const i = Math.min(slides.length, Math.max(1, Math.round(p * (slides.length - 1)) + 1));
-                if (current) current.textContent = String(i);
                 typewrite(qa('.journey__desc')[Math.round(p * (slides.length - 1))]);
               },
               invalidateOnRefresh: true,
@@ -306,9 +255,11 @@ export default function Motion() {
           if (fmtStep !== i) return;
           const sizeEl = document.getElementById('fmt-size');
           const descEl = document.getElementById('fmt-desc');
-          if (sizeEl) sizeEl.textContent = f.size;
+          if (sizeEl) sizeEl.textContent = f.name;
+          const sizesEl = document.getElementById('fmt-sizes');
+          if (sizesEl) sizesEl.textContent = f.sizes.join(' · ') + ' mm';
           if (descEl) descEl.textContent = f.desc;
-          const S = 320 / 1200;
+          const S = 320 / Math.max(f.v, f.h);
           const w = Math.max(80, f.h * S);
           const h = Math.max(80, f.v * S);
           const x = 60;
@@ -364,7 +315,6 @@ export default function Motion() {
       const spaceSlides = qa('.spaces__slide');
       const spacesWrap = q('.spaces-scroll') as HTMLElement | null;
       if (spaceSlides.length && spacesWrap) {
-        const cur = q('.spaces__current');
         let shown = -1;
         /* read the wrapper's own rect each frame instead of a ScrollTrigger:
            the pins and sticky curtain above keep moving the trigger's start,
@@ -380,7 +330,6 @@ export default function Motion() {
           if (i === shown) return;
           shown = i;
           spaceSlides.forEach((s, n) => s.classList.toggle('is-active', n === i));
-          if (cur) cur.textContent = String(i + 1);
         };
         lenis.on('scroll', pickSpace);
         pickSpace();
@@ -427,7 +376,6 @@ export default function Motion() {
       const amenImgs = qa('.amen__media img');
       const amenTitle = q('.amen__title');
       const amenDesc = q('.amen__desc');
-      const amenCur = q('.amen__current');
       let amenIdx = 0;
       const setAmen = (i: number) => {
         if (!amenImgs.length) return;
@@ -436,7 +384,6 @@ export default function Motion() {
         const d = (amenImgs[amenIdx] as HTMLElement).dataset;
         if (amenTitle) amenTitle.innerHTML = (d.title || '').replace('\n', '<br>');
         if (amenDesc) amenDesc.textContent = d.desc || '';
-        if (amenCur) amenCur.textContent = String(amenIdx + 1);
       };
       /* scroll owns the index while the panel is stuck, so the arrows scroll to
          the step rather than setting it — otherwise the next frame overrides */
@@ -464,27 +411,50 @@ export default function Motion() {
       q('.amen .arrow--next')?.addEventListener('click', () => goAmen(amenIdx + 1));
       q('.amen .arrow--prev')?.addEventListener('click', () => goAmen(amenIdx - 1));
 
-      /* day cycle stepper */
+      /* day cycle — scroll owns the hour: the section is stuck while the dwell
+         spacer scrolls behind it, and the spacer's progress picks the step */
       const dayImgs = qa('.daycycle__media img');
-      const clock = q('.daycycle__clock');
+      const clock = q('.daycycle__time');
+      const dayLabel = q('.daycycle__label');
       const dial = q('.daycycle__ring') as HTMLElement | null;
-      let dayIdx = 0;
+      const daySection = q('.daycycle');
+      const dayDwell = q('.daycycle-dwell') as HTMLElement | null;
+      let dayIdx = -1;
+      const setDial = (hours: number) => {
+        if (!dial) return;
+        const hh = Math.floor(hours);
+        const mm = Math.round((hours - hh) * 60);
+        dial.style.setProperty('--h', String((hh % 12) * 30 + mm * 0.5));
+        dial.style.setProperty('--m', String(mm * 6));
+      };
       const setDay = (i: number) => {
-        if (!dayImgs.length || !clock) return;
-        dayIdx = (i + dayImgs.length) % dayImgs.length;
-        dayImgs.forEach((im, n) => im.classList.toggle('is-active', n === dayIdx));
-        const time = (dayImgs[dayIdx] as HTMLElement).dataset.time || '';
-        clock.textContent = time;
-        /* swing the dial to the same hour — CSS transitions the rotation */
-        const [hh, mm] = time.split(':').map(Number);
-        if (dial && !Number.isNaN(hh)) {
-          dial.style.setProperty('--h', String((hh % 12) * 30 + (mm || 0) * 0.5));
-          dial.style.setProperty('--m', String((mm || 0) * 6));
-        }
+        if (!dayImgs.length || i === dayIdx) return;
+        dayIdx = i;
+        dayImgs.forEach((im, n) => im.classList.toggle('is-active', n === i));
+        const el = dayImgs[i] as HTMLElement;
+        if (clock) clock.textContent = el.dataset.time || '';
+        if (dayLabel) dayLabel.textContent = el.dataset.label || '';
+        /* the hands read the step's own time. They used to be swept by a
+           separate linear 07:00→23:00 ramp, which disagreed with the readout
+           everywhere except the first frame — the hours on show (07, 13, 19,
+           23) are not evenly spaced, so no linear ramp can hit all four. */
+        const [hh, mm] = (el.dataset.time || '0:0').split(':').map(Number);
+        setDial(hh + mm / 60);
       };
       setDay(0);
-      q('.daycycle .arrow--next')?.addEventListener('click', () => setDay(dayIdx + 1));
-      q('.daycycle .arrow--prev')?.addEventListener('click', () => setDay(dayIdx - 1));
+      if (dayDwell && dayImgs.length) {
+        lenis.on('scroll', () => {
+          const r = dayDwell.getBoundingClientRect();
+          if (r.height <= 0) return;
+          /* the spacer's top sits at the fold the moment the section sticks */
+          const p = Math.min(1, Math.max(0, (innerHeight - r.top) / r.height));
+          /* photograph, readout and hands all step together at each quarter;
+             the hands glide between hours on their CSS transition, so the
+             scroll still visibly drives the clock */
+          setDay(Math.min(dayImgs.length - 1, Math.floor(p * dayImgs.length)));
+          daySection?.classList.toggle('is-moving', p > 0.02);
+        });
+      }
 
       if (!reduced && q('.global__title')) {
         gsap.fromTo('.global__title', { x: '60vw' }, {
@@ -520,8 +490,8 @@ export default function Motion() {
         anchorHandlers.forEach(([a, h]) => a.removeEventListener('click', h));
         burger?.removeEventListener('click', burgerHandler);
         menuNav?.removeEventListener('click', burgerHandler);
+        menu?.removeEventListener('click', scrimHandler);
         techTeardown();
-        matTeardown();
         lenis.destroy();
       };
     })();

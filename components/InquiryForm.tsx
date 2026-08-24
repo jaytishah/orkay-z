@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
+import { consentText } from '@/content/pages';
 
 const INTERESTS = ['Import', 'Distribution', 'OEM & Private Label', 'Project Supply'];
 
@@ -81,6 +83,22 @@ export default function InquiryForm() {
           Message
         </label>
         <textarea id="f-message" name="message" rows={3} />
+      </div>
+      <div className="field field--wide">
+        <label className="text-small" style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          <input type="checkbox" name="consentContact" required style={{ marginTop: 3 }} />
+          <span>{consentText.contact} *</span>
+        </label>
+        {errors.consentContact && <span className="field__error text-small">{errors.consentContact}</span>}
+      </div>
+      <div className="field field--wide">
+        <label className="text-small" style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          <input type="checkbox" name="consentMarketing" style={{ marginTop: 3 }} />
+          <span>{consentText.marketing}</span>
+        </label>
+        <p className="text-small" style={{ color: 'var(--c-gray-light)' }}>
+          How we use your details: <Link href="/legal/privacy" style={{ textDecoration: 'underline', textUnderlineOffset: 4 }}>Privacy Policy</Link>.
+        </p>
       </div>
       {errors.form && <p className="field__error text-small">{errors.form}</p>}
       <button type="submit" className="btn btn--underline btn--red" disabled={sending}>

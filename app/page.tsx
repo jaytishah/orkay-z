@@ -2,8 +2,8 @@ import SiteChrome, { Footer } from '@/components/SiteChrome';
 import Motion from '@/components/Motion';
 import GlobalMap from '@/components/GlobalMap';
 import {
-  formats, tileTypes, dayCycle, gallery,
-  site, nearby, spaces, facilities, services,
+  formats, tileTypes, dayCycle,
+  site, nearby, spaces, facilities, timeline,
 } from '@/content/site';
 /* the film-curtain block below is the /z9 layout language — reuse its sheet
    rather than re-declaring .z9-about/.z9-tile here */
@@ -27,7 +27,7 @@ export default function Home() {
         {/* 00 · HERO */}
         <section className="section hero ui-dark" data-polarity="dark">
           <h1 className="sr-only">
-            ORKAY Tiles International — vitrified and porcelain tile manufacturer, Morbi, India.
+            ORKAY Tiles — vitrified porcelain tile manufacturer, Morbi, India.
             Crafted in Morbi, designed for the world.
           </h1>
           <figure className="hero__media" data-parallax="0.85">
@@ -39,7 +39,7 @@ export default function Home() {
           </figure>
           <div className="hero__panel">
             <p className="hero__lede h-mid reveal-lines">
-              Premium vitrified surfaces<br />crafted in Morbi,<br />designed for the world.
+              Premium tiles<br />crafted in Morbi,<br />designed for the world.
             </p>
             <a href="#about" className="hero__scroll" aria-label="Scroll to manufacturing">↓</a>
             <p className="hero__since text-small">Morbi, Gujarat, India</p>
@@ -93,7 +93,7 @@ export default function Home() {
           <figure className="z9-loc__media img-reveal">
             <img
               src="/img/privilege_dining.jpg"
-              alt="Dining room floored and tabled in ORKAY black marble-look porcelain at dusk"
+              alt="Dining room floored and tabled in ORKAY black marble-look vitrified porcelain at dusk"
             />
           </figure>
           <p className="z9-loc__statement h-mid reveal-lines">
@@ -162,7 +162,7 @@ export default function Home() {
         {/* 01 · STATEMENT */}
         <section className="section statement ui-light" id="about" data-polarity="light">
           <h2 className="statement__title h-mid reveal-lines">
-            Seven manufacturing units. 16,000 sq.m a day. Thirty years of craft
+            Seven manufacturing units. 60,000 sq m a day. Thirty years of craft
             reflected in every single surface we press, fire, polish and pack.
           </h2>
           <figure className="statement__media img-reveal img-reveal--r">
@@ -173,95 +173,20 @@ export default function Home() {
           </figure>
         </section>
 
-        {/* 01b · STYLE — staggered pair */}
+        {/* 01b · STYLE — single frame. The red-bathroom pair and the reveal
+            animation were removed per CR S-06; the title wraps instead of clipping */}
         <section className="section z9-style ui-light" id="style" data-polarity="light">
-          <h2 className="z9-style__title h-mid reveal-lines">
+          <h2 className="z9-style__title h-mid">
             Full-slab walls and<br />mirror-polished floors<br />from our own kilns
           </h2>
-          <figure className="z9-style__a img-reveal">
-            <img src="/img/bath_red.png" alt="Bathroom clad in deep red ORKAY marble-look porcelain, a macaw on the towel rail" />
-          </figure>
-          <figure className="z9-style__b img-reveal img-reveal--r">
-            <img src="/img/style_horse.png" alt="Black ORKAY marble-look slabs stood in an open yard, a figure in black beside a red horse" />
+          <figure className="z9-style__b">
+            <img src="/img/style_horse.png" alt="Black ORKAY marble-look vitrified porcelain slabs stood in an open yard, a figure in black beside a red horse" />
           </figure>
         </section>
 
-        {/* 03 · MATERIALS collage */}
-        <section className="section materials ui-light" data-polarity="light">
-          <h2 className="materials__label h-display reveal-lines">Premium<br />Materials</h2>
-          <div className="materials__stage">
-            {/* the plate: white statuario circle behind a tall veined-black slab,
-                fluted dark wood panel in front, travertine half-dome lower left,
-                brass rod and sphere, hollow glass capsule across the front */}
-            {/* no img-reveal here — the collage reads as one plate, so the
-                slabs land together; motion comes from the levitation loop in
-                Motion.tsx (mouse lerp per item + scroll drift on the stage) */}
-            <figure className="materials__item materials__item--circle" data-depth="0.6">
-              <img src="/img/slab_realistik.jpg" alt="Statuario white marble-look disc" />
-            </figure>
-            <figure className="materials__item materials__item--nero" data-depth="1">
-              <img src="/img/slab_nero_veined.jpg" alt="Veined black marble-look porcelain slab" />
-            </figure>
-            {/* the fluting, metal, stone and glass shapes are drawn in CSS so
-                the plate needs no render assets we do not own */}
-            <figure className="materials__item materials__item--wood" data-depth="0.85">
-              <img src="/img/wood_walnut.jpg" alt="Fluted dark wood-look porcelain panel" />
-            </figure>
-            <span className="materials__item materials__item--dome" data-depth="0.7" aria-hidden="true" />
-            <span className="materials__item materials__item--rod" data-depth="1.1" aria-hidden="true" />
-            <span className="materials__item materials__item--sphere" data-depth="1.15" aria-hidden="true" />
-            <span className="materials__item materials__item--capsule" data-depth="1.05" aria-hidden="true" />
-          </div>
-        </section>
-
-        {/* 04 · LUXURY */}
-        <section className="section luxury ui-light" data-polarity="light">
-          <p className="luxury__caption text-small reveal-lines">
-            Luxury is carried by the finishing material. It is printed into the vein of the
-            porcelain, held in the polish that survives thirty years of traffic, and repeated
-            across every slab of the same batch — lobby wall to bathroom floor.
-          </p>
-          <div className="luxury__pair">
-            {/* no reveal, no parallax — the pair reads as one plate, both frames
-                identical width and height */}
-            <figure>
-              <img src="/img/lobby_dark.jpg" alt="Hotel lobby clad in dark ORKAY marble slabs" />
-            </figure>
-            <figure>
-              <img src="/img/bath_dark.jpg" alt="Bathroom in dark stone-look porcelain" />
-            </figure>
-          </div>
-        </section>
-
-        {/* the wrapper ends the pin, so the gallery is only sticky for the length
-            of the day cycle that slides up over it */}
+        {/* the curtain stack: day cycle (stuck) → experience → spaces ride up
+            over one another; the gallery that used to open it was removed (CR S-08) */}
         <div className="curtain">
-        {/* 05 · GALLERY — collage; the VIEW cursor is a CSS cursor, the lightbox
-            is the same :target modal the z9 film uses */}
-        <section className="section gallery ui-dark" id="gallery" data-polarity="dark">
-          <div className="gallery__stage">
-            {gallery.map((g, i) => (
-              <a className="gallery__item" href={`#gal-${i}`} key={g.img} aria-label={`View ${g.title.replace(/\n/g, ' ')}`}>
-                <img src={g.img} alt={g.alt} />
-              </a>
-            ))}
-          </div>
-
-          <h2 className="gallery__title h-display">
-            Gallery <span className="gallery__count text-small">/{gallery.length} photos</span>
-          </h2>
-
-          {gallery.map((g, i) => (
-            <div className="z9-modal" id={`gal-${i}`} key={`lb-${g.img}`} role="dialog" aria-label={g.alt}>
-              <a className="z9-modal__close" href="#gallery" aria-label="Close" />
-              <a className="z9-modal__x text-small" href="#gallery">Close ×</a>
-              <div className="z9-modal__body">
-                <img src={g.img} alt={g.alt} />
-                <p className="z9-modal__note text-small">{g.desc}</p>
-              </div>
-            </div>
-          ))}
-        </section>
 
         {/* 06 · DAY CYCLE */}
         <section className="section daycycle ui-dark" data-polarity="dark">
@@ -270,25 +195,22 @@ export default function Home() {
               <img
                 key={d.time}
                 src={d.img}
-                alt={`Room at ${d.time}`}
+                alt={`The same room at ${d.time} — ${d.label.toLowerCase()}`}
                 data-time={d.time}
+                data-label={d.label}
                 className={i === 0 ? 'is-active' : undefined}
               />
             ))}
           </div>
           <div className="daycycle__panel">
-            <div className="daycycle__row">
-              <div className="daycycle__clock" aria-live="polite">
-                {dayCycle[0].time}
-              </div>
-              <div className="daycycle__arrows">
-                <button className="arrow arrow--prev" aria-label="Previous time">←</button>
-                <button className="arrow arrow--next" aria-label="Next time">→</button>
-              </div>
+            <div className="daycycle__clock" aria-live="polite">
+              <span className="daycycle__time">{dayCycle[0].time}</span>
+              <span className="daycycle__label text-small">{dayCycle[0].label}</span>
             </div>
             <p className="text-small daycycle__hint reveal-lines">
-              One floor. Every light.<br />Watch an ORKAY surface live through the day.
+              One floor. Every light.<br />The same ORKAY surface, photographed from morning to night.
             </p>
+            <p className="text-small daycycle__cue" aria-hidden="true">Scroll to move through the day ↓</p>
           </div>
           {/* the ring is the dial: Motion swings these two hands to each hour */}
           <div className="daycycle__ring" aria-hidden="true">
@@ -297,6 +219,9 @@ export default function Home() {
             <i className="daycycle__pivot" />
           </div>
         </section>
+        {/* scroll budget for the stuck day cycle — Motion steps the hour as this
+            passes behind it, then the experience climbs over */}
+        <div className="daycycle-dwell" aria-hidden="true" />
 
         {/* 06b · EXPERIENCE — rides up over the pinned day cycle */}
         <section className="section experience ui-dark" id="experience" data-polarity="dark">
@@ -315,17 +240,19 @@ export default function Home() {
         {/* 06c · SPACES — the panel holds while the photo steps through */}
         <div className="spaces-scroll">
           <section className="section spaces ui-dark" id="spaces" data-polarity="dark">
-            <p className="spaces__index text-small">
-              <span className="spaces__current">1</span> — {spaces.length}
-            </p>
             {spaces.map((s, i) => (
               <article className={`spaces__slide${i === 0 ? ' is-active' : ''}`} key={s.name}>
                 <div className="spaces__panel">
                   <h3 className="h-display">{s.name}</h3>
                   <p className="spaces__desc text-small">{s.desc}</p>
                 </div>
-                <figure className="spaces__media">
+                <figure className={`spaces__media${'extra' in s && s.extra ? ' spaces__media--split' : ''}`}>
                   <img src={s.img} alt={s.alt} />
+                  {'extra' in s && s.extra ? (
+                    <span className="spaces__stack">
+                      {s.extra.map((x) => <img key={x.img} src={x.img} alt={x.alt} />)}
+                    </span>
+                  ) : null}
                 </figure>
               </article>
             ))}
@@ -336,9 +263,6 @@ export default function Home() {
         {/* 07 · WHAT WE MAKE — the six ranges, on the pinned horizontal track */}
         <section className="section journey ui-light" id="ranges" data-polarity="light">
           <div className="journey__pin">
-            <p className="journey__pagination text-small">
-              <span className="journey__current">1</span> — <span className="journey__total">{tileTypes.length}</span>
-            </p>
             <div className="journey__track">
               {tileTypes.map((j) => (
                 <article className="journey__slide" key={j.title}>
@@ -366,7 +290,6 @@ export default function Home() {
         <div className="amen-scroll">
         <section className="section amen ui-dark" id="applications" data-polarity="dark">
           <div className="amen__panel">
-            <p className="amen__label text-small">Infrastructure</p>
             <h2 className="amen__title h-mid">
               {facilities[0].title.split('\n').map((line, n) => (
                 <span key={n}>
@@ -381,9 +304,6 @@ export default function Home() {
                 <button className="arrow arrow--prev" aria-label="Previous space">←</button>
                 <button className="arrow arrow--next" aria-label="Next space">→</button>
               </div>
-              <p className="amen__count text-small">
-                <span className="amen__current">1</span> — {facilities.length}
-              </p>
             </div>
             <p className="amen__desc text-small" aria-live="polite">{facilities[0].desc}</p>
           </div>
@@ -431,17 +351,18 @@ export default function Home() {
         {/* 08a · CHOOSE YOUR FORMAT */}
         <section className="section formats ui-dark" id="formats" data-polarity="dark">
           <div className="formats__pin">
-            <nav className="formats__tabs text-small" aria-label="Tile formats">
+            <nav className="formats__tabs text-small" aria-label="Tile categories">
               {formats.map((f, i) => (
-                <button className={`formats__tab${i === 0 ? ' is-active' : ''}`} data-step={i} key={f.size}>
-                  {f.size}
+                <button className={`formats__tab${i === 0 ? ' is-active' : ''}`} data-step={i} key={f.name}>
+                  {f.name}
                 </button>
               ))}
             </nav>
             <div className="formats__panel">
-              <p className="formats__size h-display">
-                <span id="fmt-size">{formats[0].size}</span> <sup className="text-small">MM</sup>
+              <p className="formats__size h-mid">
+                <span id="fmt-size">{formats[0].name}</span>
               </p>
+              <p className="formats__sizes text-small" id="fmt-sizes">{formats[0].sizes.join(' · ')} mm</p>
               <div className="formats__plan" id="fmt-plan">
                 <svg viewBox="0 0 420 360" fill="none" aria-hidden="true">
                   <rect id="fmt-rect" x="60" y="20" width="160" height="320" stroke="currentColor" strokeWidth="1.5" pathLength="100" />
@@ -455,10 +376,10 @@ export default function Home() {
             </div>
             <figure className="formats__media">
               {formats.map((f, i) => (
-                <img key={f.size} src={f.img} alt={f.alt} data-fmt={i} className={i === 0 ? 'is-active' : undefined} />
+                <img key={f.name} src={f.img} alt={f.alt} data-fmt={i} className={i === 0 ? 'is-active' : undefined} />
               ))}
             </figure>
-            <p className="formats__kicker text-small">Choose your format</p>
+            <p className="formats__kicker text-small">Choose your category</p>
           </div>
         </section>
         </div>
@@ -468,20 +389,24 @@ export default function Home() {
           <figure className="tech__media">
             {/* keyed by name, not img: swapping an image URL would otherwise
                 remount the node and strand Motion's cached NodeList */}
-            {services.map((s, i) => (
-              <img key={s.name} src={s.img} alt={s.alt} className={i === 0 ? 'is-active' : undefined} />
+            {timeline.map((s, i) => (
+              <img key={s.year} src={s.img} alt={s.alt} className={i === 0 ? 'is-active' : undefined} />
             ))}
           </figure>
           <div className="tech__cards">
-            {services.map((s) => (
-              <article className="tech__card" key={s.name}>
-                <p className="text-small tech__label">{s.name}</p>
-                <p className="text-small tech__desc">{s.desc}</p>
+            {timeline.map((s) => (
+              <article className="tech__card" key={s.year}>
+                <p className="text-small tech__label">{s.year} · {s.capacity}</p>
+                <div className="tech__body">
+                  <p className="text-small tech__product">{s.product}</p>
+                  <p className="text-small tech__meta">{s.sizes}</p>
+                  <p className="text-small tech__desc">{s.tech}</p>
+                </div>
               </article>
             ))}
           </div>
           <h2 className="tech__title h-mid reveal-lines">
-            Five thousand<br />to a hundred<br />thousand a day
+            Five hundred<br />to sixty<br />thousand a day
           </h2>
         </section>
 

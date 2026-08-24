@@ -1,34 +1,68 @@
 /* CMS SEAM: every headline, caption and number the homepage renders.
-   All figures verified against the Orkay fact library. */
+   Figures follow the client Change Request Rev 1 (20 Aug 2026): capacity
+   60,000 sq m/day, the Section 4 timeline, "Vitrified Porcelain Tiles" as the
+   single approved term, Double-Charge and Wooden Plank removed. */
 
+/* Format selector — the buyer chooses a CATEGORY first, then sees every size
+   in it (CR S-18). `v`/`h` drive the plan drawing for the hero size. `pending`
+   marks a range Orkay has not finalised (CR Q-01 / P-03). */
 export const formats = [
-  { size: '600×1200', v: 1200, h: 600, desc: 'Large-format vitrified slabs · Glossy / Matt · Floors, walls and facades', img: '/img/fmt_600x1200.png', alt: 'Woman in black crossing a terrace paved in 600 by 1200 grey stone-look slabs, concrete villa behind her at dusk' },
-  { size: '600×600', v: 600, h: 600, desc: 'Vitrified double-charge floor tiles · Glossy / Matt · Residential and commercial floors', img: '/img/fmt_600x600.png', alt: 'Black marble-look vitrified slab stood on a salt flat between white horses' },
-  { size: '300×450', v: 450, h: 300, desc: 'Ceramic wall tiles · Glossy / Carving · Bathrooms and kitchens', img: '/img/fmt_300x450.png', alt: 'Stone-look tiled stair treads and risers, a woman stepping up past a glass balustrade' },
-  { size: '400×400', v: 400, h: 400, desc: 'Heavy-duty parking tiles · Matt anti-skid · Driveways, terraces and outdoors', img: '/img/fmt_parking.png', alt: '400 by 400 heavy-duty outdoor tiles installed' },
+  {
+    name: 'Vitrified Porcelain Tiles',
+    sizes: ['600×600', '600×1200', '1000×1000', '1200×1200', '1200×1800'],
+    v: 1200, h: 600,
+    desc: 'Dense, low-porosity vitrified porcelain for floors, walls and facades · Glossy / Matt',
+    img: '/img/fmt_600x1200.png',
+    alt: 'Woman in black crossing a terrace paved in grey stone-look vitrified porcelain tiles, concrete villa behind her at dusk',
+  },
+  {
+    name: 'Porcelain Slab Tiles',
+    sizes: ['800×2400', '800×3000', '1200×1800'],
+    v: 2400, h: 800,
+    desc: 'Panoramic slabs for floors, feature walls and facades — and counter tops cut from the same slab',
+    img: '/img/type_slabs.png',
+    alt: 'Lit corridor floored in polished large-format marble-look vitrified porcelain slabs',
+  },
+  {
+    name: 'Ceramic Tiles',
+    sizes: ['300×450', '300×600'],
+    pending: true,
+    v: 450, h: 300,
+    desc: 'Wall and floor ceramic in glossy, matt and carved finishes · Full range being confirmed',
+    img: '/img/fmt_300x450.png',
+    alt: 'Stone-look tiled stair treads and risers, a woman stepping up past a glass balustrade',
+  },
+  {
+    name: 'Outdoor Tiles',
+    sizes: ['600×600'],
+    pending: true,
+    v: 600, h: 600,
+    desc: 'Matt anti-skid bodies for terraces, platforms and driveways · Full anti-skid range being confirmed',
+    img: '/img/cr_outdoor_platform.jpg',
+    alt: 'Station platform laid in 600×600 matt anti-skid ORKAY outdoor tiles in a straight grid',
+  },
 ];
 
-/* The six categories we manufacture — mirrors the ranges on orkaytiles.com */
+/* The four categories we manufacture (CR §6). Counter tops sit inside
+   Porcelain Slab Tiles as an application, not a category. */
 export const tileTypes = [
-  { title: 'Porcelain\nTiles', desc: 'Full-body and double-charge vitrified, pressed dense and fired to near-zero porosity. Floors, walls, wet areas — one body that takes traffic, water and cleaning chemicals without changing.', img: '/img/type_porcelain.png', alt: 'Man leaning on a beige marble-look porcelain wall beside brown veined slabs' },
-  { title: 'Porcelain\nSlabs', desc: 'Large format up to 600×1200 and beyond, for floors, feature walls and facades. Fewer joints across a space, and a vein that runs on from one slab to the next.', img: '/img/type_slabs.png', alt: 'Lit corridor floored in polished large-format marble-look porcelain slabs' },
-  { title: 'Ceramic\nWall Tiles', desc: 'Glossy, matt and carved faces for kitchens, bathrooms and backsplashes. Light bodies made to be cut and set fast on a wall, in shades that match the floor they meet.', img: '/img/type_ceramic.png', alt: 'Hotel lobby walled in stone-look tile, a guest crossing the polished floor' },
-  { title: 'Wooden\nPlank', desc: 'Plank formats printed with real timber grain, then fired. The look of oak or walnut with none of the sealing, swelling or refinishing — and it takes a wet floor.', img: '/img/life_gym.png', alt: 'Wood-look porcelain plank flooring' },
-  { title: 'Counter\nTops', desc: 'Non-porous, heat- and stain-resistant surfaces for islands, vanities and worktops. Nothing to seal each year, and the pattern is fired in, so acid and oil do not mark it.', img: '/img/type_countertop.png', alt: 'Grey stone-look porcelain slab stood in a mirrored studio, a man beside it for scale' },
-  { title: 'Outdoor\nTiles', desc: 'Anti-skid matt bodies for terraces, driveways, platforms and parking decks. Rated for frost, sun and standing water — the finish stays the same through the seasons.', img: '/img/type_outdoor.png', alt: 'Station platform floored in dark marble-look ORKAY porcelain at sunrise' },
+  { title: 'Vitrified\nPorcelain Tiles', desc: 'Pressed dense and fired to near-zero porosity. Floors, walls, wet areas — one body that takes traffic, water and cleaning chemicals without changing. 600×600 to 1200×1800.', img: '/img/type_porcelain.png', alt: 'Man leaning on a beige marble-look vitrified porcelain wall beside brown veined slabs' },
+  { title: 'Porcelain\nSlab Tiles', desc: 'Large format to 800×3000, for floors, feature walls, facades and counter tops. Fewer joints across a space, and a vein that runs on from one slab to the next.', img: '/img/type_slabs.png', alt: 'Lit corridor floored in polished large-format marble-look vitrified porcelain slabs' },
+  { title: 'Ceramic\nTiles', desc: 'Glossy, matt and carved faces for kitchens, bathrooms and backsplashes, in wall and floor bodies. Light, made to be cut and set fast, in shades that match the floor they meet.', img: '/img/type_ceramic.png', alt: 'Hotel lobby walled in stone-look ceramic tile, a guest crossing the polished floor' },
+  { title: 'Outdoor\nTiles', desc: 'Anti-skid matt bodies for terraces, driveways, platforms and parking decks. Rated for frost, sun and standing water — the finish stays the same through the seasons.', img: '/img/cr_outdoor_platform.jpg', alt: 'Station platform floored in 600×600 matt anti-skid ORKAY outdoor tiles, a bullet train at the edge at sunrise' },
 ];
 
 /* Arrow-driven carousel under the infrastructure plate */
 export const facilities = [
   {
     title: 'Restaurant\nand bar',
-    desc: 'Front-of-house floors take the traffic of a full service every night. Full-body vitrified keeps its polish where a stone floor would have dulled and been ground back twice.',
-    img: '/img/gal_commercial.jpg', alt: 'Restaurant floored in ORKAY stone-look porcelain',
+    desc: 'Front-of-house floors take the traffic of a full service every night. Full-body vitrified porcelain keeps its polish where a stone floor would have dulled and been ground back twice.',
+    img: '/img/cr_restaurant.jpg', alt: 'Restaurant and bar floored in 600×1200 stone-look ORKAY vitrified porcelain, joints running straight to the bar',
   },
   {
     title: 'Private\ndining',
     desc: 'Warm travertine-look slabs, matt finished so candlelight sits on the surface instead of glaring off it. Same batch from the entrance through to the private room.',
-    img: '/img/app_interior_warm.jpg', alt: 'Private dining room floored in travertine-look porcelain',
+    img: '/img/cr_private_dining.jpg', alt: 'Private dining room floored in matt travertine-look ORKAY vitrified porcelain slabs, candlelit',
   },
   {
     title: 'Hotel\nlobby',
@@ -37,83 +71,76 @@ export const facilities = [
   },
 ];
 
-/* Scroll-driven carousel of finished spaces — one photo per step */
+/* Scroll-driven carousel of finished spaces — one photo per step.
+   Lobby carries the reception / bathroom pair that used to be its own
+   section (CR S-09a merge). */
 export const spaces = [
   {
     name: 'Lobby',
-    desc: 'Double-height entrances take the largest formats we run. Fewer joints across the floor, one continuous vein up the feature wall, and a polish that survives the traffic of a commercial entrance.',
-    img: '/img/life_lobby.png', alt: 'Dark entrance hall floored and clad in charcoal marble-look ORKAY slabs',
+    desc: 'Luxury is carried by the finishing material: printed into the vein of vitrified porcelain, held in a polish that survives thirty years of traffic, and repeated across every slab of the same batch — lobby wall to bathroom floor. Double-height entrances take the largest formats we run.',
+    img: '/img/cr_lobby.jpg', alt: 'Double-height hotel lobby floored in 1200×1800 charcoal marble-look ORKAY vitrified porcelain, the same slab running up the feature wall',
+    extra: [
+      { img: '/img/lobby_dark.jpg', alt: 'Hotel reception clad in dark ORKAY marble-look slabs' },
+      { img: '/img/bath_dark.jpg', alt: 'Bathroom in dark stone-look vitrified porcelain' },
+    ],
   },
   {
     name: 'Living',
-    desc: 'A book-matched fireplace wall in marble-look porcelain: the pattern is printed to the slab, so it never fades, never needs sealing, and repeats exactly on the reorder.',
-    img: '/img/life_living.png', alt: 'Living room floored in polished brown marble-look ORKAY porcelain, a horse sculpture on the feature wall',
+    desc: 'A book-matched fireplace wall in marble-look vitrified porcelain: the pattern is printed to the slab, so it never fades, never needs sealing, and repeats exactly on the reorder.',
+    img: '/img/cr_living_bookmatch.jpg', alt: 'Living room with a book-matched marble-look ORKAY vitrified porcelain fireplace wall and a polished 1200×1200 floor',
   },
   {
     name: 'Kitchen',
-    desc: 'Dark full-body vitrified for the island and the splashback. Heat, oil and acid do nothing to a fired surface — the counter looks the same after ten years of cooking.',
-    img: '/img/life_kitchen.jpg', alt: 'Dark kitchen with a black marble-look porcelain island and splashback, grey stone-look floor',
+    desc: 'Dark full-body vitrified porcelain for the island and the splashback. Heat, oil and acid do nothing to a fired surface — the counter looks the same after ten years of cooking.',
+    img: '/img/life_kitchen.jpg', alt: 'Dark kitchen with a black marble-look vitrified porcelain slab island and splashback, grey stone-look floor',
   },
   {
     name: 'Bath',
     desc: 'Matt and anti-skid finishes rated to AS/NZS 4586, so the floor stays safe wet. The same body, same batch, same shade as the wall it meets.',
-    img: '/img/gal_bath.jpg', alt: 'Bathroom in stone-look porcelain',
-  },
-  {
-    name: 'Gym',
-    desc: 'Wood-look porcelain takes dropped plates and sweat the way timber never could. Matt, anti-skid, and unaffected by the disinfectant a gym floor is cleaned with every night.',
-    img: '/img/life_gym.png', alt: 'Home gym floored in wood-look ORKAY porcelain, rack and bench against a stone-look wall',
+    img: '/img/gal_bath.jpg', alt: 'Bathroom in stone-look vitrified porcelain',
   },
 ];
 
 /* What sits inside the Morbi campus — the LOCATION strip under the hero */
 export const nearby = [
-  { title: 'Showroom', meta: 'On campus', img: '/img/design_studio.png', alt: 'Buyers reviewing full slabs with the ORKAY team in the campus showroom' },
-  { title: 'Seven units', meta: 'One standard', img: '/img/seven_units.png', alt: 'ORKAY production campus lit at dusk, long concrete facade above a porcelain-paved approach' },
-  { title: 'Design studio', meta: '1,000+ designs', img: '/img/design_studio_hall.png', alt: 'Decoration line running patterned and plain tiles side by side' },
+  { title: 'Showroom', meta: 'On campus', img: '/img/cr_showroom.jpg', alt: 'Full-size vitrified porcelain slabs on racks in the ORKAY campus showroom' },
+  { title: 'Seven units', meta: 'One standard', img: '/img/cr_seven_units.jpg', alt: 'The seven ORKAY production units at dusk, a vitrified-porcelain-paved approach in front' },
+  { title: 'Design studio', meta: '4,000+ designs', img: '/img/cr_design_studio.jpg', alt: 'The ORKAY design studio — surface designs on screen, full-size slab samples on racks' },
   { title: 'Loading yard', meta: 'FCL on site', img: '/img/advantage_yard.jpg', alt: 'Crated slabs in the dispatch yard' },
-  { title: 'Mundra port', meta: '3 hours away', img: '/img/mundra_port.png', alt: 'Crated ORKAY slabs on pallets at Mundra port at sunrise, a container ship loading behind them' },
+  { title: 'Mundra port', meta: '3 hours away', img: '/img/cr_mundra_port.jpg', alt: 'Crated ORKAY tile on pallets at Mundra port at sunrise, a container ship loading behind them' },
 ];
 
-/* Growth milestones, verbatim from orkaytiles.com/about-us — one card per
-   step up in daily output. Figures are the company's own published ones.
-   Numerals kept in international format: this site reads outside India. */
-export const services = [
-  { name: '1996 · 5,000 sq.m a day', desc: 'Late Shri Avcharbhai Patel fires the first ORKAY tile in Morbi. One line, one shift, and a standard set higher than the town was asking for.', img: '/img/milestone_1996_store.png', alt: 'Lit ORKAY Tiles showroom facade at night, gold-lettered sign above glass-block windows' },
-  { name: '2008 · 15,000 sq.m a day', desc: 'Output trebles in twelve years, and the first containers leave for buyers who had never heard of Morbi.', img: '/img/milestone_2008.png', alt: 'Woman in gold crossing a lobby walled and floored in beige stone-look ORKAY porcelain' },
-  { name: '2013 · 35,000 sq.m a day', desc: 'Digital printing arrives on the line. A thousand faces become possible where a handful of screens used to decide the whole range.', img: '/img/milestone_2013.png', alt: 'Living room floored in polished grey marble-look ORKAY porcelain, a lit fireplace along the far wall' },
-  { name: '2016 · 65,000 sq.m a day', desc: 'Glazed and double-charge vitrified run side by side, shade-mapped batch by batch, so a reorder still matches the floor already laid.', img: '/img/milestone_2016.png', alt: 'White statuario-look ORKAY porcelain slab stood on red velvet beneath a crystal chandelier' },
-  { name: '2019 · 85,000 sq.m a day', desc: 'Capacity built for the export book: CE marking, ISO 9001:2015 systems, and our own IEC on every shipment that leaves the yard.', img: '/img/milestone_2019.png', alt: 'Barefoot woman in black crossing a candlelit hall floored in polished marble-look ORKAY porcelain' },
-  { name: '2020 · 100,000 sq.m a day', desc: 'Porcelain slabs join the range — large format to 1200×2400, and a scale that puts ORKAY among the largest lines in the town that fires most of India’s porcelain.', img: '/img/statement_slabs.png', alt: 'Large-format ORKAY porcelain slabs stood in the yard' },
+/* Manufacturing capacity timeline — the authoritative dataset from CR §4.
+   Five fields per milestone; every figure is Orkay's own. Capacity today is
+   the four active lines: 15,000 + 21,000 + 13,000 + 11,000 = 60,000 sq m/day. */
+export const timeline = [
+  { year: '1996', capacity: '500 sq m/day', product: 'Cement Mosaic Tiles', sizes: '—', tech: 'Company founded. First production line.', img: '/img/milestone_1996_store.png', alt: 'Lit ORKAY Tiles showroom facade at night, gold-lettered sign above glass-block windows' },
+  { year: '2008', capacity: '6,000 sq m/day', product: 'Ceramic Tiles', sizes: '200×300 mm', tech: 'First ceramic tile plant.', img: '/img/milestone_2008.png', alt: 'Woman in gold crossing a lobby walled and floored in beige stone-look ORKAY tile' },
+  { year: '2013', capacity: '12,000 sq m/day', product: 'Ceramic Floor Tiles', sizes: '250×375 mm', tech: 'Digital printing machinery introduced.', img: '/img/milestone_2013.png', alt: 'Living room floored in polished grey marble-look ORKAY tile, a lit fireplace along the far wall' },
+  { year: '2016', capacity: '15,000 sq m/day', product: 'Ceramic Tiles', sizes: '300×450 mm, 300×600 mm (250×375 discontinued)', tech: 'Plant upgraded — Cretaprint Hybrid Printers (EFI) replace digital printing. Size change made on an identified future trend.', img: '/img/milestone_2016.png', alt: 'White statuario-look ORKAY slab stood on red velvet beneath a crystal chandelier' },
+  { year: '2019', capacity: '21,000 sq m/day', product: 'Vitrified Porcelain Tiles', sizes: '600×600 mm, 600×1200 mm', tech: 'SACMI line + EFI Cretaprint technology.', img: '/img/milestone_2019.png', alt: 'Barefoot woman in black crossing a candlelit hall floored in polished marble-look ORKAY vitrified porcelain' },
+  { year: '2023', capacity: '13,000 sq m/day', product: 'Vitrified Porcelain Tiles', sizes: '1000×1000 mm, 1200×1200 mm, 1200×1800 mm', tech: 'SACMI line + System digital printing machine.', img: '/img/cr_milestone_2023.jpg', alt: 'SACMI line producing 1200×1800 ORKAY vitrified porcelain slabs' },
+  { year: '2024', capacity: 'Golden Carving Series', product: 'Golden Carving Series', sizes: '—', tech: 'First manufacturer in India to introduce this series. Solar-powered plant commissioned for green energy supply.', img: '/img/cr_milestone_2024.jpg', alt: 'Golden Carving series tile — raised carved pattern finished in gold lustre' },
+  { year: '2025', capacity: '11,000 sq m/day', product: 'Porcelain Slab Tiles', sizes: '800×2400 mm, 800×3000 mm (counter tops); 1200×1800 mm (slab)', tech: 'CONTINUA+ system by SACMI — only 60–70 units in use worldwide.', img: '/img/cr_milestone_2025.jpg', alt: 'SACMI CONTINUA+ line producing 800×3000 ORKAY porcelain slab tiles' },
 ];
 
 export const stats = [
   { value: 1996, display: '1996', label: 'Manufacturing since' },
-  { value: 16000, display: '16,000', label: 'sq.m produced daily' },
+  { value: 60000, display: '60,000', label: 'sq m produced daily' },
   { value: 40, display: '40+', label: 'Export countries' },
   { value: 4000, display: '4,000+', label: 'Designs in range' },
 ];
 
+/* One surface, four lights. `label` is what makes the clock legible (CR S-10b). */
 export const dayCycle = [
-  { time: '07:00', img: '/img/day_0700.jpg' },
-  { time: '13:00', img: '/img/day_1300.jpg' },
-  { time: '19:00', img: '/img/day_1900.jpg' },
-  { time: '23:00', img: '/img/day_2300.jpg' },
-];
-
-export const gallery = [
-  { img: '/img/gal_terrace.jpg', alt: 'Villa terrace and poolside paved in patterned ORKAY outdoor tiles', title: 'Terrace\n& Poolside', desc: 'Matt anti-skid outdoor tiles. The pattern holds true across the run — laid wet or dry, the grip stays.' },
-  { img: '/img/gal_lobby.jpg', alt: 'Hotel lobby in dark marble-look ORKAY slabs with brass and oak', title: 'Hotel\nLobby', desc: 'Dark marble-look vitrified slabs, polished. Warmed by oak and brass, and polished to hold its mirror for decades.' },
-  { img: '/img/gal_residential.jpg', alt: 'Family living room floored in warm beige ORKAY vitrified tiles', title: 'Residential\nFloors', desc: '600×600 double-charge vitrified. Shade-mapped per batch, so next year’s reorder matches today’s floor.' },
-  { img: '/img/gal_bath.jpg', alt: 'Spa bathroom in stone-look ORKAY wall and floor tiles', title: 'Stone\nBathroom', desc: 'Stone-look ceramic on the wall, matching porcelain underfoot. Low porosity, zero staining, built for daily water.' },
-  { img: '/img/gal_commercial.jpg', alt: 'Restaurant interior floored in large-format ORKAY porcelain', title: 'Hospitality\nFloors', desc: 'Full-body porcelain rated for continuous footfall. Dense, inert, and unchanged after thirty years of service.' },
-  { img: '/img/gal_largeformat.jpg', alt: 'Open-plan kitchen with 600 by 1200 ORKAY slabs', title: 'Large-Format\nLiving', desc: '600×1200 slabs with joints you have to look for. Fewer lines on the floor, a room that reads larger than it is.' },
-  { img: '/img/gal_goldenhour.jpg', alt: 'Living room at golden hour on travertine-look ORKAY porcelain', title: 'Golden\nHour', desc: 'A surface is only as good as its worst light. This one keeps its depth from first sun to last lamp.' },
-  { img: '/img/gal_statuario.jpg', alt: 'Bright interior floored in statuario marble-look ORKAY slabs', title: 'Statuario\nWhite', desc: 'Marble-look statuario in large format. The vein runs continuous, edge to edge, across every slab in the crate.' },
+  { time: '07:00', label: 'Morning', img: '/img/day_0700.jpg' },
+  { time: '13:00', label: 'Afternoon', img: '/img/day_1300.jpg' },
+  { time: '19:00', label: 'Evening', img: '/img/day_1900.jpg' },
+  { time: '23:00', label: 'Night', img: '/img/day_2300.jpg' },
 ];
 
 export const site = {
-  name: 'ORKAY Tiles International',
+  name: 'ORKAY Tiles',
   tagline: 'Crafted in Morbi. Designed for the World.',
   since: 'Since 1996 — Morbi, Gujarat, India',
   email: 'info@orkaytiles.com',
@@ -128,21 +155,21 @@ export const site = {
   exhibitionPoster: '/img/exhibition_poster.jpg',
 };
 
-/* The six product categories ORKAY publishes on orkaytiles.com. */
+/* The four product categories (CR §6). */
 export const products = [
-  { name: 'Porcelain Tiles', meta: 'GVT · PGVT · Double charge', desc: 'Glazed and double-charged vitrified tiles from 400×400 to 600×1200. Dense, low-porosity bodies for floors that take traffic.' },
-  { name: 'Porcelain Slab Tiles', meta: '800×1600 to 1200×2400', desc: 'Panoramic slabs for floors, walls, facades and book-matched features. The fewest joints a surface can have.' },
-  { name: 'Ceramic Tiles', meta: '200×375 to 300×900', desc: 'Digital ceramic wall tiles in glossy, matt and carved finishes. Built for bathrooms, kitchens and feature walls.' },
-  { name: 'Wooden Plank', meta: 'Matt · Carving · Relief punch', desc: 'Timber-look porcelain planks — Birchwood, Alpine, Aston and Bosco ranges. The grain of wood with the life of porcelain.' },
-  { name: 'Counter Tops', meta: 'Slab-cut surfaces', desc: 'Full-slab kitchen and vanity tops cut from the same bodies as the floor, so a room can run one material throughout.' },
-  { name: 'Outdoor Tiles', meta: 'Matt anti-skid', desc: 'Heavy-duty parking, driveway and terrace tiles. Anti-skid rated, frost stable, and unchanged by weather.' },
+  { name: 'Vitrified Porcelain Tiles', meta: '600×600 · 600×1200 · 1000×1000 · 1200×1200 · 1200×1800', desc: 'Dense, low-porosity vitrified porcelain for floors, walls and facades that take traffic.' },
+  { name: 'Porcelain Slab Tiles', meta: '800×2400 · 800×3000 · 1200×1800 · counter tops from the same slab', desc: 'Panoramic slabs for floors, walls, facades and book-matched features. The fewest joints a surface can have.' },
+  { name: 'Ceramic Tiles', meta: 'Wall and floor · range being confirmed', desc: 'Ceramic wall and floor tiles in glossy, matt and carved finishes. Built for bathrooms, kitchens and feature walls.' },
+  { name: 'Outdoor Tiles', meta: '600×600 · matt anti-skid', desc: 'Heavy-duty parking, driveway and terrace tiles. Anti-skid rated, frost stable, and unchanged by weather.' },
 ];
 
-/* Container-load data published on orkaytiles.com/packing-details.
-   Importers plan shipments off these numbers — do not round them. */
+/* Container-load data published on orkaytiles.com/packing-details, trimmed
+   to the confirmed ranges (CR §6). Importers plan shipments off these
+   numbers — do not round them. Sizes added in the CR (1000×1000, 1200×1800,
+   800×2400, 800×3000) have no published packing data yet. */
 export const packing = [
   {
-    body: 'Ceramic Wall Tiles',
+    body: 'Ceramic Tiles',
     rows: [
       { size: '200×600', thick: '9', box: '6', sqm: '0.72', kg: '10.30', sqmC: '1,843.20' },
       { size: '200×375', thick: '6.80', box: '8', sqm: '0.75', kg: '9', sqmC: '2,268.00' },
@@ -154,24 +181,16 @@ export const packing = [
     ],
   },
   {
-    body: 'Porcelain Tiles · GVT / PGVT',
+    body: 'Vitrified Porcelain Tiles',
     rows: [
-      { size: '400×400', thick: '10', box: '5', sqm: '0.80', kg: '17', sqmC: '1,276.80' },
       { size: '600×600', thick: '9', box: '4', sqm: '1.44', kg: '28', sqmC: '1,382.40' },
-      { size: '800×800', thick: '11', box: '3', sqm: '1.92', kg: '49', sqmC: '998.40' },
       { size: '600×1200', thick: '9', box: '2', sqm: '1.44', kg: '31', sqmC: '1,267.20' },
-    ],
-  },
-  {
-    body: 'Porcelain Slabs',
-    rows: [
-      { size: '800×1600', thick: '9', box: '2', sqm: '2.56', kg: '53', sqmC: '1,290.24' },
       { size: '1200×1200', thick: '9', box: '2', sqm: '2.88', kg: '61', sqmC: '1,140.48' },
-      { size: '900×1800', thick: '9', box: '2', sqm: '3.24', kg: '65', sqmC: '—' },
-      { size: '1200×2400', thick: '9', box: '1', sqm: '2.88', kg: '61', sqmC: '604.80' },
     ],
   },
 ];
+/* Packing rows Orkay still has to publish for the confirmed range. */
+export const packingPending = ['1000×1000', '1200×1800', '800×2400', '800×3000'];
 
 export const contact = {
   address: 'Corporate Office · 62/63/64, Shakti Chamber-1,\n8A National Highway, Morbi-363642, Gujarat, India',
@@ -187,11 +206,11 @@ export const contact = {
   ],
 };
 
-/* Direct Manufacturer Advantage — every line traceable to the approved
-   campaign file in the orkay-tiles fact library. No unverified claims. */
+/* Direct Manufacturer Advantage — figures per CR Rev 1; certificates per the
+   orkay-tiles fact library. */
 export const advantage = [
-  { label: 'Own the line', desc: 'Seven production units in Morbi, 16,000 sq.m a day. The tile you order is pressed, fired and packed on equipment we own — not bought in and re-labelled.' },
-  { label: 'Own the paperwork', desc: 'A registered Partnership manufacturer holding its own DGFT Importer-Exporter Code, AAAFO3244L. Your order does not route through someone else’s factory or someone else’s licence.' },
+  { label: 'Own the line', desc: 'Seven production units in Morbi, 60,000 sq m a day. The tile you order is pressed, fired and packed on equipment we own — not bought in and re-labelled.' },
+  { label: 'Own the paperwork', desc: 'A manufacturer holding its own DGFT Importer-Exporter Code, AAAFO3244L. Your order does not route through someone else’s factory or someone else’s licence.' },
   { label: 'Own the standard', desc: 'ISO 9001:2015 certified and CE compliant under EU CPR 305/2011. The same certificates cover the floor you specify and the container it ships in.' },
   { label: 'Own the outcome', desc: 'Five quality gates between raw material and released shipment: pre-production control, in-process inspection, pre-packing checks, packing and pallet verification, pre-shipment release approval.' },
 ];

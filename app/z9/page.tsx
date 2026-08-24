@@ -199,7 +199,7 @@ export default function Z9() {
             <article className="z9-built__feature">
               <h3 className="h-mid reveal-lines">Premium<br />bodies</h3>
               <p className="text-small">
-                Full-body vitrified, double-charge and glazed porcelain, finished matt, glossy,
+                Full-body vitrified porcelain, finished matt, glossy,
                 carving or anti-skid — rated against AS 4459 and AS/NZS 4586.
               </p>
             </article>

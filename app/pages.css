@@ -1,0 +1,233 @@
+/* ═══════════════════════════════════════════════════════════
+   CONTENT PAGES — shared section language
+   Same rules as globals.css: two type sizes, one accent, one easing,
+   zero radius, zero shadow. Nothing here introduces a new colour.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── page hero ─── */
+.pg-hero {
+  min-height: 78vh;
+  display: grid;
+  align-content: end;
+  gap: 32px;
+  padding: 26vh var(--pad) 10vh;
+}
+.pg-hero__kicker { color: var(--c-red); }
+.pg-hero__title { max-width: 16ch; }
+.pg-hero__lede {
+  font-size: clamp(18px, 1.9vw, 28px);
+  line-height: 1.3;
+  max-width: 44ch;
+  color: var(--c-gray);
+}
+.ui-dark .pg-hero__lede { color: var(--c-gray-light); }
+.pg-hero--media { min-height: 100vh; padding-bottom: 0; overflow: hidden; }
+.pg-hero__figure { height: 62vh; margin-top: 6vh; }
+
+/* ─── generic section ─── */
+.pg { padding: 14vh var(--pad); }
+.pg--tight { padding: 9vh var(--pad); }
+.pg__label { color: var(--c-red); margin-bottom: 5vh; }
+.pg__title { max-width: 18ch; margin-bottom: 4vh; }
+.pg__lede { color: var(--c-gray); max-width: 62ch; }
+.ui-dark .pg__lede { color: var(--c-gray-light); }
+
+/* ─── column grids ─── */
+.pg-grid { display: grid; gap: var(--pad); margin-top: 7vh; }
+.pg-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.pg-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.pg-grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ─── ruled item (the advantage-grid idiom, reusable) ─── */
+.pg-item { padding-top: 22px; border-top: 1px solid rgba(0, 0, 0, 0.18); }
+.ui-dark .pg-item { border-top-color: rgba(255, 255, 255, 0.24); }
+.pg-item__desc { color: var(--c-gray); margin-top: 12px; }
+.ui-dark .pg-item__desc { color: var(--c-gray-light); }
+
+/* ─── numbered process steps ─── */
+.pg-steps { display: grid; gap: 0; margin-top: 7vh; }
+.pg-step {
+  display: grid; grid-template-columns: 84px 1fr 1.3fr;
+  gap: var(--pad); align-items: start;
+  padding: 34px 0; border-top: 1px solid rgba(0, 0, 0, 0.18);
+}
+.ui-dark .pg-step { border-top-color: rgba(255, 255, 255, 0.24); }
+.pg-step:last-child { border-bottom: 1px solid rgba(0, 0, 0, 0.18); }
+.ui-dark .pg-step:last-child { border-bottom-color: rgba(255, 255, 255, 0.24); }
+.pg-step__n { color: var(--c-red); }
+.pg-step__desc { color: var(--c-gray); }
+.ui-dark .pg-step__desc { color: var(--c-gray-light); }
+
+/* ─── spec / data table ─── */
+.pg-table { display: grid; margin-top: 6vh; border-top: 1px solid rgba(0, 0, 0, 0.18); max-width: 760px; }
+.ui-dark .pg-table { border-top-color: rgba(255, 255, 255, 0.24); }
+.pg-table > div {
+  display: flex; justify-content: space-between; gap: 24px;
+  padding: 16px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+}
+.ui-dark .pg-table > div { border-bottom-color: rgba(255, 255, 255, 0.24); }
+.pg-table span:first-child { color: var(--c-gray); }
+.ui-dark .pg-table span:first-child { color: var(--c-gray-light); }
+
+/* ─── media band ─── */
+.pg-band { height: 78vh; overflow: hidden; }
+.pg-band--short { height: 56vh; }
+
+/* ─── split: copy one side, image the other ─── */
+.pg-split { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: var(--pad); }
+.pg-split__copy { display: grid; gap: 28px; }
+.pg-split__media { height: 72vh; }
+.pg-split--rev .pg-split__media { order: -1; }
+
+/* ─── quote / testimonial ─── */
+.pg-quote { padding-top: 26px; border-top: 1px solid rgba(0, 0, 0, 0.18); display: grid; gap: 22px; }
+.ui-dark .pg-quote { border-top-color: rgba(255, 255, 255, 0.24); }
+.pg-quote__body { font-size: clamp(17px, 1.5vw, 22px); line-height: 1.35; }
+.pg-quote__who { color: var(--c-gray); }
+.ui-dark .pg-quote__who { color: var(--c-gray-light); }
+.pg-quote__stars { color: var(--c-red); letter-spacing: 0.2em; }
+
+/* ─── closing call to action ─── */
+.pg-cta { display: flex; flex-wrap: wrap; gap: 56px; padding: 12vh var(--pad) 14vh; }
+
+/* ─── document / download list ─── */
+.pg-docs { display: grid; margin-top: 6vh; border-top: 1px solid rgba(255, 255, 255, 0.24); }
+.pg-doc {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--pad);
+  padding: 26px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+}
+/* the nudge rides on transform, like .arrow and .footer__top — animating
+   padding would relayout the row on every hover frame, and the rule under it
+   would shift with the text instead of staying put */
+.pg-doc__label { transition: transform var(--dur) var(--ease); }
+.pg-doc:hover .pg-doc__label { transform: translateX(12px); }
+.pg-doc__meta { color: var(--c-gray-light); margin-top: 8px; }
+
+/* ─── form ─── */
+.pg-form { display: grid; gap: 28px; max-width: 780px; margin-top: 6vh; }
+.pg-form__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px calc(var(--pad) / 2); }
+
+/* ─── placeholder marker: anything Orkay still has to supply ─── */
+.pg-todo {
+  display: inline-block; border: 1px solid var(--c-red); color: var(--c-red);
+  padding: 2px 8px; margin-left: 8px;
+}
+
+/* ─── responsive ─── */
+@media (max-width: 900px) {
+  .pg-hero { padding-top: 22vh; }
+  .pg-hero__title { max-width: 100%; }
+  .pg-grid--2, .pg-grid--3, .pg-grid--4 { grid-template-columns: 1fr; }
+  .pg-step { grid-template-columns: 48px 1fr; gap: 18px; }
+  .pg-step__desc { grid-column: 2; }
+  .pg-split { grid-template-columns: 1fr; }
+  .pg-split__media { height: 52vh; order: -1; }
+  .pg-form__grid { grid-template-columns: 1fr; }
+  .pg-cta { gap: 28px; padding-bottom: 10vh; }
+  .pg-band { height: 52vh; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ROOM VISUALISER
+   ═══════════════════════════════════════════════════════════ */
+
+.viz { display: grid; grid-template-columns: 1.35fr 1fr; gap: var(--pad); align-items: start; }
+
+.viz__stage {
+  position: relative; overflow: hidden;
+  aspect-ratio: 16 / 10; background: var(--c-black);
+  /* isolate so mix-blend-mode composites against the room photo only,
+     never against the page behind it */
+  isolation: isolate;
+}
+.viz__room { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.viz__surface { position: absolute; inset: 0; pointer-events: none; }
+/* the warped layer: transform-origin must stay at the corner or the
+   homography lands in the wrong place */
+.viz__tile {
+  position: absolute; left: 0; top: 0;
+  transform-origin: 0 0;
+  background-repeat: repeat;
+  will-change: transform;
+}
+
+.viz__caption {
+  position: absolute; left: 18px; bottom: 16px; z-index: 3;
+  color: var(--c-white); mix-blend-mode: difference;
+}
+
+.viz__handle {
+  position: absolute; z-index: 4; width: 22px; height: 22px;
+  margin: -11px 0 0 -11px; padding: 0;
+  border: 2px solid var(--c-white); background: var(--c-red);
+  cursor: grab; touch-action: none;
+}
+.viz__handle:active { cursor: grabbing; }
+
+.viz__controls { display: grid; gap: 32px; align-content: start; }
+.viz__group { display: grid; gap: 14px; }
+.viz__group--row { grid-auto-flow: column; justify-content: start; align-items: center; gap: 14px; }
+.viz__legend { color: var(--c-gray-light); }
+.ui-light .viz__legend { color: var(--c-gray); }
+
+.viz__rooms { display: flex; flex-wrap: wrap; gap: 8px; }
+.viz__chip {
+  border: 1px solid rgba(255, 255, 255, 0.3); background: none; color: inherit;
+  padding: 9px 14px; cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.ui-light .viz__chip { border-color: rgba(0, 0, 0, 0.28); }
+.viz__chip:hover { border-color: var(--c-red); }
+.viz__chip.is-active { background: var(--c-red); border-color: var(--c-red); color: var(--c-white); }
+
+.viz__swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.viz__swatch {
+  display: grid; gap: 8px; padding: 0; background: none; border: 0;
+  color: inherit; cursor: pointer; text-align: left;
+}
+.viz__swatch img {
+  width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+  outline: 1px solid rgba(255, 255, 255, 0.22); outline-offset: -1px;
+  transition: outline-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.ui-light .viz__swatch img { outline-color: rgba(0, 0, 0, 0.2); }
+.viz__swatch:hover img { transform: scale(1.04); }
+.viz__swatch.is-active img { outline: 2px solid var(--c-red); outline-offset: -2px; }
+.viz__swatch span { color: var(--c-gray-light); }
+.ui-light .viz__swatch span { color: var(--c-gray); }
+.viz__swatch.is-active span { color: inherit; }
+
+.viz__range { flex: 1; min-width: 140px; accent-color: var(--c-red); }
+.viz__value { min-width: 2ch; }
+.viz__hint { color: var(--c-gray-light); max-width: 46ch; }
+.ui-light .viz__hint { color: var(--c-gray); }
+.viz__hint code { font-family: inherit; color: var(--c-red); }
+
+@media (max-width: 900px) {
+  .viz { grid-template-columns: 1fr; }
+  .viz__stage { aspect-ratio: 4 / 3; }
+  .viz__swatches { grid-template-columns: repeat(4, 1fr); }
+  .viz__group--row { grid-auto-flow: row; justify-content: stretch; }
+}
+
+/* the room photo re-applied over the swapped surface: multiply puts the
+   room's shadows back on top of the tile instead of erasing the tile */
+.viz__shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background-size: cover; background-position: center;
+  mix-blend-mode: multiply; opacity: 0.72;
+}
+
+/* ─── page entry ───────────────────────────────────────────────────
+   Client-side navigation remounts main, so this replays on every route
+   change and the pages read as one continuous site rather than ten
+   separate documents. Opacity only: a transform here would create a
+   containing block and change how the fixed chrome and the homepage's
+   pinned sections are measured. */
+@keyframes pg-enter { from { opacity: 0; } to { opacity: 1; } }
+.pg-main { animation: pg-enter var(--dur) var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-main { animation: none; }
+}

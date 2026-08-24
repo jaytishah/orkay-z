@@ -219,7 +219,7 @@
    the right one bleeds off the page edge, the left one drops half a screen. ── */
 .z9-style {
   padding: 10vh 0 14vh;
-  display: grid; grid-template-columns: 25% 1fr 2fr; align-items: end;
+  display: grid; grid-template-columns: 1fr 2fr; align-items: end;
   column-gap: calc(var(--pad) / 2);   /* the gutter between the pair */
 }
 /* bottoms sit on one line, so the shorter frame starts further down. The fr
@@ -229,13 +229,13 @@
   grid-column: 1; align-self: start; padding-left: var(--pad);
   /* the <br>s set the three lines; type is sized so the longest one still
      clears the left frame at 25% */
-  font-size: clamp(20px, 2.2vw, 34px); white-space: nowrap;
+  font-size: clamp(20px, 2.2vw, 34px); white-space: normal; /* wraps rather than clipping (CR S-06b) */
 }
 /* narrow frame, landscape photo — the macaw sits in the left eighth, so a
    centred cover crop would leave nothing but red wall */
 .z9-style__a { grid-column: 2; height: 56vh; }
 .z9-style__a img { object-position: left; }
-.z9-style__b { grid-column: 3; height: 82vh; }
+.z9-style__b { grid-column: 2; height: 82vh; }
 
 /* ── 02 LIFE — two columns, sticky headline, cards ── */
 .z9-life { padding-top: 20vh; padding-bottom: 14vh; }

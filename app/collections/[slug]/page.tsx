@@ -15,9 +15,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const c = getCollection(slug);
-  if (!c) return { title: 'Collection — ORKAY Tiles International' };
+  if (!c) return { title: 'Collection — ORKAY Tiles' };
   return {
-    title: `${c.name} — ORKAY Tiles International`,
+    title: `${c.name} — ORKAY Tiles`,
     description: `${c.desc} ${c.finish} finish, ${c.sizes}. ${c.body}. CE certified, ISO 9001:2015.`,
     openGraph: { title: `${c.name} — ORKAY Tiles`, description: c.desc, images: [c.img] },
   };
