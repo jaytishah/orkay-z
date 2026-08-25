@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { consentText } from '@/content/pages';
+import { INTERESTS } from '@/lib/submissions';
 
-const INTERESTS = ['Import', 'Distribution', 'OEM & Private Label', 'Project Supply'];
+/* Contact form 01 — the general enquiry. The option list and the validation
+   rules live in lib/submissions.ts, so the form and the route cannot drift
+   apart: an interest this <select> offers is one the schema accepts. */
 
 const FIELDS = [
   { name: 'name', label: 'Name', type: 'text', required: true },
@@ -17,7 +20,7 @@ const FIELDS = [
 export default function InquiryForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState<{ reference: string } | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -31,7 +34,7 @@ export default function InquiryForm() {
         body: JSON.stringify(data),
       });
       const json = await res.json();
-      if (json.ok) setSent(true);
+      if (json.ok) setSent({ reference: json.reference });
       else setErrors(json.errors || { form: 'Something went wrong.' });
     } catch {
       setErrors({ form: 'Network error. Please email us directly.' });
@@ -45,7 +48,10 @@ export default function InquiryForm() {
       <div className="inquiry inquiry--sent">
         <p className="h-mid">Thank you.</p>
         <p className="text-small">
-          Your inquiry is with our export team. You will hear from us within one business day.
+          Your enquiry is with our team. You will hear from us within one business day.
+        </p>
+        <p className="text-small" style={{ marginTop: 16 }}>
+          Your reference: <strong>{sent.reference}</strong>
         </p>
       </div>
     );

@@ -1,19 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import { nav } from '@/content/pages';
 
-/* Sub-page chrome. Carries the same three elements as the homepage header —
-   mark, one text CTA, burger — so moving between pages never changes the
-   furniture. The burger opens the same fullscreen menu, which is what makes
-   every route reachable from every other route.
+/* Sub-page chrome. Three slots in one fixed row — mark, centre, actions —
+   and what fills them swaps once you are past the hero:
 
-   `polarity` must match the polarity of the section the header sits over:
-   the mark is a single flat colour here (the homepage's per-frame ink
-   clipping is Motion's job, and Motion does not run on these pages), so a
-   light mark over a light hero would simply disappear. */
+     at the top   [mark]              …            [Catalogue] [≡]
+     scrolled     …        [◉ About Products … ]              [≡]
+
+   The mark is a flat colour here (the homepage's per-frame ink clipping is
+   Motion's job, and Motion does not run on these pages), so over a long page
+   that alternates light and dark sections it is wrong about half the time —
+   and on a split layout it lands on top of the artwork. Retiring it into a
+   dark pill solves both: the pill carries its own ground, so it reads over
+   any section, and it puts the nav on screen instead of behind a click.
+
+   `polarity` still describes the section the header sits over, because the
+   top state is unchanged and the burger has no ground of its own. */
 export default function PageChrome({
   polarity = 'light',
   cta = { label: 'Request Catalogue', href: '/downloads' },
@@ -22,6 +29,9 @@ export default function PageChrome({
   cta?: { label: string; href: string } | null;
 }) {
   const [open, setOpen] = useState(false);
+  const [past, setPast] = useState(false);
+  const sentinel = useRef<HTMLSpanElement>(null);
+  const pathname = usePathname();
 
   /* a route change unmounts nothing here, so the menu is closed explicitly;
      Escape closes it too, and the body scroll lock is released either way */
@@ -37,14 +47,63 @@ export default function PageChrome({
     };
   }, [open]);
 
+  /* "Am I past the hero?" as an observation rather than a scroll handler:
+     no listener firing on every frame, nothing to throttle, and it stays
+     correct while Lenis owns the scroll. The sentinel sits at the top of the
+     document and the root is grown upwards by 68% of the viewport, so it
+     stops intersecting at exactly the point the hero has left. */
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setPast(!entry.isIntersecting),
+      { rootMargin: '68% 0px 0px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  /* the fullscreen menu already lists every destination — showing the pill
+     behind it would be the same links twice, so the top state comes back */
+  const showPill = past && !open;
+  const dark = polarity === 'dark' || open;
+
   return (
     <>
-      <header className={`cd-header${polarity === 'dark' || open ? ' cd-header--dark' : ''}`}>
+      <span ref={sentinel} className="cd-sentinel" aria-hidden="true" />
+
+      <header
+        className={`cd-header${dark ? ' cd-header--dark' : ''}${showPill ? ' cd-header--past' : ''}`}
+      >
         <Link href="/" className="cd-logo" aria-label="ORKAY — back to homepage">
           {/* the header inverts over dark sections and behind the open menu —
               the mark is artwork now, so swap the colourway instead of color */}
-          <Logo variant={polarity === 'dark' || open ? 'white' : 'dark'} />
+          <Logo variant={dark ? 'white' : 'dark'} />
         </Link>
+
+        {/* The standing menu. Always rendered so the swap is a cross-fade
+            rather than a mount, and `inert` while hidden so a keyboard user
+            cannot tab into links they cannot see. */}
+        <nav className="cd-pill" aria-label="Pages" inert={!showPill}>
+          <Link href="/" className="cd-pill__mark" aria-label="ORKAY — back to homepage">
+            <Logo variant="white" />
+          </Link>
+          <span className="cd-pill__rule" aria-hidden="true" />
+          {nav.primary
+            /* Home is the mark immediately to the left of these — listing it
+               again spends pill width on a destination already on screen */
+            .filter((l) => l.href !== '/')
+            .map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="cd-pill__link text-small"
+                aria-current={pathname === l.href ? 'page' : undefined}
+              >
+                {l.label}
+              </Link>
+            ))}
+        </nav>
 
         <nav className="cd-nav">
           {cta ? (

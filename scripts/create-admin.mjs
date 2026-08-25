@@ -41,7 +41,9 @@ const user = {
 if (process.env.DYNAMO_TABLE) {
   const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
   const { DynamoDBDocumentClient, PutCommand } = require('@aws-sdk/lib-dynamodb');
-  const doc = DynamoDBDocumentClient.from(new DynamoDBClient({}));
+  const doc = DynamoDBDocumentClient.from(new DynamoDBClient(
+    process.env.DYNAMO_ENDPOINT ? { endpoint: process.env.DYNAMO_ENDPOINT } : {},
+  ));
   await doc.send(new PutCommand({
     TableName: process.env.DYNAMO_TABLE,
     Item: { PK: `USER#${user.email}`, SK: 'META', type: 'user', ...user },

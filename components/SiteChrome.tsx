@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSyncExternalStore } from 'react';
 import LangSwitcher from '@/components/LangSwitcher';
 import Logo from '@/components/Logo';
 import { contact, site } from '@/content/site';
@@ -152,6 +153,7 @@ export function Footer() {
         <button type="button" className="footer__link" data-consent-open>
           Cookie settings
         </button>
+        <AdminLink />
       </div>
     </footer>
   );
@@ -166,4 +168,20 @@ export function BackToCollections() {
       </span>
     </Link>
   );
+}
+
+/* Staff-only footer entrance. Rendered client-side off the readable
+   orkay-admin-ui hint cookie, so a visitor without an admin session never
+   sees it; the hint grants nothing on its own — /admin is gated by the
+   httpOnly JWT that middleware and every route re-verify server-side. */
+/* The cookie cannot change under us mid-page, so there is nothing to
+   subscribe to; useSyncExternalStore is here for its server snapshot, which
+   keeps the server HTML (no link) and the first client render agreeing. */
+const noSubscribe = () => () => {};
+const readHintCookie = () => document.cookie.split('; ').includes('orkay-admin-ui=1');
+
+function AdminLink() {
+  const signedIn = useSyncExternalStore(noSubscribe, readHintCookie, () => false);
+  if (!signedIn) return null;
+  return <Link href="/admin" rel="nofollow">CMS</Link>;
 }

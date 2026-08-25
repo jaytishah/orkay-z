@@ -13,7 +13,8 @@
   },
   "scripts": {
     "build:css": "node scripts/build-css.mjs",
-    "build": "node scripts/build-css.mjs && tsc -p tsconfig.json"
+    "build": "node scripts/build-css.mjs && node scripts/build-logo-art.mjs && tsc -p tsconfig.json",
+    "build:logo": "node scripts/build-logo-art.mjs"
   },
   "peerDependencies": { "react": ">=18" }
 }

@@ -1,84 +1,72 @@
 import { NextResponse } from 'next/server';
+import { randomUUID } from 'node:crypto';
 import { consentText } from '@/content/pages';
+import { clientIp, rateLimit } from '@/lib/auth';
+import { forwardLead } from '@/lib/ghl';
+import { getStore } from '@/lib/store';
+import { inquirySchema, reference, toInquirySubmission } from '@/lib/submissions';
 
-/* B2B inquiry intake. Forwards to a GoHighLevel inbound webhook when
-   GHL_WEBHOOK_URL is set; logs locally otherwise so the form is testable
-   before the client's GHL account exists. */
+/* Contact form 01 — the general enquiry.
 
-type Body = {
-  name?: string;
-  company?: string;
-  email?: string;
-  country?: string;
-  phone?: string;
-  interest?: string;
-  message?: string;
-  consentContact?: string | boolean;
-  consentMarketing?: string | boolean;
-};
-
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+   The enquiry is written to our own store first and forwarded to GoHighLevel
+   second. That order is the point: before this, an enquiry existed only in
+   GHL, so an unset webhook or a CRM outage meant it existed nowhere. The
+   admin inbox is now the system of record and GHL is the copy. */
 
 export async function POST(request: Request) {
-  let body: Body;
+  const ip = clientIp(request);
+  const rl = rateLimit(`inquiry:${ip}`);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { ok: false, errors: { form: `Too many enquiries from this connection. Try again in ${Math.ceil(rl.retryAfterS / 60)} min.` } },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfterS) } },
+    );
+  }
+
+  let body: unknown;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ ok: false, errors: { form: 'Invalid request.' } }, { status: 400 });
   }
 
-  const errors: Record<string, string> = {};
-  if (!body.name?.trim()) errors.name = 'Required';
-  if (!body.company?.trim()) errors.company = 'Required';
-  if (!body.country?.trim()) errors.country = 'Required';
-  if (!body.email?.trim()) errors.email = 'Required';
-  else if (!EMAIL.test(body.email.trim())) errors.email = 'Enter a valid email';
-  const contactOk = body.consentContact === 'on' || body.consentContact === true;
-  if (!contactOk) errors.consentContact = 'We need your consent to reply to this enquiry';
-
-  if (Object.keys(errors).length) {
+  const parsed = inquirySchema.safeParse(body);
+  if (!parsed.success) {
+    const errors: Record<string, string> = {};
+    for (const issue of parsed.error.issues) errors[issue.path.join('.') || 'form'] = issue.message;
     return NextResponse.json({ ok: false, errors }, { status: 400 });
   }
 
-  const payload = {
-    name: body.name!.trim(),
-    company: body.company!.trim(),
-    email: body.email!.trim(),
-    country: body.country!.trim(),
-    phone: body.phone?.trim() || '',
-    interest: body.interest?.trim() || '',
-    message: body.message?.trim() || '',
-    source: 'orkaytiles.com — website inquiry',
-    /* CR L-05: explicit opt-in captured with the wording and the moment it was given */
+  const submission = toInquirySubmission(parsed.data, randomUUID());
+  /* CR L-05: the opt-in wording and the moment it was given travel with the
+     record, so the consent can be evidenced later from the record alone. */
+  submission.data = {
+    ...submission.data,
     consent: {
       contact: true,
       contactText: consentText.contact,
-      marketing: body.consentMarketing === 'on' || body.consentMarketing === true,
+      marketing: parsed.data.consentMarketing,
       marketingText: consentText.marketing,
-      at: new Date().toISOString(),
+      at: submission.createdAt,
+      ip,
     },
   };
 
-  const webhook = process.env.GHL_WEBHOOK_URL;
-  if (!webhook) {
-    console.log('[inquiry] GHL_WEBHOOK_URL not set — payload:', payload);
-    return NextResponse.json({ ok: true, forwarded: false });
-  }
+  const store = await getStore();
+  await store.createSubmission(submission);
 
-  try {
-    const res = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      console.error('[inquiry] GHL webhook responded', res.status);
-      return NextResponse.json({ ok: false, errors: { form: 'Could not submit. Please email us directly.' } }, { status: 502 });
-    }
-  } catch (err) {
-    console.error('[inquiry] GHL webhook failed', err);
-    return NextResponse.json({ ok: false, errors: { form: 'Could not submit. Please email us directly.' } }, { status: 502 });
-  }
+  await forwardLead({
+    name: parsed.data.name,
+    company: parsed.data.company,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
+    country: parsed.data.country,
+    interest: parsed.data.interest,
+    message: parsed.data.message,
+    source: 'orkaytiles.com — general enquiry',
+    submissionId: submission.id,
+    consent: submission.data.consent as Record<string, unknown>,
+  });
 
-  return NextResponse.json({ ok: true, forwarded: true });
+  return NextResponse.json({ ok: true, reference: reference(submission.id) }, { status: 201 });
 }

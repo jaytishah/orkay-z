@@ -13,6 +13,11 @@ import path from 'node:path';
    ════════════════════════════════════════════════════════════════════ */
 
 const COOKIE = 'orkay-admin';
+/* Readable companion to COOKIE, carrying no secret and granting nothing —
+   it only tells the public footer whether to show the CMS link, so a visitor
+   never sees it. Every authorization decision still reads COOKIE server-side.
+   ponytail: a cookie the browser already sends, not a session fetch per pageview. */
+const UI_HINT_COOKIE = 'orkay-admin-ui';
 const SESSION_HOURS = 12;
 
 /* SESSION_SECRET must be set in production (server-side env only — hard
@@ -76,14 +81,23 @@ export async function setSessionCookie(token: string): Promise<void> {
     path: '/',
     maxAge: SESSION_HOURS * 3600,
   });
+  jar.set(UI_HINT_COOKIE, '1', {
+    httpOnly: false,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: SESSION_HOURS * 3600,
+  });
 }
 
 export async function clearSessionCookie(): Promise<void> {
   const jar = await cookies();
   jar.set(COOKIE, '', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 });
+  jar.set(UI_HINT_COOKIE, '', { httpOnly: false, sameSite: 'lax', path: '/', maxAge: 0 });
 }
 
 export const SESSION_COOKIE_NAME = COOKIE;
+export const UI_HINT_COOKIE_NAME = UI_HINT_COOKIE;
 
 /* ── login throttling (hard rule 9) ──────────────────────────────────
    Sliding window per key (IP and account). In-memory: per-instance on
@@ -108,4 +122,14 @@ export function rateLimit(key: string): { allowed: boolean; retryAfterS: number 
 
 export function clearRateLimit(key: string): void {
   attempts.delete(key);
+}
+
+/** Caller IP for throttling and the dealer audit trail. Behind Cloudflare and
+    Amplify the origin only ever sees the forwarded chain; the first hop is the
+    client. Spoofable in principle — good enough for a rate-limit key and an
+    audit note, never used to authorize anything. */
+export function clientIp(request: Request): string {
+  return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    || request.headers.get('cf-connecting-ip')
+    || 'local';
 }

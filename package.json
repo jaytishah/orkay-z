@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check": "node --test scripts/selfcheck.test.mts"
+    "check": "node --test scripts/selfcheck.test.mts",
+    "check:dealers": "node scripts/dealer-e2e.mjs",
+    "check:catalog": "node scripts/catalog-e2e.mjs",
+    "admin:dynamo": "node scripts/with-dynamo.mjs node scripts/create-admin.mjs",
+    "dynamo:local": "node scripts/dynamo-local.mjs",
+    "dynamo:provision": "node scripts/with-dynamo.mjs node scripts/aws/provision.mjs",
+    "dev:dynamo": "node scripts/with-dynamo.mjs node node_modules/next/dist/bin/next dev"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1116.0",

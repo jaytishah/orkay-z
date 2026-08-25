@@ -185,6 +185,10 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
    collection header is on white for its whole length, so it is always on. */
 .cd-header nav { display: flex; align-items: center; gap: 24px; }
 .header.is-light .lang__btn,
+/* .cd-header was never in this list, so the catalogue pill rendered white on
+   white over every light hero — invisible until the page scrolled onto a dark
+   section. Same swap the homepage header has always had. */
+.cd-header:not(.cd-header--dark) .btn--nav,
 .header.is-light .btn--nav,
 .cd-header .lang__btn {
   color: var(--c-black);
@@ -192,6 +196,7 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
   border-color: rgba(0, 0, 0, 0.16);
 }
 .header.is-light .burger { color: var(--c-black); }
+.cd-header:not(.cd-header--dark) .btn--nav:hover,
 .header.is-light .lang__btn:hover,
 .header.is-light .btn--nav:hover,
 .cd-header .lang__btn:hover { background: rgba(0, 0, 0, 0.1); border-color: rgba(0, 0, 0, 0.3); }
@@ -944,6 +949,9 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
 /* ═══════════ COLLECTION DETAIL PAGE ═══════════ */
 .cd-header { position: fixed; inset: 0 0 auto 0; z-index: 46; display: flex; justify-content: space-between; align-items: center; padding: 28px var(--pad); color: var(--c-black); pointer-events: none; }
 .cd-header a, .cd-header button { pointer-events: auto; }
+/* zero net height, real area — an IntersectionObserver target needs a box,
+   and the page must not gain a pixel for it (see PageChrome) */
+.cd-sentinel { display: block; height: 1px; margin-bottom: -1px; pointer-events: none; }
 /* the mark is flat colour on sub-pages (Motion's per-frame ink clipping does
    not run here), so it is told which polarity it sits over */
 .cd-header--dark { color: var(--c-white); }
@@ -956,6 +964,76 @@ body { top: 0 !important; } /* the banner offsets the page even when hidden */
   display: inline-block; padding: 13px 0;
   font-size: 30px; font-weight: 700;
   line-height: 0.9; white-space: nowrap;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+/* ─── the standing menu ───────────────────────────────────────────────
+   A dark chip carrying its own ground, so it reads over a light section, a
+   dark section, or a photograph — which is the whole reason the flat mark
+   could not simply stay where it was. */
+.cd-pill {
+  /* Taken out of the row rather than given a slot in it: a hidden flex or
+     grid item still holds its width, which squeezed the catalogue button
+     into two lines at the top of the page. Absolute also means "centred"
+     is centred on the viewport, not on whatever the mark and the actions
+     happened to leave between them. */
+  position: absolute; left: 50%; top: 50%;
+  display: flex; align-items: center; gap: clamp(14px, 1.6vw, 26px);
+  padding: 10px 26px 10px 20px;
+  background: var(--c-black); color: var(--c-white);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  /* visibility, not display: the swap is a cross-fade, and a display change
+     would also make `inert` pointless by removing the links outright */
+  opacity: 0; visibility: hidden; transform: translate(-50%, calc(-50% - 10px));
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility 0s var(--dur);
+}
+.cd-header--past .cd-pill {
+  opacity: 1; visibility: visible; transform: translate(-50%, -50%);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+/* the mark does not disappear — it moves into the pill */
+.cd-header--past .cd-logo { opacity: 0; visibility: hidden; transform: translateY(-10px); }
+.cd-header--past .btn--nav { opacity: 0; visibility: hidden; }
+
+/* The burger is the last flat-coloured thing in the row, and it has the same
+   problem the mark had: no ground of its own, so it vanishes over a section
+   whose polarity it was not told about. Alongside the pill it gets the same
+   chip, which also pairs the two visually. */
+.cd-header--past .burger {
+  width: 30px; padding: 15px 18px; box-sizing: content-box;
+  color: var(--c-white); background: var(--c-black);
+  border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 999px;
+}
+
+.cd-pill__mark { display: flex; align-items: center; font-size: 17px; }
+.cd-pill__rule { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.22); flex: none; }
+.cd-pill__link {
+  position: relative; white-space: nowrap;
+  color: rgba(255, 255, 255, 0.72);
+  transition: color var(--dur) var(--ease);
+}
+.cd-pill__link:hover { color: var(--c-white); }
+/* the page you are on, marked with the one accent the site owns */
+.cd-pill__link[aria-current='page'] { color: var(--c-white); }
+.cd-pill__link[aria-current='page']::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -6px;
+  height: 1px; background: var(--c-red);
+}
+
+/* Seven destinations plus the mark need about 960px before the pill starts
+   fighting the burger for the row, so the standing menu is desktop-only.
+
+   Only the menu, though — the mark still retires at every width. Its
+   polarity problem is not a function of screen size, and restoring it here
+   would put a black wordmark back on top of a black section on exactly the
+   devices least able to spare the room. The chipped burger still reaches
+   every destination. */
+@media (max-width: 1023px) {
+  /* scoped, not bare `.cd-pill`: the pill is a <nav> inside the header, so
+     `.cd-header nav { display: flex }` outranks a lone class selector no
+     matter how late it comes */
+  .cd-header .cd-pill { display: none; }
 }
 .cd-hero { min-height: 100vh; display: grid; grid-template-columns: 1.2fr 1fr; background: var(--c-white); color: var(--c-black); }
 .cd-hero__media { height: 100vh; }

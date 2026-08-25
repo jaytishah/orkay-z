@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Footer } from '@/components/SiteChrome';
 import PageChrome from '@/components/PageChrome';
 import CollectionReveal from '@/components/CollectionReveal';
+import DealerApplicationForm from '@/components/DealerApplicationForm';
 import { dealerPage, digioPage } from '@/content/pages';
 import { contact } from '@/content/site';
 import '../pages.css';
@@ -89,10 +90,9 @@ export default function DealerOnboardingPage() {
               <p className="text-small pg__label" style={{ marginBottom: 0 }}>Start</p>
               <h2 className="h-mid reveal-lines">Open an<br />application</h2>
               <p className="text-small pg__lede">
-                The application form and the live Digio signing flow are wired up as part of the
-                dealer module build. Until that goes live, applications are opened by the dealer
-                desk directly.
-                <em className="pg-todo">Flow pending build</em>
+                Fill this in once. We check the district, verify the firm, and send the agreement
+                for Aadhaar OTP signature — you never print a page. Prefer to talk first? The
+                dealer desk is on WhatsApp.
               </p>
               <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
                 <a
@@ -119,6 +119,10 @@ export default function DealerOnboardingPage() {
             <figure className="pg-split__media img-reveal img-reveal--r">
               <img src="/img/cr_design_studio.jpg" alt="The ORKAY design studio in Morbi" />
             </figure>
+          </div>
+
+          <div id="apply" style={{ marginTop: '8vh' }}>
+            <DealerApplicationForm />
           </div>
         </section>
 

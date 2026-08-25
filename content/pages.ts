@@ -120,6 +120,81 @@ export const contactPage = {
   ] as Fact[],
 };
 
+/* The three ways in on /contact. Each renders a section with its own CTA;
+   the button opens that section's form in a modal. `form` names which one —
+   the page holds the component map, this file holds the words. */
+export type Channel = {
+  n: string;
+  form: 'inquiry' | 'dealership' | 'support';
+  kicker: string;
+  title: string;
+  lede: string;
+  /* what to have to hand before opening the form */
+  ready: string[];
+  cta: string;
+  dialogTitle: string;
+  dialogLede: string;
+  image: string;
+  alt: string;
+};
+
+export const contactChannels: Channel[] = [
+  {
+    n: '01',
+    form: 'inquiry',
+    kicker: 'General enquiry',
+    title: 'Ask the desk\na direct question',
+    lede: 'Pricing, availability, a container, an OEM run, a spec sheet for a project — one form, and it reaches the desk that handles it. The more specific the brief, the faster the quote comes back.',
+    ready: [
+      'The market and the destination port, if you are importing',
+      'Sizes and finishes you are looking at',
+      'Monthly or one-off quantity',
+      'Whether it is for stock, a project, or private label',
+    ],
+    cta: 'Open the enquiry form',
+    dialogTitle: 'Send an enquiry',
+    dialogLede: 'Answered within one business day, by a person, from Morbi.',
+    image: '/img/export_sales_desk_morbi.jpg',
+    alt: 'Large-format tile samples, a stack of spec sheets and a tape measure laid out along the export desk in the Morbi office, with the sales floor working behind',
+  },
+  {
+    n: '02',
+    form: 'dealership',
+    kicker: 'Apply for a dealership',
+    title: 'One district,\none dealer',
+    lede: 'Orkay appoints dealers directly, one per district, on factory pricing. The application checks your district before it proceeds, verifies the firm against its GSTIN, and ends in an Aadhaar OTP e-signature — no paper, no courier.',
+    ready: [
+      'GSTIN and PAN for the applying firm',
+      'The district you intend to serve',
+      'An Aadhaar-linked mobile for the signatory',
+      'A bank reference, only if you want credit terms',
+    ],
+    cta: 'Apply for a dealership',
+    dialogTitle: 'Dealership application',
+    dialogLede: 'Your GSTIN is checked against the GST registry as you type. Nothing is printed or couriered.',
+    image: '/img/tile_showroom_gallery.jpg',
+    alt: 'A dealer showroom aisle lined with full-height porcelain slab panels in dark steel frames, a sample board rack at the right and a single visitor at the far end',
+  },
+  {
+    n: '03',
+    form: 'support',
+    kicker: 'Dealer support programme',
+    title: 'Already a dealer?\nAsk for support',
+    lede: 'Display racks, sample boards, catalogue and range photography, showroom branding, a batch held for a project, or a quality question. Appointed dealers raise it here with their dealer code and it lands with the desk that owns their account.',
+    ready: [
+      'Your ORKAY dealer code, from your signed agreement',
+      'Showroom name and city',
+      'What you need, and how much of it',
+      'The project or deadline it is for, if there is one',
+    ],
+    cta: 'Request dealer support',
+    dialogTitle: 'Dealer support request',
+    dialogLede: 'For appointed Orkay dealers. Your dealer code is on your signed agreement.',
+    image: '/img/tile_despatch_morbi.jpg',
+    alt: 'Tile sample boards and a flat-packed display stand laid out on a workbench with packing tape, ready for despatch to a dealer, wrapped pallets and the loading bay behind',
+  },
+];
+
 /* ─── Product ─── */
 
 export const productPage = {

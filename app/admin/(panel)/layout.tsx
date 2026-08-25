@@ -31,6 +31,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin">Products</Link>
           <Link href="/admin/products/new">Add product</Link>
           <Link href="/admin/import">Import</Link>
+          <Link href="/admin/dealers">Dealers</Link>
+          <Link href="/admin/inbox">Inbox</Link>
           <Link href="/products" target="_blank" rel="noreferrer">View site ↗</Link>
           <span className="adm-muted">{session.email}</span>
           <LogoutButton />

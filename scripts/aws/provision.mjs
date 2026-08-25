@@ -7,6 +7,7 @@
    Creates, idempotently:
    - DynamoDB table  orkay-catalog  (on-demand, PITR on) with the §5a keys:
        PK/SK · GSI byCategory (GSI1PK/GSI1SK) · sparse GSI byStatus (GSI2PK/GSI2SK)
+       · GSI byDealerStatus (GSI3PK/GSI3SK) for the Module 10 approval queue
    - S3 bucket       orkay-media    (private; public read on products/* only,
                                      enforced via bucket policy; CORS for the site)
    Then prints the .env values and a least-privilege IAM policy for the app.
@@ -22,14 +23,19 @@ const BUCKET = process.env.S3_BUCKET || 'orkay-media';
 
 const {
   DynamoDBClient, CreateTableCommand, DescribeTableCommand, UpdateContinuousBackupsCommand,
-  ResourceInUseException, ResourceNotFoundException,
+  UpdateTableCommand, ResourceInUseException, ResourceNotFoundException,
 } = require('@aws-sdk/client-dynamodb');
 const {
   S3Client, CreateBucketCommand, PutBucketPolicyCommand, PutPublicAccessBlockCommand,
   PutBucketCorsCommand, BucketAlreadyOwnedByYou,
 } = require('@aws-sdk/client-s3');
 
-const ddb = new DynamoDBClient({ region: REGION });
+/* Pointed at DynamoDB Local, this provisions the same table and indexes the
+   AWS run does — the point being that the schema is verified, not re-typed. */
+const ENDPOINT = process.env.DYNAMO_ENDPOINT;
+const LOCAL = Boolean(ENDPOINT);
+
+const ddb = new DynamoDBClient({ region: REGION, ...(ENDPOINT ? { endpoint: ENDPOINT } : {}) });
 const s3 = new S3Client({ region: REGION });
 
 /* ── DynamoDB ── */
@@ -44,6 +50,8 @@ try {
       { AttributeName: 'GSI1SK', AttributeType: 'S' },
       { AttributeName: 'GSI2PK', AttributeType: 'S' },
       { AttributeName: 'GSI2SK', AttributeType: 'S' },
+      { AttributeName: 'GSI3PK', AttributeType: 'S' },
+      { AttributeName: 'GSI3SK', AttributeType: 'S' },
     ],
     KeySchema: [
       { AttributeName: 'PK', KeyType: 'HASH' },
@@ -66,6 +74,15 @@ try {
         ],
         Projection: { ProjectionType: 'ALL' },
       },
+      {
+        /* Module 10's approval queue: STATUS#<applied|verified|signed|active> · createdAt */
+        IndexName: 'byDealerStatus',
+        KeySchema: [
+          { AttributeName: 'GSI3PK', KeyType: 'HASH' },
+          { AttributeName: 'GSI3SK', KeyType: 'RANGE' },
+        ],
+        Projection: { ProjectionType: 'ALL' },
+      },
     ],
   }));
   console.log(`created table ${TABLE} (waiting for ACTIVE to enable PITR)...`);
@@ -79,6 +96,37 @@ try {
   if (err instanceof ResourceInUseException) console.log(`table ${TABLE} already exists — leaving it`);
   else throw err;
 }
+/* An account provisioned before Module 10 has the table but not the dealer
+   queue index — CreateTable is skipped for it, so the GSI has to be added
+   separately or listApplications(status) fails at runtime. One GSI per
+   UpdateTable call is a DynamoDB limit, and the table must be ACTIVE. */
+async function ensureIndex(name, pkAttr, skAttr) {
+  const d = await ddb.send(new DescribeTableCommand({ TableName: TABLE }));
+  if ((d.Table.GlobalSecondaryIndexes || []).some((i) => i.IndexName === name)) {
+    console.log(`index ${name}: present`);
+    return;
+  }
+  await ddb.send(new UpdateTableCommand({
+    TableName: TABLE,
+    AttributeDefinitions: [
+      { AttributeName: pkAttr, AttributeType: 'S' },
+      { AttributeName: skAttr, AttributeType: 'S' },
+    ],
+    GlobalSecondaryIndexUpdates: [{
+      Create: {
+        IndexName: name,
+        KeySchema: [
+          { AttributeName: pkAttr, KeyType: 'HASH' },
+          { AttributeName: skAttr, KeyType: 'RANGE' },
+        ],
+        Projection: { ProjectionType: 'ALL' },
+      },
+    }],
+  }));
+  console.log(`index ${name}: creating (backfills in the background)`);
+}
+await ensureIndex('byDealerStatus', 'GSI3PK', 'GSI3SK');
+
 try {
   await ddb.send(new UpdateContinuousBackupsCommand({
     TableName: TABLE,
@@ -90,6 +138,12 @@ try {
 }
 
 /* ── S3 ── */
+if (LOCAL) {
+  console.log('\nDYNAMO_ENDPOINT is set — skipping S3, this is a local DynamoDB run.');
+  console.log(`table ${TABLE} ready at ${ENDPOINT}`);
+  process.exit(0);
+}
+
 try {
   await s3.send(new CreateBucketCommand({
     Bucket: BUCKET,
@@ -148,6 +202,10 @@ Add to the Amplify environment (server-side only — hard rule 1):
   S3_BUCKET=${BUCKET}
   SESSION_SECRET=<generate: openssl rand -hex 32>
   GHL_WEBHOOK_URL=<from GoHighLevel>
+  DIGIO_CLIENT_ID=<Orkay's Digio account>
+  DIGIO_CLIENT_SECRET=<Orkay's Digio account>
+  DIGIO_TEMPLATE_ID=<the approved dealer-agreement template in that account>
+  DIGIO_WEBHOOK_SECRET=<generate, then set the same value in Digio's webhook config>
 
 Least-privilege IAM policy for the app role (Module 12):
 ${JSON.stringify({

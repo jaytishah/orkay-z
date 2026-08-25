@@ -96,3 +96,45 @@ doc; do not cite it in conventions.md until it exists.
   on `npm run build`; docs/previews strings were updated in the generators.
 - "Double Charge" and "Wooden Plank" are removed product lines — do not reintroduce them in
   preview copy (SplitSlide preview now says "Porcelain Slab").
+
+## Re-sync 24 Aug 2026 — the brand mark became artwork
+
+The app replaced its CSS-drawn wordmark with the client's supplied lockup
+(`public/img/logo_orkay{,_white}.png`) and **deleted the entire `.logo__*` rule family**.
+Because `src/styles.css` is generated from the app's CSS, the DS inherited that deletion
+and its `Logo` — whose `O` was an *empty* span drawn purely by `.logo__o` — silently
+rendered as "RKAY(TM)TILES".
+
+**Nothing mechanical caught it.** The DS component's own source had not changed, so its
+`sourceKey` matched the anchor and the driver classified `Logo` as `unchanged`; the render
+check passed because the root was non-empty. Only reading the contact sheet found it.
+*Lesson: on any re-sync where `styles.css` changed, read the contact sheets even when the
+verdict is all-green — a generated stylesheet can rewrite components the diff calls
+unchanged.*
+
+Fixed by following the app: `scripts/build-logo-art.mjs` (new, wired into `npm run build`)
+inlines both colourways as **lossless WebP data-URIs** into `src/components/logo-art.ts`,
+and `Logo.tsx` renders `<img class="brandmark">` in the two existing layers. `LogoProps` is
+unchanged, so the `.d.ts` contract did not move.
+
+- **Why data-URIs, not a path:** the uploaded bundle has no image channel — a design built
+  from this DS would resolve `/img/logo_orkay.png` against its own origin and 404. Inlining
+  is what makes the mark travel. Cost: bundle 29 KB → 57 KB.
+- Both colourways are required. The white one is not a filter of the dark one — the red
+  bullseye and swoosh stay red in both.
+- The surviving `.logo`, `.logo--xl` (scale 2.7), `.logo__layer--ink`
+  (`clip-path: inset(0 0 100% 0)`) and `.brandmark` (`height: 1.55em`) rules still drive it,
+  so the whole lockup still scales from one `--logo-size`.
+
+## conventions.md drift found this run (not yet applied — author's call)
+
+- **`--logo-track` no longer exists.** Removed with the text-wordmark CSS; conventions.md
+  §3 still lists it. An agent trusting it emits `var(--logo-track)`, which resolves to
+  nothing.
+- **`guidelines/DESIGN.md` is the wrong path.** In the bundle it is
+  `guidelines/docs/guides/DESIGN.md` (driven by `guidelinesGlob: docs/guides/**/*.md`).
+
+Everything else in conventions.md re-verified clean against this build: all 9 other tokens,
+every class, all 11 named components, and all four `Button` variants — `plain` is the
+default and correctly emits **no** modifier class, and `nav` is built dynamically as
+`btn--${variant}` so the literal never appears in the bundle. Don't "fix" those two.
